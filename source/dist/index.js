@@ -456,8 +456,8 @@
 	  var tagList = catalog.tagList;
 	  if (catalog) {
 	    return articleList.filter(function (o) {
-	      return o.tagList.length && o.tagList.every(function (tag, i) {
-	        return tag == tagList[i];
+	      return o.tagList.length && tagList.every(function (tag, i) {
+	        return tag == o.tagList[i];
 	      });
 	    });
 	  }
@@ -1218,7 +1218,7 @@
 	        viewTips.html('在' + data.totalNum + '篇文章中搜索到' + count + '篇关于：' + keyWord);
 	      }
 	
-	      console.log(data);
+	      //console.log(data);
 	    });
 	  }
 	};
