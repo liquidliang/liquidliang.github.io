@@ -6,7 +6,7 @@ const m_initOption = require('helper/init_option');
 
 
 
-module.exports = function(page, key) {
+module.exports = function(page) {
   let viewBody = $('<div class="container" style="min-height:'+((window.innerHeight||640) -200)+'px"/>').setView({
    name: 'blog/blog',
    delay: true,
@@ -16,9 +16,10 @@ module.exports = function(page, key) {
   let viewFoot = c_footer();
   page.setView({
     start: function(hasRender){
-      if(hasRender){
+      if(hasRender && BCD.history.getCode()==-1){
         return m_initOption.notRender(hasRender);
       }
+      let key = location.hash.replace('#!/', '');
       if(m_article.getArticle(key)){
         m_article.getArticleContent(key).then((data)=>{
           page.setView({title: data.title});

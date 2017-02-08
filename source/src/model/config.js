@@ -5,6 +5,7 @@ let isLocalhost = arr.length === 1;
 let username = isLocalhost ? "swblog" : arr[0];
 let config = {
   "author": username,
+  "logoTitle": username+"的博客",
   "nav": [
     ["Home", "#!/index"],
     ["About", "#!/blog/about.md"]
@@ -13,6 +14,7 @@ let config = {
 //先用缓存，请求回来再更新
 BCD.ajaxCache('./json/config.json', (data) => {
   config = data || config;
+  config.logoTitle = config.logoTitle || username+"的博客";
   isInit = true;
   let cb;
   while (cb = callbackList.pop()) {
@@ -25,8 +27,9 @@ BCD.ajaxCache('./json/config.json', (data) => {
 
 
 
-module.exports = {
+window.CONFIG = module.exports = {
   username,
+  getIndex: ()=> config.nav && config.nav[0] && config.nav[0][1] || "",
   isLocalhost,
   getConfigSync: () => config,
   getConfig: (callback) => {

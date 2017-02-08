@@ -33,7 +33,7 @@ m_config.getConfig(function(){
           c_pageList(page, key);
           next();
         }else if(key=='blog'){
-          c_pageBlog(page, location.hash.replace('#!/', ''));
+          c_pageBlog(page);
           next();
         }else if(key=='search'){
           c_pageSearch(page, key);
@@ -48,7 +48,7 @@ m_config.getConfig(function(){
             return next();
           }
 
-          BCD.replaceHash('#!/index');
+          BCD.replaceHash(m_config.getIndex());
           next(-1);
         }
       }

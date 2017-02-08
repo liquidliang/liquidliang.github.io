@@ -81,7 +81,7 @@
 	          c_pageList(page, key);
 	          next();
 	        } else if (key == 'blog') {
-	          c_pageBlog(page, location.hash.replace('#!/', ''));
+	          c_pageBlog(page);
 	          next();
 	        } else if (key == 'search') {
 	          c_pageSearch(page, key);
@@ -96,7 +96,7 @@
 	            return next();
 	          }
 	
-	          BCD.replaceHash('#!/index');
+	          BCD.replaceHash(m_config.getIndex());
 	          next(-1);
 	        }
 	      }
@@ -128,10 +128,18 @@
 	};
 	BCD.addEvent('back', back);
 	
+	var replaceHash = function replaceHash(ele, option, data) {
+	  ele.on('click', function (e) {
+	    BCD.replaceHash(ele.data('url'));
+	    m_util.stopBubble(e);
+	  });
+	};
+	BCD.addEvent('replaceHash', go);
 	//事件绑定
 	module.exports = {
 	  go: go,
-	  back: back
+	  back: back,
+	  replaceHash: replaceHash
 	};
 
 /***/ },
@@ -712,11 +720,13 @@
 	var username = isLocalhost ? "swblog" : arr[0];
 	var config = {
 	  "author": username,
+	  "logoTitle": username + "的博客",
 	  "nav": [["Home", "#!/index"], ["About", "#!/blog/about.md"]]
 	};
 	//先用缓存，请求回来再更新
 	BCD.ajaxCache('./json/config.json', function (data) {
 	  config = data || config;
+	  config.logoTitle = config.logoTitle || username + "的博客";
 	  isInit = true;
 	  var cb = void 0;
 	  while (cb = callbackList.pop()) {
@@ -727,8 +737,11 @@
 	  }
 	}, 0, 1E3, true);
 	
-	module.exports = {
+	window.CONFIG = module.exports = {
 	  username: username,
+	  getIndex: function getIndex() {
+	    return config.nav && config.nav[0] && config.nav[0][1] || "";
+	  },
 	  isLocalhost: isLocalhost,
 	  getConfigSync: function getConfigSync() {
 	    return config;
@@ -748,7 +761,6 @@
 
 	'use strict';
 	
-	//<li><a href="#">Action</a></li>
 	var m_util = __webpack_require__(2);
 	var m_article = __webpack_require__(4);
 	var m_config = __webpack_require__(7);
@@ -837,7 +849,7 @@
 	    getData: function getData() {
 	      return m_config.getConfigSync();
 	    },
-	    template: '  <div class="container">' + '    <div class="navbar-header">' + '      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">' + '        <span class="sr-only">Toggle navigation</span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '      </button>' + '      <a href="#!/index" class="logo-link" style="padding: 12px;"><%-obj.author%>的博客</a>' + '    </div>' + '    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">' + '      <div class="navbar-form navbar-right" data-on="?m=navigator_search"></div>' + '      <ul class="nav navbar-nav"><%(obj.nav || []).forEach(function(o){%>' + '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a href="<%=o[1]%>"><%-o[0]%></a></li>' + '        <%})%>' + '      </ul>' + '    </nav>' + '  </div>'
+	    template: '  <div class="container">' + '    <div class="navbar-header">' + '      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">' + '        <span class="sr-only">Toggle navigation</span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '      </button>' + '      <a data-on="?m=go" data-url="<%=CONFIG.getIndex()%>" class="logo-link" style="padding: 12px;"><%-obj.logoTitle%></a>' + '    </div>' + '    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">' + '      <div class="navbar-form navbar-right" data-on="?m=navigator_search"></div>' + '      <ul class="nav navbar-nav"><%(obj.nav || []).forEach(function(o){%>' + '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a data-on="?m=replaceHash" data-url="<%=o[1]%>"><%-o[0]%></a></li>' + '        <%})%>' + '      </ul>' + '    </nav>' + '  </div>'
 	  }, option);
 	  return viewHeader.setView(option);
 	};
@@ -1104,7 +1116,7 @@
 	var c_content = __webpack_require__(17);
 	var m_initOption = __webpack_require__(12);
 	
-	module.exports = function (page, key) {
+	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
 	    name: 'blog/blog',
 	    delay: true,
@@ -1114,9 +1126,10 @@
 	  var viewFoot = c_footer();
 	  page.setView({
 	    start: function start(hasRender) {
-	      if (hasRender) {
+	      if (hasRender && BCD.history.getCode() == -1) {
 	        return m_initOption.notRender(hasRender);
 	      }
+	      var key = location.hash.replace('#!/', '');
 	      if (m_article.getArticle(key)) {
 	        m_article.getArticleContent(key).then(function (data) {
 	          page.setView({ title: data.title });
