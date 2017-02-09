@@ -16,5 +16,129 @@
  {
   "path": "blog/readme.md",
   "mtime": 1486648058000
+ },
+ {
+  "path": "blog/阮一峰",
+  "mtime": 1486648695000,
+  "child": [
+   {
+    "path": "blog/阮一峰/es6tutorial",
+    "mtime": 1486648670672,
+    "child": [
+     {
+      "path": "blog/阮一峰/es6tutorial/array.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/arraybuffer.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/async.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/class.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/decorator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/destructuring.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/fp.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/function.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/generator-async.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/generator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/intro.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/iterator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/let.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/mixin.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/module.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/number.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/object.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/promise.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/proxy.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/reference.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/reflect.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/regex.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/set-map.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/simd.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/spec.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/string.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/style.md",
+      "mtime": 1486619131594
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/symbol.md",
+      "mtime": 1486619131594
+     }
+    ]
+   }
+  ]
  }
 ]
