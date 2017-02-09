@@ -19,11 +19,11 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486649492000,
+  "mtime": 1486649577000,
   "child": [
    {
     "path": "blog/阮一峰/es6tutorial",
-    "mtime": 1486649484477,
+    "mtime": 1486649564462,
     "child": [
      {
       "path": "blog/阮一峰/es6tutorial/array.md",
@@ -55,6 +55,10 @@
      },
      {
       "path": "blog/阮一峰/es6tutorial/function.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/generator-async.md",
       "mtime": 1486619131578
      },
      {
