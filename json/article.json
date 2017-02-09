@@ -19,7 +19,7 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486650580000,
+  "mtime": 1486652395000,
   "child": [
    {
     "path": "blog/阮一峰/2014",
@@ -1309,7 +1309,7 @@
    },
    {
     "path": "blog/阮一峰/es6tutorial",
-    "mtime": 1486650428821,
+    "mtime": 1486652367026,
     "child": [
      {
       "path": "blog/阮一峰/es6tutorial/array.md",
@@ -1358,6 +1358,10 @@
      {
       "path": "blog/阮一峰/es6tutorial/iterator.md",
       "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/let.md",
+      "mtime": 1486652222907
      },
      {
       "path": "blog/阮一峰/es6tutorial/mixin.md",
