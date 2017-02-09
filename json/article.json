@@ -19,12 +19,16 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486650219000,
+  "mtime": 1486650349000,
   "child": [
    {
     "path": "blog/阮一峰/es6tutorial",
-    "mtime": 1486650210912,
+    "mtime": 1486650342816,
     "child": [
+     {
+      "path": "blog/阮一峰/es6tutorial/about.md",
+      "mtime": 1486619131578
+     },
      {
       "path": "blog/阮一峰/es6tutorial/array.md",
       "mtime": 1486619131578
@@ -71,10 +75,6 @@
      },
      {
       "path": "blog/阮一峰/es6tutorial/iterator.md",
-      "mtime": 1486619131578
-     },
-     {
-      "path": "blog/阮一峰/es6tutorial/let和const命令.md",
       "mtime": 1486619131578
      }
     ]
