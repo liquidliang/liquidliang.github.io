@@ -19,11 +19,11 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486649577000,
+  "mtime": 1486649720000,
   "child": [
    {
     "path": "blog/阮一峰/es6tutorial",
-    "mtime": 1486649564462,
+    "mtime": 1486649711378,
     "child": [
      {
       "path": "blog/阮一峰/es6tutorial/array.md",
@@ -63,6 +63,46 @@
      },
      {
       "path": "blog/阮一峰/es6tutorial/generator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/intro.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/iterator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/let.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/mixin.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/module.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/number.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/object.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/promise.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/proxy.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/reference.md",
       "mtime": 1486619131578
      }
     ]
