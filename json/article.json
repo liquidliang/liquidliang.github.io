@@ -19,14 +19,46 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486649370000,
+  "mtime": 1486649492000,
   "child": [
    {
     "path": "blog/阮一峰/es6tutorial",
-    "mtime": 1486649363655,
+    "mtime": 1486649484477,
     "child": [
      {
       "path": "blog/阮一峰/es6tutorial/array.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/arraybuffer.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/async.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/class.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/decorator.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/destructuring.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/fp.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/function.md",
+      "mtime": 1486619131578
+     },
+     {
+      "path": "blog/阮一峰/es6tutorial/generator.md",
       "mtime": 1486619131578
      }
     ]
