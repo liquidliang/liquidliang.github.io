@@ -19,11 +19,17 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486649181000,
+  "mtime": 1486649262000,
   "child": [
    {
-    "path": "blog/阮一峰/readme.md",
-    "mtime": 1486523515062
+    "path": "blog/阮一峰/es6tutorial",
+    "mtime": 1486649236850,
+    "child": [
+     {
+      "path": "blog/阮一峰/es6tutorial/readme.md",
+      "mtime": 1486523515062
+     }
+    ]
    }
   ]
  }
