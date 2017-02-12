@@ -56,9 +56,10 @@
 	var m_config = __webpack_require__(7);
 	var c_header = __webpack_require__(8);
 	var c_pageList = __webpack_require__(9);
-	var c_pageContent = __webpack_require__(17);
-	var c_pageBlog = __webpack_require__(19);
-	var c_pageSearch = __webpack_require__(20);
+	var c_pageBook = __webpack_require__(17);
+	var c_pageContent = __webpack_require__(19);
+	var c_pageBlog = __webpack_require__(21);
+	var c_pageSearch = __webpack_require__(22);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -86,7 +87,11 @@
 	        } else {
 	          var path = decodeURIComponent(key);
 	          if (m_article.hasCatalog(path)) {
-	            c_pageList(page, path);
+	            if (m_article.hasArticle(path + '/$sidebar$.md')) {
+	              c_pageBook(page, path);
+	            } else {
+	              c_pageList(page, path);
+	            }
 	            return next();
 	          } else if (m_article.hasArticle(path)) {
 	            c_pageContent(page, path);
@@ -131,7 +136,7 @@
 	    m_util.stopBubble(e);
 	  });
 	};
-	BCD.addEvent('replaceHash', go);
+	BCD.addEvent('replaceHash', replaceHash);
 	//事件绑定
 	module.exports = {
 	  go: go,
@@ -231,7 +236,6 @@
 	var swPostMessage = __webpack_require__(6);
 	var catalogList = []; //目录列表
 	var articleList = []; //文件列表
-	var originList = []; //原始文件结构列表
 	var tagList = [];
 	var articleDict = {};
 	var catalogDict = {};
@@ -362,7 +366,6 @@
 	};
 	
 	var init = function init(list) {
-	  originList = list;
 	  catalogList = []; //目录列表
 	  articleList = []; //文件列表
 	  var tagSet = new Set();
@@ -371,7 +374,7 @@
 	        path = _o$path === undefined ? '' : _o$path,
 	        mtime = o.mtime;
 	
-	    if (o.child) {
+	    if (o.isDirectory) {
 	      var tags = path.split('/').slice(1);
 	      tags.forEach(function (o) {
 	        return tagSet.add(o);
@@ -384,7 +387,6 @@
 	      };
 	      catalogDict[path] = item;
 	      catalogList.push(item);
-	      o.child.forEach(processArticle);
 	    } else {
 	      var _tags = path.split('/').slice(1, -1);
 	      _tags.forEach(function (o) {
@@ -398,7 +400,11 @@
 	        time: m_util.getTime(mtime),
 	        tagList: _tags
 	      };
-	      articleDict[path] = _item;
+	      if (articleDict[path]) {
+	        $.extend(articleDict[path], _item);
+	      } else {
+	        articleDict[path] = _item;
+	      }
 	      articleList.push(_item);
 	    }
 	  };
@@ -417,6 +423,7 @@
 	    processCount++;
 	    if (processCount === 2) {
 	      (function () {
+	        //如果网络请求失败，这里不会被执行
 	        var existDict = {};
 	        articleList.forEach(function (o) {
 	          existDict[location.origin + '/' + o.path] = 1;
@@ -483,7 +490,7 @@
 	        list: list.map(function (o) {
 	          return articleDict[o.path];
 	        }).filter(function (o) {
-	          return !!o;
+	          return !!(o && o.content);
 	        })
 	      };
 	    });
@@ -617,6 +624,7 @@
 	};
 	
 	module.exports = {
+	  getName: getName,
 	  initArticle: initArticle,
 	  catalogDict: catalogDict,
 	  articleDict: articleDict,
@@ -1146,7 +1154,7 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/article_list',
-	    template: '<h1><%=obj.title%></h1>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, idx){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(o.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=idx%>" style="background-color: #ffffe8;">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
+	    template: '<h1><%=obj.title%></h1>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, idx){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(o.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=idx%>">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
 	  }, option);
 	};
 
@@ -1156,12 +1164,85 @@
 
 	'use strict';
 	
+	var s_mainContainer = __webpack_require__(18);
+	var m_article = __webpack_require__(4);
+	var c_articleList = __webpack_require__(16);
+	
+	module.exports = function (page, key) {
+	  page.html(s_mainContainer);
+	  var viewContent = page.find('[data-selector="main"]');
+	  var viewSlidebar = page.find('[data-selector="slidebar"]');
+	  var slidebar = void 0;
+	  var currentHash = void 0;
+	  viewSlidebar.setView({
+	    name: 'blog/slidebar',
+	    template: '<div data-on="?m=mkview"></div>'
+	  });
+	
+	  viewContent.setView({
+	    name: 'blog/blog',
+	    template: '<div data-on="?m=mkview"></div>'
+	  });
+	
+	  page.setView({
+	    title: m_article.getName(key),
+	    start: function start() {
+	      if (currentHash !== location.hash) {
+	        viewContent.empty();
+	        currentHash = location.hash;
+	      }
+	      m_article.getArticleContent(key + '/$sidebar$.md').then(function (data) {
+	        if (!slidebar) {
+	          (function () {
+	            slidebar = $.extend({}, data);
+	            var content = slidebar.content || '';
+	            var chapters = slidebar.chapters = [];
+	
+	            slidebar.content = content.replace(/<%(([^>]|[^%]>)+)%>/g, function ($0, $1) {
+	              chapters.push($1);
+	              return '<a data-on="?m=replaceHash" data-url="#!/' + BCD.getHash(0) + '/' + $1 + '.md">' + $1 + '</a>';
+	            });
+	            viewSlidebar.reset(slidebar);
+	            setTimeout(function () {
+	              viewSlidebar.bindEvent();
+	            });
+	          })();
+	        }
+	        var fileName = BCD.getHash(1);
+	        if (fileName) {
+	          m_article.getArticleContent(key + '/' + fileName).then(function (data) {
+	            viewContent.reset(data);
+	          });
+	        } else {
+	          return BCD.replaceHash('#!/' + BCD.getHash(0) + '/' + slidebar.chapters[0] + '.md');
+	        }
+	      });
+	    }
+	  });
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	//有侧边栏的内容展示
+	
 	var c_mainContainer = __webpack_require__(11);
 	var c_footer = __webpack_require__(10);
 	var m_article = __webpack_require__(4);
 	var m_readHistory = __webpack_require__(14);
 	var c_pannelList = __webpack_require__(13);
-	var c_content = __webpack_require__(18);
+	var c_content = __webpack_require__(20);
 	var m_initOption = __webpack_require__(12);
 	
 	module.exports = function (page, key) {
@@ -1194,7 +1275,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1204,20 +1285,21 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/content',
-	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview" style="background-color: #ffffe8;">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
 	  }, option);
 	};
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
+	//针对导航的，没有侧边栏的内容展示
+	
 	var c_mainContainer = __webpack_require__(11);
 	var c_footer = __webpack_require__(10);
 	var m_article = __webpack_require__(4);
-	var c_content = __webpack_require__(18);
 	var m_initOption = __webpack_require__(12);
 	
 	module.exports = function (page) {
@@ -1247,7 +1329,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1256,7 +1338,7 @@
 	var c_mainContainer = __webpack_require__(11);
 	var m_initOption = __webpack_require__(12);
 	var c_pannelList = __webpack_require__(13);
-	var m_pullArticle = __webpack_require__(21);
+	var m_pullArticle = __webpack_require__(23);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1285,7 +1367,7 @@
 	};
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1301,7 +1383,7 @@
 	
 	viewRank.setView({
 	  full: 'append',
-	  template: '<%(obj.list || []).forEach(function(o, i, list){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a></h2>' + '  <div class="row">' + '    <div class="col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=i%>" style="background-color: #ffffe8;">' + '  </div><br />' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <%if(i<list.length-1)print("<hr>")%>' + '</article><%})%>'
+	  template: '<%(obj.list || []).forEach(function(o, i, list){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a></h2>' + '  <div class="row">' + '    <div class="col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=i%>">' + '  </div><br />' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <%if(i<list.length-1)print("<hr>")%>' + '</article><%})%>'
 	});
 	
 	module.exports = {

@@ -3,7 +3,6 @@ const m_search = require('helper/search');
 const swPostMessage = require('helper/sw_post_message.js');
 let catalogList = []; //目录列表
 let articleList = []; //文件列表
-let originList = []; //原始文件结构列表
 let tagList = [];
 let articleDict = {};
 let catalogDict = {};
@@ -124,7 +123,6 @@ const preload = (obj) => {
 };
 
 const init = (list) => {
-  originList = list;
   catalogList = []; //目录列表
   articleList = []; //文件列表
   let tagSet = new Set();
@@ -132,7 +130,7 @@ const init = (list) => {
     let {
       path = '', mtime
     } = o;
-    if (o.child) {
+    if (o.isDirectory) {
       let tags = path.split('/').slice(1);
       tags.forEach(o => tagSet.add(o));
       let item = {
@@ -143,7 +141,6 @@ const init = (list) => {
       };
       catalogDict[path] = item;
       catalogList.push(item);
-      o.child.forEach(processArticle);
     } else {
       let tags = path.split('/').slice(1, -1);
       tags.forEach(o => tagSet.add(o));
@@ -155,7 +152,11 @@ const init = (list) => {
         time: m_util.getTime(mtime),
         tagList: tags
       };
-      articleDict[path] = item;
+      if(articleDict[path]){
+        $.extend(articleDict[path], item);
+      }else{
+        articleDict[path] = item;
+      }
       articleList.push(item);
     }
   };
@@ -172,7 +173,7 @@ const initArticle = new Promise((resolve)=>{
   BCD.ajaxCache('./json/article.json', (data) => {
     init(data);
     processCount++;
-    if(processCount===2){
+    if(processCount===2){ //如果网络请求失败，这里不会被执行
       let existDict = {};
       articleList.forEach(o=>{
         existDict[location.origin + '/' + o.path] = 1;
@@ -227,7 +228,7 @@ const getList = (method) => (tag, page = 0, count = 10) => {
       page,
       count,
       num: totalList.length,
-      list: list.map(o => articleDict[o.path]).filter(o => !!o)
+      list: list.map(o => articleDict[o.path]).filter(o => !!(o&&o.content))
     };
   });
 };
@@ -346,6 +347,7 @@ const searchDirect = (word) => {
 
 
 module.exports = {
+  getName,
   initArticle,
   catalogDict,
   articleDict,
