@@ -3,20 +3,21 @@ var namePrefix = 'swblog-';
 var nameReg = new RegExp('^' + namePrefix);
 var businessKey = 'business-' + version;
 var businessCacheName = namePrefix + businessKey;
+var libCacheName = namePrefix + 'lib-' + version;
 var imageCacheName = namePrefix + 'image';
+var markdownCacheName = namePrefix + 'markdown';
 
 var expectedCaches = [
-  businessCacheName, //业务代码  对于开发者常变，先用缓存，同时更新，下次进来再用新的。
-  namePrefix + 'lib', //各种引用库的资源 不常变
-  namePrefix + 'markdown', //文章资源 根据规则变
-  imageCacheName  //图片资源，由于没办法完全从链接判断是否为图片，回包后再判断是否缓存
+  businessCacheName, //业务代码  对于开发者常变，先用缓存，同时更新，下次进来再用新的(更新不需要改version)。
+  libCacheName, //各种引用库的资源 不常变，可以通过更改version实现更新。
+  markdownCacheName, //文章资源 根据规则变
+  imageCacheName  //图片资源，由于没办法完全从链接判断是否为图片，回包后再判断是否为图片，然后缓存
 ];
 //正则匹配缓存文件
-var regDict = {
-  lib: /\.js$|\.css$|\.html$|\.woff|\.woff2$/,
-  markdown: /\.md$|\.md\?[^?]+$/
-};
+var regDict = {};
 
+regDict[markdownCacheName] = /\.md$|\.md\?[^?]+$/;
+regDict[libCacheName] = /\.js$|\.css$|\.html$|\.woff|\.woff2$/;
 //安装文件
 var FILES = [
   '/',
@@ -122,13 +123,12 @@ var addToCache = function (dbName, req, response) {
 };
 
 
-var fetchCache = function (key, req) {
-  var dbName = namePrefix + key;
+var fetchCache = function (dbName, req) {
   return caches.open(dbName).then(function (cache) {
     return cache.match(req.clone());
   }).then(function (response) {
     if (response) {
-      if (key == businessKey) {
+      if (dbName == businessCacheName) {
         addToCache(dbName, req, response);
       }
       return response; //如果命中缓存，直接使用缓存
@@ -155,12 +155,12 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
-    return event.respondWith(fetchCache(businessKey, req));
+    return event.respondWith(fetchCache(businessCacheName, req));
   }
 
-  for (var key in regDict) {
-    if (regDict[key].test(url)) {
-      return event.respondWith(fetchCache(key, req));
+  for (var dbName in regDict) {
+    if (regDict[dbName].test(url)) {
+      return event.respondWith(fetchCache(dbName, req));
     }
   }
 
@@ -168,7 +168,7 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  return event.respondWith(fetchCache('image', req));
+  return event.respondWith(fetchCache(imageCacheName, req));
 
 });
 
@@ -189,9 +189,8 @@ var preloadList = function (msgObj) {
   return new Promise(function (resolve) {
     iterator(msgObj.list, function (url, next, list) {
       let myRequest = new Request(url);
-      for (var key in regDict) {
-        if (regDict[key].test(url)) {
-          let dbName = namePrefix + key;
+      for (var dbName in regDict) {
+        if (regDict[dbName].test(url)) {
           caches.open(dbName).then(function (cache) {
             return cache.match(myRequest.clone());
           }).then(function (response) {
@@ -256,7 +255,7 @@ function _processMessage(msgObj) {
     if (!articleDict) {
       return new Promise(function () {});
     }
-    return caches.open(namePrefix + 'markdown').then(function (cache) {
+    return caches.open(markdownCacheName).then(function (cache) {
       //删除不存在的博客文件
       cache.keys().then(function (oldReqList) {
         oldReqList.forEach(oldReq => {
