@@ -16,10 +16,19 @@ let viewHeader = c_header();
 $('body').append(viewHeader);
 
 m_config.getConfig.then(() =>
-  m_article.initArticle.then(() =>
+  m_article.initArticle.then(() => {
+    viewHeader.reset();
     BCD.app({ //入口
       setTitle: function (str) {
-        viewHeader.reset();
+        //viewHeader.reset();
+        let navLis = viewHeader.find('.nav li');
+        navLis.removeClass('active');
+        navLis.each((i, domLi) => {
+          let url = $($(domLi).find('a')[0]).attr('data-url') || '';
+          if (location.hash.indexOf(url) === 0) {
+            $(domLi).addClass('active');
+          }
+        });
         document.title = str;
       },
       initPage: function (key, next) {
@@ -38,12 +47,11 @@ m_config.getConfig.then(() =>
           next();
         } else {
           let path = decodeURIComponent(key);
-          if (m_article.hasCatalog(path)) {
-            if(m_article.hasArticle(path + '/$sidebar$.md')){
-              c_pageBook(page, path);
-            }else{
-              c_pageList(page, path);
-            }
+          if (m_article.hasBook(path)) {
+            c_pageBook(page, path);
+            return next();
+          } else if (m_article.hasCatalog(path)) {
+            c_pageList(page, path);
             return next();
           } else if (m_article.hasArticle(path)) {
             c_pageContent(page, path);
@@ -54,6 +62,6 @@ m_config.getConfig.then(() =>
           next(-1);
         }
       }
-    })
-  )
+    });
+  })
 );

@@ -65,9 +65,18 @@
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
-	    return BCD.app({ //入口
+	    viewHeader.reset();
+	    BCD.app({ //入口
 	      setTitle: function setTitle(str) {
-	        viewHeader.reset();
+	        //viewHeader.reset();
+	        var navLis = viewHeader.find('.nav li');
+	        navLis.removeClass('active');
+	        navLis.each(function (i, domLi) {
+	          var url = $($(domLi).find('a')[0]).attr('data-url') || '';
+	          if (location.hash.indexOf(url) === 0) {
+	            $(domLi).addClass('active');
+	          }
+	        });
 	        document.title = str;
 	      },
 	      initPage: function initPage(key, next) {
@@ -86,12 +95,11 @@
 	          next();
 	        } else {
 	          var path = decodeURIComponent(key);
-	          if (m_article.hasCatalog(path)) {
-	            if (m_article.hasArticle(path + '/$sidebar$.md')) {
-	              c_pageBook(page, path);
-	            } else {
-	              c_pageList(page, path);
-	            }
+	          if (m_article.hasBook(path)) {
+	            c_pageBook(page, path);
+	            return next();
+	          } else if (m_article.hasCatalog(path)) {
+	            c_pageList(page, path);
 	            return next();
 	          } else if (m_article.hasArticle(path)) {
 	            c_pageContent(page, path);
@@ -235,18 +243,25 @@
 	var m_search = __webpack_require__(5);
 	var swPostMessage = __webpack_require__(6);
 	var catalogList = []; //目录列表
-	var articleList = []; //文件列表
-	var tagList = [];
-	var articleDict = {};
 	var catalogDict = {};
+	var articleList = []; //文件列表
+	var articleDict = {};
+	var sidebarList = []; //sidebar文件列表(sidebar文件也可以在articleDict中索引到)
+	var bookList = []; //书籍列表
+	var bookDict = {};
+	var tagList = [];
+	var sidebarName = '$sidebar$';
+	var getSidebarPath = function getSidebarPath(path) {
+	  return path + '/' + sidebarName + '.md';
+	};
 	
 	BCD.addEvent('mkview', function (ele, option, data) {
 	  var name = m_util.getRandomName();
 	  var result = void 0;
 	  if ('idx' in option) {
-	    var item = data.list[option.idx];
-	    result = item.summary;
-	    if (result.length < item.content.length) {
+	    var _item = data.list[option.idx];
+	    result = _item.summary;
+	    if (result.length < _item.content.length) {
 	      result += '...';
 	    }
 	  } else {
@@ -306,15 +321,19 @@
 	};
 	
 	var getSortContent = function getSortContent(content) {
-	  var len = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+	  var paragraph = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
 	
+	  var len = 500;
 	  var minLen = len / 2;
 	  var ret = content.substring(0, len);
 	  var partCount = 0;
 	  var partIndex = 0;
-	  ret.replace(/\n|<br>|<\/p>/g, function ($0, idx) {
+	  ret.replace(/([^\n]*)(\n|<br>|<\/p>)/g, function ($0, $1, $2, idx) {
 	    partCount++;
-	    if (partCount == 15) {
+	    if (partCount > paragraph && $1.length > 10 && partIndex === 0) {
+	      partIndex = idx;
+	    }
+	    if (partCount == 15 && partIndex === 0) {
 	      partIndex = idx;
 	    }
 	  });
@@ -368,6 +387,8 @@
 	var init = function init(list) {
 	  catalogList = []; //目录列表
 	  articleList = []; //文件列表
+	  sidebarList = [];
+	  bookList = [];
 	  var tagSet = new Set();
 	  var processArticle = function processArticle(o) {
 	    var _o$path = o.path,
@@ -379,20 +400,20 @@
 	      tags.forEach(function (o) {
 	        return tagSet.add(o);
 	      });
-	      var item = {
+	      var _item2 = {
 	        path: path,
+	        time: m_util.getTime(mtime),
 	        href: '#!/' + encodeURIComponent(o.path),
-	        catalog: path.slice(path.lastIndexOf('/') + 1),
+	        title: path.slice(path.lastIndexOf('/') + 1),
 	        tagList: tags
 	      };
-	      catalogDict[path] = item;
-	      catalogList.push(item);
+	      catalogList.push(_item2);
 	    } else {
 	      var _tags = path.split('/').slice(1, -1);
 	      _tags.forEach(function (o) {
 	        return tagSet.add(o);
 	      });
-	      var _item = {
+	      var _item3 = {
 	        path: path,
 	        mtime: mtime,
 	        href: '#!/' + encodeURIComponent(o.path),
@@ -401,14 +422,30 @@
 	        tagList: _tags
 	      };
 	      if (articleDict[path]) {
-	        $.extend(articleDict[path], _item);
+	        $.extend(articleDict[path], _item3);
 	      } else {
-	        articleDict[path] = _item;
+	        articleDict[path] = _item3;
 	      }
-	      articleList.push(_item);
+	      articleList.push(_item3);
 	    }
 	  };
 	  list.forEach(processArticle);
+	  articleList = articleList.filter(function (o) {
+	    if (o.title == sidebarName) {
+	      sidebarList.push(o);
+	      return false;
+	    }
+	    return true;
+	  });
+	  catalogList = catalogList.filter(function (o) {
+	    if (articleDict[getSidebarPath(o.path)]) {
+	      bookDict[o.path] = o;
+	      bookList.push(o);
+	      return false;
+	    }
+	    catalogDict[path] = item;
+	    return true;
+	  });
 	  articleList = articleList.sort(function (a, b) {
 	    return b.mtime - a.mtime;
 	  });
@@ -424,17 +461,19 @@
 	    if (processCount === 2) {
 	      (function () {
 	        //如果网络请求失败，这里不会被执行
+	        var totalList = sidebarList.concat(articleList);
 	        var existDict = {};
-	        articleList.forEach(function (o) {
+	        totalList.forEach(function (o) {
 	          existDict[location.origin + '/' + o.path] = 1;
 	        });
+	
 	        swPostMessage({
 	          m: 'delete_not_exist_article',
 	          dict: existDict
 	        });
 	        swPostMessage({
 	          m: 'preload',
-	          list: articleList.map(getURL)
+	          list: totalList.map(getURL)
 	        }, preload);
 	      })();
 	    }
@@ -514,10 +553,12 @@
 	  var testType = 0;
 	  var obj = {};
 	  var searchWeight = 0;
+	  var weightDict = {};
 	  if (reg.test(item.title)) {
 	    obj.title = item.title.replace(reg, function ($0) {
-	      var weight = /\w/.test($0) ? 2 : $0.length;
-	      searchWeight += weight * 3;
+	      if (!weightDict[$0]) {
+	        weightDict[$0] = 2;
+	      }
 	      return '<span class="text-danger">' + $0 + '</span>';
 	    });
 	    testType += 1;
@@ -526,8 +567,12 @@
 	    (function () {
 	      var pointList = [];
 	      obj.content = item.content.replace(reg, function ($0, point) {
+	        if (!weightDict[$0]) {
+	          weightDict[$0] = 1;
+	        } else if (weightDict[$0] == 2) {
+	          weightDict[$0]++;
+	        }
 	        var weight = /\w/.test($0) ? 2 : $0.length;
-	        searchWeight += weight;
 	        pointList.push({
 	          point: point,
 	          weight: weight
@@ -539,11 +584,11 @@
 	      });
 	      var start = pointList[0].point - 20;
 	      var summary = item.content.substr(start < 0 ? 0 : start);
-	      start = summary.search(/[。\s]/);
+	      start = summary.search(/[。\n\r]/);
 	      if (start < 20) {
-	        summary = getSortContent(summary.substr(start).replace(/^[。\s]*/, ''), 100);
+	        summary = getSortContent(summary.substr(start).replace(/^[。\s]*/, ''), 5);
 	      } else {
-	        summary = getSortContent(summary.substr(10).replace(/^[。\s]*/, ''), 100);
+	        summary = getSortContent(summary.substr(10).replace(/^[。\s]*/, ''), 5);
 	      }
 	      obj.summary = summary.replace(reg, function ($0) {
 	        return '<span class="text-danger">' + $0 + '</span>';
@@ -552,6 +597,9 @@
 	    })();
 	  }
 	  obj.testType = testType;
+	  for (var key in weightDict) {
+	    searchWeight += /\w/.test(key) ? weightDict[key] : key.length * weightDict[key];
+	  }
 	  obj.searchWeight = searchWeight;
 	  return Object.assign({}, item, obj);
 	};
@@ -561,10 +609,13 @@
 	  var fitList = [];
 	  var remainList = [];
 	  var ajaxList = [];
+	  var totalList = articleList.filter(function (o) {
+	    return o;
+	  });
 	
 	  var searchCallback = function searchCallback(list) {
 	    return callback({
-	      totalNum: articleList.length,
+	      totalNum: totalList.length,
 	      checkNum: list.length,
 	      searchWord: word,
 	      list: list.filter(function (o) {
@@ -587,7 +638,7 @@
 	      }
 	    });
 	  };
-	  articleList.forEach(function (o) {
+	  totalList.forEach(function (o) {
 	    var item = articleDict[o.path];
 	    if (item) {
 	      var testObj = testItem(reg, item);
@@ -634,18 +685,22 @@
 	  hasArticle: function hasArticle(path) {
 	    return !!articleDict[path];
 	  },
+	  hasBook: function hasBook(path) {
+	    return !!bookDict[path];
+	  },
 	  getCatalogs: function getCatalogs() {
 	    return catalogList;
+	  },
+	  getBooks: function getBooks() {
+	    return bookList;
 	  },
 	  getTagArticles: getTagArticles,
 	  getTags: function getTags() {
 	    return tagList;
 	  },
+	  getSidebarPath: getSidebarPath,
 	  getArticleList: function getArticleList() {
 	    return articleList;
-	  },
-	  getLastPost: function getLastPost() {
-	    return articleList.slice(0, 5);
 	  },
 	  getListByCatalog: getList(getCatalogArticles),
 	  getListByTag: getList(getTagArticles),
@@ -832,7 +887,6 @@
 	    template: '<%(obj||[]).forEach(function(o){%>' + '<li><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a></li>' + '<%})%>'
 	  });
 	  var viewGroup = ele.find('.form-group');
-	
 	  var getWord = function getWord() {
 	    return viewInput.val().trim();
 	  };
@@ -843,9 +897,13 @@
 	    } else {
 	      BCD.go(hash);
 	    }
+	    setTimeout(function () {
+	      viewInput[0].focus(); //延时才能自动focus
+	    }, 300);
 	  };
 	  ele.find('button').on('click', function (e) {
 	    m_util.stopBubble(e);
+	    var word = getWord();
 	    if (word) {
 	      doSearch();
 	    }
@@ -856,9 +914,14 @@
 	  viewInput.on('blur', function () {
 	    viewDrop.hide();
 	  });
-	  ele.on('keypress input keyup', function (e) {
+	  ele.on('keyup', function (e) {
+	    //keypress要慢一拍 keypress input keyup
+	    //console.log(e);
 	    var word = getWord();
 	    if (word) {
+	      if (e.keyCode == 32) {
+	        return doSearch();
+	      }
 	      var lis = viewDrop.find('a');
 	      if (e.keyCode == 13) {
 	        if (selectLi) {
@@ -881,6 +944,7 @@
 	      }
 	
 	      if (word == oldWord) {
+	        //上下选择
 	        if (e.keyCode == 40 || e.keyCode == 38) {
 	          lis.css('background-color', '');
 	          selectLi = lis.eq(index);
@@ -1045,10 +1109,10 @@
 	var m_readHistory = __webpack_require__(14);
 	var c_pannel = __webpack_require__(15);
 	module.exports = function (view) {
-	  var viewPannelRecommendPost = c_pannel({
+	  var viewPannelBook = c_pannel({
 	    data: {
-	      title: '推荐阅读',
-	      list: m_readHistory.getRecommend().map(function (o) {
+	      title: '书籍',
+	      list: m_article.getBooks().map(function (o) {
 	        return {
 	          href: o.href,
 	          title: o.title,
@@ -1064,7 +1128,7 @@
 	        return o.tagList.length === 1;
 	      }).map(function (o) {
 	        return {
-	          title: o.catalog,
+	          title: o.title,
 	          href: o.href
 	        };
 	      })
@@ -1078,8 +1142,21 @@
 	    }
 	  });
 	
+	  var viewPannelRecommendPost = c_pannel({
+	    data: {
+	      title: '推荐阅读',
+	      list: m_readHistory.getRecommend().map(function (o) {
+	        return {
+	          href: o.href,
+	          title: o.title,
+	          time: o.time
+	        };
+	      })
+	    }
+	  });
+	
 	  return view.setView({
-	    viewList: [viewPannelCatalog, viewPannelTag, viewPannelRecommendPost]
+	    viewList: [viewPannelBook, viewPannelCatalog, viewPannelTag, viewPannelRecommendPost]
 	  });
 	};
 
@@ -1139,7 +1216,7 @@
 	  var view = $('<div class="panel panel-primary"></div>');
 	  option = $.extend({
 	    name: 'blog/panel',
-	    template: '<div class="panel-heading">' + '  <h4><%-obj.title%></h4>' + '</div>' + '<div class="panel-body">' + '  <%if(obj.isInline){%>' + '    <ul class="list-inline">' + '     <%(obj.list || []).forEach(function(o){%>' + '      <li><a data-on="?m=go" data-url="#!/tag/<%=o%>"><%=o%></a></li>' + '     <%})%>' + '    </ul>' + '  <%}else{%>' + '    <ul class="list-group">' + '     <%(obj.list || []).forEach(function(o){%>' + '      <li class="list-group-item"><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a>' + '       <%=o.time ? "<span style=\\\"color: #a2a34f;\\\">("+o.time+")</span>" : ""%></li>' + '     <%})%>' + '    </ul>' + '    <%}%>' + '</div>'
+	    template: '<%var list=obj.list || []; if(list.length===0){return "";}%><div class="panel-heading">' + '  <h4><%-obj.title%></h4>' + '</div>' + '<div class="panel-body">' + '  <%if(obj.isInline){%>' + '    <ul class="list-inline">' + '     <%(obj.list || []).forEach(function(o){%>' + '      <li><a data-on="?m=go" data-url="#!/tag/<%=o%>"><%=o%></a></li>' + '     <%})%>' + '    </ul>' + '  <%}else{%>' + '    <ul class="list-group">' + '     <%list.forEach(function(o){%>' + '      <li class="list-group-item"><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a>' + '       <%=o.time ? "<span style=\\\"color: #a2a34f;\\\">("+o.time+")</span>" : ""%></li>' + '     <%})%>' + '    </ul>' + '    <%}%>' + '</div>'
 	  }, option);
 	  return view.setView(option);
 	};
@@ -1191,7 +1268,7 @@
 	        viewContent.empty();
 	        currentHash = location.hash;
 	      }
-	      m_article.getArticleContent(key + '/$sidebar$.md').then(function (data) {
+	      m_article.getArticleContent(m_article.getSidebarPath(key)).then(function (data) {
 	        if (!slidebar) {
 	          (function () {
 	            slidebar = $.extend({}, data);
@@ -1357,8 +1434,9 @@
 	    start: function start(hasRender) {
 	      var word = decodeURIComponent(BCD.getHash(1));
 	      if (hasRender && oldWord == word) {
-	        return m_initOption.noRender(true);
+	        return m_initOption.notRender(true);
 	      }
+	      oldWord = word;
 	      m_pullArticle.init(word);
 	    },
 	    title: '搜索结果',
