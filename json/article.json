@@ -1594,128 +1594,128 @@
   "num": 12
  },
  {
-  "path": "blog/阮一峰/es6tutorial/$sidebar$.md",
-  "mtime": 1486970050827
+  "path": "blog/阮一峰/ECMAScript 6入门/$sidebar$.md",
+  "mtime": 1486988539211
  },
  {
-  "path": "blog/阮一峰/es6tutorial/async 函数.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/array.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Class.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/arraybuffer.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Decorator.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/async.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/ECMAScript 6简介.md",
-  "mtime": 1486649720000
+  "path": "blog/阮一峰/ECMAScript 6入门/class.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Generator 函数的异步应用.md",
-  "mtime": 1486649577000
+  "path": "blog/阮一峰/ECMAScript 6入门/decorator.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Generator 函数的语法.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/destructuring.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Iterator 和 for...of 循环.md",
-  "mtime": 1486649720000
+  "path": "blog/阮一峰/ECMAScript 6入门/fp.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/let 和 const 命令.md",
-  "mtime": 1486652395000
+  "path": "blog/阮一峰/ECMAScript 6入门/function.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Mixin.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/generator-async.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Module 的加载实现.md",
-  "mtime": 1486969813945
+  "path": "blog/阮一峰/ECMAScript 6入门/generator.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Module 的语法.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/intro.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Promise 对象.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/iterator.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Proxy.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/let.md",
+  "mtime": 1486988601779
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Reflect.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/mixin.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Set 和 Map 数据结构.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/module-loader.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/SIMD.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/module.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/Symbol.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/number.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/二进制数组.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/object.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/函数式编程.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/promise.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/函数的扩展.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/proxy.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/前言.md",
-  "mtime": 1486970538016
+  "path": "blog/阮一峰/ECMAScript 6入门/README.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/参考链接.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/reference.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/变量的解构赋值.md",
-  "mtime": 1486649492000
+  "path": "blog/阮一峰/ECMAScript 6入门/reflect.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/字符串的扩展.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/regex.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/对象的扩展.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/set-map.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/数值的扩展.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/simd.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/数组的扩展.md",
-  "mtime": 1486649370000
+  "path": "blog/阮一峰/ECMAScript 6入门/spec.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/正则的扩展.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/string.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/编程风格.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/style.md",
+  "mtime": 1486956776000
  },
  {
-  "path": "blog/阮一峰/es6tutorial/读懂规格.md",
-  "mtime": 1486650436000
+  "path": "blog/阮一峰/ECMAScript 6入门/symbol.md",
+  "mtime": 1486956776000
  },
  {
   "path": "blog/阮一峰/2014",
@@ -1748,8 +1748,8 @@
   "num": 151
  },
  {
-  "path": "blog/阮一峰/es6tutorial",
-  "mtime": 1486969998795,
+  "path": "blog/阮一峰/ECMAScript 6入门",
+  "mtime": 1486988193293,
   "isDirectory": 1,
   "num": 31
  },
@@ -1771,7 +1771,7 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486652395000,
+  "mtime": 1486988557727,
   "isDirectory": 1,
   "num": 344
  }

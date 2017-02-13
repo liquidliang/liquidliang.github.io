@@ -803,3 +803,4 @@ System.import('app/es6-file').then(function(m) {
 ```
 
 上面代码中，`System.import`方法返回的是一个 Promise 对象，所以可以用`then`方法指定回调函数。
+
