@@ -186,7 +186,7 @@ const init = (list) => {
       bookList.push(o);
       return false;
     }
-    catalogDict[path] = item;
+    catalogDict[o.path] = o;
     return true;
   });
   articleList = articleList.sort((a, b) => {

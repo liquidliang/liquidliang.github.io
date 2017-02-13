@@ -259,9 +259,9 @@
 	  var name = m_util.getRandomName();
 	  var result = void 0;
 	  if ('idx' in option) {
-	    var _item = data.list[option.idx];
-	    result = _item.summary;
-	    if (result.length < _item.content.length) {
+	    var item = data.list[option.idx];
+	    result = item.summary;
+	    if (result.length < item.content.length) {
 	      result += '...';
 	    }
 	  } else {
@@ -400,20 +400,20 @@
 	      tags.forEach(function (o) {
 	        return tagSet.add(o);
 	      });
-	      var _item2 = {
+	      var item = {
 	        path: path,
 	        time: m_util.getTime(mtime),
 	        href: '#!/' + encodeURIComponent(o.path),
 	        title: path.slice(path.lastIndexOf('/') + 1),
 	        tagList: tags
 	      };
-	      catalogList.push(_item2);
+	      catalogList.push(item);
 	    } else {
 	      var _tags = path.split('/').slice(1, -1);
 	      _tags.forEach(function (o) {
 	        return tagSet.add(o);
 	      });
-	      var _item3 = {
+	      var _item = {
 	        path: path,
 	        mtime: mtime,
 	        href: '#!/' + encodeURIComponent(o.path),
@@ -422,11 +422,11 @@
 	        tagList: _tags
 	      };
 	      if (articleDict[path]) {
-	        $.extend(articleDict[path], _item3);
+	        $.extend(articleDict[path], _item);
 	      } else {
-	        articleDict[path] = _item3;
+	        articleDict[path] = _item;
 	      }
-	      articleList.push(_item3);
+	      articleList.push(_item);
 	    }
 	  };
 	  list.forEach(processArticle);
@@ -443,7 +443,7 @@
 	      bookList.push(o);
 	      return false;
 	    }
-	    catalogDict[path] = item;
+	    catalogDict[o.path] = o;
 	    return true;
 	  });
 	  articleList = articleList.sort(function (a, b) {
