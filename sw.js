@@ -159,6 +159,10 @@ self.addEventListener('fetch', function (event) {
     }
   }
 
+  if(/\.jpg$|\.png$|\.gif$/.test(url)){
+    return;
+  }
+
   return event.respondWith(fetch(req));
 
 });
