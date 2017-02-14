@@ -1,7 +1,12 @@
 {
   "private": true,
+<<<<<<< HEAD
   "description": "Makedown server",
   "name": "boke",
+=======
+  "description": "我的个人主页",
+  "name": "liquidliang.github.io",
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   "dependencies": {
     "gulp": "^3.9.1",
     "koa": "^1.2.4",
@@ -26,7 +31,11 @@
     "webpack": "^1.14.0",
     "webpack-stream": "^3.2.0"
   },
+<<<<<<< HEAD
   "version": "0.0.0",
+=======
+  "version": "0.0.1",
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   "scripts": {
     "start": "gulp watch",
     "update": "node server/update-index.js"

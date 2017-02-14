@@ -18,6 +18,7 @@ module.exports = function(page, key) {
   viewBody.addView(viewPannelList);
 
   let viewFoot = c_footer();
+<<<<<<< HEAD
   page.setView({
     start: function(hasRender){
       viewList.empty();
@@ -26,12 +27,27 @@ module.exports = function(page, key) {
         m_article.getListByTag(0, BCD.getHash(1)).then((data)=>{
           data.title = "最新文章";
           data.hrefHead = hrefHead;
+=======
+  let currentHash;
+  page.setView({
+    start: function(hasRender){
+      if(hasRender && currentHash==location.hash && BCD.history.getCode()==-1){
+        return m_initOption.notRender(hasRender);
+      }
+      currentHash=location.hash;
+      viewList.empty();
+      if(key=='index'){
+        m_article.getListByTag(0, BCD.getHash(1)).then((data)=>{
+          data.title = "最新文章";
+          data.hrefHead = '#!/index';
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
           viewList.reset(data);
         });
       }else if(key=='tag'){
         let tag = BCD.getHash(1);
           m_article.getListByTag(tag, BCD.getHash(2)).then((data)=>{
             data.title = '"'+tag+'" 的最新文章';
+<<<<<<< HEAD
             data.hrefHead = hrefHead;
             viewList.reset(data);
           });
@@ -43,6 +59,18 @@ module.exports = function(page, key) {
         });
       }
       return m_initOption.notRender(hasRender);
+=======
+            data.hrefHead = '#!/tag/'+tag;
+            viewList.reset(data);
+          });
+      }else if(m_article.hasCatalog(key)){
+        m_article.getListByCatalog(key, BCD.getHash(1)).then((data)=>{
+          data.title = '"'+data.tag.replace(/^[^/]+\//, '')+'" 的最新文章';
+          data.hrefHead = '#!/'+BCD.getHash(0);
+          viewList.reset(data);
+        });
+      }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     },
     title: '文章列表',
     viewList: [viewBody, viewFoot]

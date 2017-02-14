@@ -1,7 +1,10 @@
 const m_util = require('common/util/index');
 const m_search = require('helper/search');
 const swPostMessage = require('helper/sw_post_message.js');
+<<<<<<< HEAD
 let pathList = []; //路径列表
+=======
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 let catalogList = []; //目录列表
 let articleList = []; //文件列表
 let originList = []; //原始文件结构列表
@@ -13,7 +16,15 @@ BCD.addEvent('mkview', function(ele, option, data) {
   let name = m_util.getRandomName();
   let result;
   if ('idx' in option) {
+<<<<<<< HEAD
     result = data.list[option.idx].summary;
+=======
+    let item = data.list[option.idx];
+    result = item.summary;
+    if(result.length < item.content.length) {
+      result += '...';
+    }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   } else {
     result = data.content;
   }
@@ -67,19 +78,47 @@ const getPath = (pathWithSearch) => pathWithSearch.replace(/\?[^?]+/, '');
 const getSortContent = (content, len=500) => {
   let minLen = len/2;
   let ret = content.substring(0, len);
+<<<<<<< HEAD
+=======
+  let partCount = 0;
+  let partIndex = 0;
+  ret.replace(/\n|<br>|<\/p>/g,function($0, idx){
+    partCount++;
+    if(partCount==15){
+      partIndex = idx;
+    }
+  });
+  if(partIndex>0){
+    ret = ret.substring(0, partIndex);
+    if (ret.length < len*0.7){
+      return ret;
+    }
+  }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   let getContent = (str, reg) => {
     let arr = str.split(reg).filter(o => !!o);
     let count = 0;
     if (arr && arr.length > 2) {
       let idx = arr.length - 1;
+<<<<<<< HEAD
       arr.some((o, i) => {
+=======
+      if(arr.some((o, i) => {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
         count += o.length;
         if (count > minLen && i > 1) {
           idx = i;
           return true;
         }
+<<<<<<< HEAD
       });
       return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '') + '...';
+=======
+      })){
+        return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '');
+      }
+      return str;
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     }
   }
   let con = getContent(ret, /\s*#+\s*/);
@@ -90,7 +129,11 @@ const getSortContent = (content, len=500) => {
   if (con) {
     return con;
   }
+<<<<<<< HEAD
   return content.length > 300 ? ret + '...' : content;
+=======
+  return ret;
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 }
 
 const preload = (obj) => {
@@ -145,12 +188,42 @@ const init = (list) => {
     return b.mtime - a.mtime;
   });
   tagList = [...tagSet];
+<<<<<<< HEAD
   // swPostMessage({
   //   m: 'preload',
   //   list: articleList.map(getURL)
   // }, preload);
 };
 
+=======
+};
+
+let processCount = 0;
+//先用缓存，请求回来再更新
+const initArticle = new Promise((resolve)=>{
+  BCD.ajaxCache('./json/article.json', (data) => {
+    init(data);
+    processCount++;
+    if(processCount===2){
+      let existDict = {};
+      articleList.forEach(o=>{
+        existDict[location.origin + '/' + o.path] = 1;
+      })
+      swPostMessage({
+        m: 'delete_not_exist_article',
+        dict: existDict
+      });
+      swPostMessage({
+        m: 'preload',
+        list: articleList.map(getURL)
+      }, preload);
+    }
+    resolve();
+    return 1; //缓存数据到localStorage
+  }, 0, 1E3, true);
+});
+
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 //获取包含相关tag文章列表
 const getTagArticles = (tag) => {
   if (tag) {
@@ -306,6 +379,7 @@ const searchDirect = (word) => {
 
 
 module.exports = {
+<<<<<<< HEAD
   init,
   catalogDict,
   articleDict,
@@ -314,6 +388,17 @@ module.exports = {
   getCatalogs: () => catalogList,
   getTagArticles,
   getTags: () => tagList,
+=======
+  initArticle,
+  catalogDict,
+  articleDict,
+  hasCatalog: (path) => !!catalogDict[path],
+  hasArticle: (path) => !!articleDict[path],
+  getCatalogs: () => catalogList,
+  getTagArticles,
+  getTags: () => tagList,
+  getArticleList: () => articleList,
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   getLastPost: () => articleList.slice(0, 5),
   getListByCatalog: getList(getCatalogArticles),
   getListByTag: getList(getTagArticles),

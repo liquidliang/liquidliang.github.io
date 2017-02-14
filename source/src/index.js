@@ -14,6 +14,7 @@ const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
 
+<<<<<<< HEAD
 m_config.getConfig(function(){
   BCD.ajaxCache('./json/article.json', function(data) {
     m_article.init(data);
@@ -44,6 +45,35 @@ m_config.getConfig(function(){
             c_pageList(page, path);
             return next();
           }else if(m_article.getArticle(path)){
+=======
+m_config.getConfig.then(() =>
+  m_article.initArticle.then(() =>
+    BCD.app({ //入口
+      setTitle: function (str) {
+        viewHeader.reset();
+        document.title = str;
+      },
+      initPage: function (key, next) {
+        var page = this;
+        if (key == 'index') {
+          c_pageList(page, key);
+          next();
+        } else if (key == 'tag') {
+          c_pageList(page, key);
+          next();
+        } else if (key == 'blog') {
+          c_pageBlog(page);
+          next();
+        } else if (key == 'search') {
+          c_pageSearch(page, key);
+          next();
+        } else {
+          let path = decodeURIComponent(key);
+          if (m_article.hasCatalog(path)) {
+            c_pageList(page, path);
+            return next();
+          } else if (m_article.hasArticle(path)) {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
             c_pageContent(page, path);
             return next();
           }
@@ -52,6 +82,12 @@ m_config.getConfig(function(){
           next(-1);
         }
       }
+<<<<<<< HEAD
     });
   });
 })
+=======
+    })
+  )
+);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a

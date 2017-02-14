@@ -56,6 +56,7 @@
 	var m_config = __webpack_require__(7);
 	var c_header = __webpack_require__(8);
 	var c_pageList = __webpack_require__(9);
+<<<<<<< HEAD
 	var c_pageContent = __webpack_require__(16);
 	var c_pageBlog = __webpack_require__(18);
 	var c_pageSearch = __webpack_require__(19);
@@ -67,12 +68,26 @@
 	    m_article.init(data);
 	    //入口
 	    BCD.app({
+=======
+	var c_pageContent = __webpack_require__(17);
+	var c_pageBlog = __webpack_require__(19);
+	var c_pageSearch = __webpack_require__(20);
+	var viewHeader = c_header();
+	$('body').append(viewHeader);
+	
+	m_config.getConfig.then(function () {
+	  return m_article.initArticle.then(function () {
+	    return BCD.app({ //入口
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	      setTitle: function setTitle(str) {
 	        viewHeader.reset();
 	        document.title = str;
 	      },
 	      initPage: function initPage(key, next) {
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	        var page = this;
 	        if (key == 'index') {
 	          c_pageList(page, key);
@@ -88,10 +103,17 @@
 	          next();
 	        } else {
 	          var path = decodeURIComponent(key);
+<<<<<<< HEAD
 	          if (m_article.getCatalog(path)) {
 	            c_pageList(page, path);
 	            return next();
 	          } else if (m_article.getArticle(path)) {
+=======
+	          if (m_article.hasCatalog(path)) {
+	            c_pageList(page, path);
+	            return next();
+	          } else if (m_article.hasArticle(path)) {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	            c_pageContent(page, path);
 	            return next();
 	          }
@@ -232,7 +254,10 @@
 	var m_util = __webpack_require__(2);
 	var m_search = __webpack_require__(5);
 	var swPostMessage = __webpack_require__(6);
+<<<<<<< HEAD
 	var pathList = []; //路径列表
+=======
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	var catalogList = []; //目录列表
 	var articleList = []; //文件列表
 	var originList = []; //原始文件结构列表
@@ -244,7 +269,15 @@
 	  var name = m_util.getRandomName();
 	  var result = void 0;
 	  if ('idx' in option) {
+<<<<<<< HEAD
 	    result = data.list[option.idx].summary;
+=======
+	    var item = data.list[option.idx];
+	    result = item.summary;
+	    if (result.length < item.content.length) {
+	      result += '...';
+	    }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  } else {
 	    result = data.content;
 	  }
@@ -306,6 +339,23 @@
 	
 	  var minLen = len / 2;
 	  var ret = content.substring(0, len);
+<<<<<<< HEAD
+=======
+	  var partCount = 0;
+	  var partIndex = 0;
+	  ret.replace(/\n|<br>|<\/p>/g, function ($0, idx) {
+	    partCount++;
+	    if (partCount == 15) {
+	      partIndex = idx;
+	    }
+	  });
+	  if (partIndex > 0) {
+	    ret = ret.substring(0, partIndex);
+	    if (ret.length < len * 0.7) {
+	      return ret;
+	    }
+	  }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  var getContent = function getContent(str, reg) {
 	    var arr = str.split(reg).filter(function (o) {
 	      return !!o;
@@ -313,14 +363,25 @@
 	    var count = 0;
 	    if (arr && arr.length > 2) {
 	      var idx = arr.length - 1;
+<<<<<<< HEAD
 	      arr.some(function (o, i) {
+=======
+	      if (arr.some(function (o, i) {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	        count += o.length;
 	        if (count > minLen && i > 1) {
 	          idx = i;
 	          return true;
 	        }
+<<<<<<< HEAD
 	      });
 	      return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '') + '...';
+=======
+	      })) {
+	        return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '');
+	      }
+	      return str;
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	    }
 	  };
 	  var con = getContent(ret, /\s*#+\s*/);
@@ -331,7 +392,11 @@
 	  if (con) {
 	    return con;
 	  }
+<<<<<<< HEAD
 	  return content.length > 300 ? ret + '...' : content;
+=======
+	  return ret;
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	};
 	
 	var preload = function preload(obj) {
@@ -391,12 +456,44 @@
 	    return b.mtime - a.mtime;
 	  });
 	  tagList = [].concat(_toConsumableArray(tagSet));
+<<<<<<< HEAD
 	  // swPostMessage({
 	  //   m: 'preload',
 	  //   list: articleList.map(getURL)
 	  // }, preload);
 	};
 	
+=======
+	};
+	
+	var processCount = 0;
+	//先用缓存，请求回来再更新
+	var initArticle = new Promise(function (resolve) {
+	  BCD.ajaxCache('./json/article.json', function (data) {
+	    init(data);
+	    processCount++;
+	    if (processCount === 2) {
+	      (function () {
+	        var existDict = {};
+	        articleList.forEach(function (o) {
+	          existDict[location.origin + '/' + o.path] = 1;
+	        });
+	        swPostMessage({
+	          m: 'delete_not_exist_article',
+	          dict: existDict
+	        });
+	        swPostMessage({
+	          m: 'preload',
+	          list: articleList.map(getURL)
+	        }, preload);
+	      })();
+	    }
+	    resolve();
+	    return 1; //缓存数据到localStorage
+	  }, 0, 1E3, true);
+	});
+	
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	//获取包含相关tag文章列表
 	var getTagArticles = function getTagArticles(tag) {
 	  if (tag) {
@@ -578,6 +675,7 @@
 	};
 	
 	module.exports = {
+<<<<<<< HEAD
 	  init: init,
 	  catalogDict: catalogDict,
 	  articleDict: articleDict,
@@ -586,6 +684,16 @@
 	  },
 	  getArticle: function getArticle(path) {
 	    return articleDict[path];
+=======
+	  initArticle: initArticle,
+	  catalogDict: catalogDict,
+	  articleDict: articleDict,
+	  hasCatalog: function hasCatalog(path) {
+	    return !!catalogDict[path];
+	  },
+	  hasArticle: function hasArticle(path) {
+	    return !!articleDict[path];
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  },
 	  getCatalogs: function getCatalogs() {
 	    return catalogList;
@@ -594,6 +702,12 @@
 	  getTags: function getTags() {
 	    return tagList;
 	  },
+<<<<<<< HEAD
+=======
+	  getArticleList: function getArticleList() {
+	    return articleList;
+	  },
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  getLastPost: function getLastPost() {
 	    return articleList.slice(0, 5);
 	  },
@@ -713,13 +827,17 @@
 
 	"use strict";
 	
+<<<<<<< HEAD
 	var isInit = false;
 	var callbackList = [];
+=======
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	var arr = location.host.split(".");
 	var isLocalhost = arr.length === 1;
 	var username = isLocalhost ? "swblog" : arr[0];
 	var config = {
 	  "author": username,
+<<<<<<< HEAD
 	  "logoTitle": username + "的博客",
 	  "nav": [["Home", "#!/index"], ["About", "#!/blog/about.md"]]
 	};
@@ -736,6 +854,36 @@
 	    return 1; //缓存数据到localStorage
 	  }
 	}, 0, 1E3, true);
+=======
+	  "nav": [["Home", "#!/index"], ["About", "#!/blog/about.md"]]
+	};
+	var searchIssueURL = void 0;
+	var newIssueURL = void 0;
+	
+	var update = function update() {
+	  var author = config.author;
+	  config.logoTitle = config.logoTitle || author + "的博客";
+	  searchIssueURL = 'https://github.com/' + author + '/' + author + '.github.io/issues?utf8=%E2%9C%93&q=';
+	  newIssueURL = 'https://github.com/' + author + '/' + author + '.github.io/issues/new?title=';
+	  if (window.CONFIG) {
+	    CONFIG.username = username = config.author;
+	  }
+	};
+	update();
+	
+	//先用缓存，请求回来再更新
+	var getConfig = new Promise(function (resolve) {
+	  BCD.ajaxCache('./json/config.json', function (data) {
+	    config = data || config;
+	    if (config.author) {
+	      update();
+	      resolve();
+	      return 1; //缓存数据到localStorage
+	    }
+	    resolve();
+	  }, 0, 1E3, true);
+	});
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	
 	window.CONFIG = module.exports = {
 	  username: username,
@@ -746,12 +894,21 @@
 	  getConfigSync: function getConfigSync() {
 	    return config;
 	  },
+<<<<<<< HEAD
 	  getConfig: function getConfig(callback) {
 	    if (isInit) {
 	      callback(config);
 	    } else {
 	      callbackList.push(callback);
 	    }
+=======
+	  getConfig: getConfig,
+	  getNewIssueURL: function getNewIssueURL(title) {
+	    return newIssueURL + decodeURIComponent(isLocalhost ? "localhost测试评论" : title);
+	  },
+	  getSearchIssueURL: function getSearchIssueURL(title) {
+	    return newIssueURL + decodeURIComponent(isLocalhost ? "localhost测试评论" : title);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  }
 	};
 
@@ -865,7 +1022,11 @@
 	var m_article = __webpack_require__(4);
 	var m_initOption = __webpack_require__(12);
 	var c_pannelList = __webpack_require__(13);
+<<<<<<< HEAD
 	var c_articleList = __webpack_require__(15);
+=======
+	var c_articleList = __webpack_require__(16);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -878,6 +1039,7 @@
 	  viewBody.addView(viewPannelList);
 	
 	  var viewFoot = c_footer();
+<<<<<<< HEAD
 	  page.setView({
 	    start: function start(hasRender) {
 	      viewList.empty();
@@ -886,6 +1048,20 @@
 	        m_article.getListByTag(0, BCD.getHash(1)).then(function (data) {
 	          data.title = "最新文章";
 	          data.hrefHead = hrefHead;
+=======
+	  var currentHash = void 0;
+	  page.setView({
+	    start: function start(hasRender) {
+	      if (hasRender && currentHash == location.hash && BCD.history.getCode() == -1) {
+	        return m_initOption.notRender(hasRender);
+	      }
+	      currentHash = location.hash;
+	      viewList.empty();
+	      if (key == 'index') {
+	        m_article.getListByTag(0, BCD.getHash(1)).then(function (data) {
+	          data.title = "最新文章";
+	          data.hrefHead = '#!/index';
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	          viewList.reset(data);
 	        });
 	      } else if (key == 'tag') {
@@ -893,6 +1069,7 @@
 	          var tag = BCD.getHash(1);
 	          m_article.getListByTag(tag, BCD.getHash(2)).then(function (data) {
 	            data.title = '"' + tag + '" 的最新文章';
+<<<<<<< HEAD
 	            data.hrefHead = hrefHead;
 	            viewList.reset(data);
 	          });
@@ -905,6 +1082,19 @@
 	        });
 	      }
 	      return m_initOption.notRender(hasRender);
+=======
+	            data.hrefHead = '#!/tag/' + tag;
+	            viewList.reset(data);
+	          });
+	        })();
+	      } else if (m_article.hasCatalog(key)) {
+	        m_article.getListByCatalog(key, BCD.getHash(1)).then(function (data) {
+	          data.title = '"' + data.tag.replace(/^[^/]+\//, '') + '" 的最新文章';
+	          data.hrefHead = '#!/' + BCD.getHash(0);
+	          viewList.reset(data);
+	        });
+	      }
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	    },
 	    title: '文章列表',
 	    viewList: [viewBody, viewFoot]
@@ -979,12 +1169,22 @@
 	'use strict';
 	
 	var m_article = __webpack_require__(4);
+<<<<<<< HEAD
 	var c_pannel = __webpack_require__(14);
 	module.exports = function (view) {
 	  var viewPannelLastPost = c_pannel({
 	    data: {
 	      title: '最新文章',
 	      list: m_article.getLastPost().map(function (o) {
+=======
+	var m_readHistory = __webpack_require__(14);
+	var c_pannel = __webpack_require__(15);
+	module.exports = function (view) {
+	  var viewPannelRecommendPost = c_pannel({
+	    data: {
+	      title: '推荐阅读',
+	      list: m_readHistory.getRecommend().map(function (o) {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	        return {
 	          href: o.href,
 	          title: o.title,
@@ -1015,12 +1215,64 @@
 	  });
 	
 	  return view.setView({
+<<<<<<< HEAD
 	    viewList: [viewPannelLastPost, viewPannelCatalog, viewPannelTag]
+=======
+	    viewList: [viewPannelCatalog, viewPannelTag, viewPannelRecommendPost]
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  });
 	};
 
 /***/ },
 /* 14 */
+<<<<<<< HEAD
+=======
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var m_config = __webpack_require__(7);
+	var m_article = __webpack_require__(4);
+	var storageKey = 'read_history';
+	var readHistory = {};
+	var init = function init() {
+	  try {
+	    readHistory = $.extend({}, JSON.parse(localStorage.getItem(storageKey)), readHistory);
+	  } catch (e) {}
+	};
+	
+	m_config.getConfig.then(function () {
+	  storageKey = 'read_history_' + m_config.username;
+	  init();
+	});
+	
+	var addHistory = function addHistory(path) {
+	  readHistory[path] = Date.now();
+	  localStorage.setItem(storageKey, JSON.stringify(readHistory));
+	};
+	
+	var getRecommend = function getRecommend() {
+	  var list = [];
+	  var currentPath = decodeURIComponent(location.hash.replace('#!/', ''));
+	  var articleList = m_article.getArticleList();
+	  articleList.some(function (o) {
+	    if (!readHistory[o.path] && o.path != currentPath) {
+	      list.push(o);
+	      if (list.length > 10) {
+	        return true;
+	      }
+	    }
+	  });
+	  return list;
+	};
+	module.exports = {
+	  addHistory: addHistory,
+	  getRecommend: getRecommend
+	};
+
+/***/ },
+/* 15 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1036,7 +1288,11 @@
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 15 */
+=======
+/* 16 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1045,12 +1301,20 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/article_list',
+<<<<<<< HEAD
 	    template: '<h1><%=obj.title%></h1>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, i){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=i%>" style="background-color: #ffffe8;">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
+=======
+	    template: '<h1><%=obj.title%></h1>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, idx){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(o.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=idx%>" style="background-color: #ffffe8;">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  }, option);
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 16 */
+=======
+/* 17 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1058,8 +1322,14 @@
 	var c_mainContainer = __webpack_require__(11);
 	var c_footer = __webpack_require__(10);
 	var m_article = __webpack_require__(4);
+<<<<<<< HEAD
 	var c_pannelList = __webpack_require__(13);
 	var c_content = __webpack_require__(17);
+=======
+	var m_readHistory = __webpack_require__(14);
+	var c_pannelList = __webpack_require__(13);
+	var c_content = __webpack_require__(18);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	var m_initOption = __webpack_require__(12);
 	
 	module.exports = function (page, key) {
@@ -1078,8 +1348,14 @@
 	      if (hasRender) {
 	        return m_initOption.notRender(hasRender);
 	      }
+<<<<<<< HEAD
 	      if (m_article.getArticle(key)) {
 	        m_article.getArticleContent(key).then(function (data) {
+=======
+	      if (m_article.hasArticle(key)) {
+	        m_article.getArticleContent(key).then(function (data) {
+	          m_readHistory.addHistory(key);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	          page.setView({ title: data.title });
 	          document.title = data.title;
 	          viewContent.reset(data);
@@ -1091,21 +1367,38 @@
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
 	
+=======
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	window.CONFIG = __webpack_require__(7);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	//单个文章
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/content',
+<<<<<<< HEAD
 	    template: '<%var arr=location.host.split("."); var isLocalhost = arr.length===1; var username= isLocalhost ? "swblog" : arr[0]; %>' + '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview" style="background-color: #ffffe8;">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" href="https://github.com/' + '<%=username%>/<%=username%>.github.io/issues?utf8=%E2%9C%93&q=<%=decodeURIComponent(isLocalhost ? "localhost测试评论" : obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" href="https://github.com/' + '<%=username%>/<%=username%>.github.io/issues/new?title=<%=decodeURIComponent(isLocalhost ? "localhost测试评论" : obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+=======
+	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      &nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span><%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview" style="background-color: #ffffe8;">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	  }, option);
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 18 */
+=======
+/* 19 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1113,7 +1406,11 @@
 	var c_mainContainer = __webpack_require__(11);
 	var c_footer = __webpack_require__(10);
 	var m_article = __webpack_require__(4);
+<<<<<<< HEAD
 	var c_content = __webpack_require__(17);
+=======
+	var c_content = __webpack_require__(18);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	var m_initOption = __webpack_require__(12);
 	
 	module.exports = function (page) {
@@ -1130,7 +1427,11 @@
 	        return m_initOption.notRender(hasRender);
 	      }
 	      var key = location.hash.replace('#!/', '');
+<<<<<<< HEAD
 	      if (m_article.getArticle(key)) {
+=======
+	      if (m_article.hasArticle(key)) {
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	        m_article.getArticleContent(key).then(function (data) {
 	          page.setView({ title: data.title });
 	          document.title = data.title;
@@ -1143,7 +1444,11 @@
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 19 */
+=======
+/* 20 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1152,7 +1457,11 @@
 	var c_mainContainer = __webpack_require__(11);
 	var m_initOption = __webpack_require__(12);
 	var c_pannelList = __webpack_require__(13);
+<<<<<<< HEAD
 	var m_pullArticle = __webpack_require__(20);
+=======
+	var m_pullArticle = __webpack_require__(21);
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1181,7 +1490,11 @@
 	};
 
 /***/ },
+<<<<<<< HEAD
 /* 20 */
+=======
+/* 21 */
+>>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
