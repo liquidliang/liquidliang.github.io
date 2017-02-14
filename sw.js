@@ -88,8 +88,17 @@ var addToCache = function (dbName, req, response) {
       return resp;
     }
     caches.open(dbName).then(function (cache) {
-      cache.put(req.clone(), cacheResp);
+      //删除旧文件
+      let urlKey = getNoSearch(req.url);
+      cache.keys().then(function (oldReqList) {
+        oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
+          cache.delete(oldReq);
+        });
+        //添加新文件
+        cache.put(req.clone(), cacheResp);
+      });
     });
+
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
@@ -221,22 +230,6 @@ var preloadList = function (urlList) {
           }).then(function (resp) {
             if (resp.status == 200) {
               retDict[url] = resp.text();
-              caches.open(dbName).then(function (cache) {
-                //删除旧的博客文件
-                let urlKey = encodeURI(url.replace(/\?[^?]+/, ''));
-                cache.keys().then(function (oldReqList) {
-                  oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1)
-                    .sort((a, b) => {
-                      try {
-                        return parseInt(b.url.substr(-13)) - parseInt(a.url.substr(-13));
-                      } catch (e) {
-                        return 0;
-                      }
-                    }).slice(1).forEach(function (oldReq) {
-                      cache.delete(oldReq);
-                    });
-                });
-              });
             }
             if (list.length) {
               setTimeout(next, 10);
@@ -271,7 +264,9 @@ var preloadAtricle = function(urlList, callback){
     return cache.keys().then(function(reqList){
       var oldReq;
       while(oldReq=reqList.pop()){
+        let noSearchURL = getNoSearch(oldReq.url);
         if(urlDict[oldReq.url]){
+          delete noSearchDict[noSearchURL];
           retDict[oldReq.url] = cache.match(oldReq).then(function(resq){
             return resq.text();
           });

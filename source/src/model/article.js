@@ -133,6 +133,16 @@ const preload = (obj) => {
       item.summary = getSortContent(obj[pathWithSearch]);
     }
   }
+  let totalList = sidebarList.concat(articleList);
+  let existDict = {};
+  totalList.forEach(o=>{
+    existDict[location.origin + '/' + o.path] = 1;
+  });
+
+  swPostMessage({
+    m: 'delete_not_exist_article',
+    dict: existDict
+  });
   if(isPreload){
     console.log('文章同步成功！可以离线使用');
     return false;
@@ -214,15 +224,6 @@ const initArticle = new Promise((resolve)=>{
     processCount++;
     if(processCount===2){ //如果网络请求失败，这里不会被执行
       let totalList = sidebarList.concat(articleList);
-      let existDict = {};
-      totalList.forEach(o=>{
-        existDict[location.origin + '/' + o.path] = 1;
-      });
-
-      swPostMessage({
-        m: 'delete_not_exist_article',
-        dict: existDict
-      });
       swPostMessage({
         m: 'preloadAtricle',
         list: totalList.map(getURL)

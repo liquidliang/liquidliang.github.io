@@ -387,6 +387,16 @@
 	      item.summary = getSortContent(obj[pathWithSearch]);
 	    }
 	  }
+	  var totalList = sidebarList.concat(articleList);
+	  var existDict = {};
+	  totalList.forEach(function (o) {
+	    existDict[location.origin + '/' + o.path] = 1;
+	  });
+	
+	  swPostMessage({
+	    m: 'delete_not_exist_article',
+	    dict: existDict
+	  });
 	  if (isPreload) {
 	    console.log('文章同步成功！可以离线使用');
 	    return false;
@@ -472,23 +482,12 @@
 	    init(data);
 	    processCount++;
 	    if (processCount === 2) {
-	      (function () {
-	        //如果网络请求失败，这里不会被执行
-	        var totalList = sidebarList.concat(articleList);
-	        var existDict = {};
-	        totalList.forEach(function (o) {
-	          existDict[location.origin + '/' + o.path] = 1;
-	        });
-	
-	        swPostMessage({
-	          m: 'delete_not_exist_article',
-	          dict: existDict
-	        });
-	        swPostMessage({
-	          m: 'preloadAtricle',
-	          list: totalList.map(getURL)
-	        }, preload);
-	      })();
+	      //如果网络请求失败，这里不会被执行
+	      var totalList = sidebarList.concat(articleList);
+	      swPostMessage({
+	        m: 'preloadAtricle',
+	        list: totalList.map(getURL)
+	      }, preload);
 	    }
 	    resolve();
 	    return 1; //缓存数据到localStorage
@@ -553,7 +552,7 @@
 	var getChildCatalog = function getChildCatalog(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret3 = function () {
+	    var _ret2 = function () {
 	      var tagList = catalog.tagList;
 	      var tagLength = tagList.length + 1;
 	      return {
@@ -565,7 +564,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+	    if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
 	  }
 	  return [];
 	};
@@ -573,7 +572,7 @@
 	var getCatalogArticles = function getCatalogArticles(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret4 = function () {
+	    var _ret3 = function () {
 	      var tagList = catalog.tagList;
 	      return {
 	        v: articleList.filter(function (o) {
@@ -586,7 +585,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
+	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  }
 	  return [];
 	};
