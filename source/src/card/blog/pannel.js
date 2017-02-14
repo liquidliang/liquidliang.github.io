@@ -4,14 +4,18 @@ module.exports = function(option) {
   option = $.extend({
     name: 'blog/panel',
     template:
-      '<div class="panel-heading">' +
+      '<%if(obj.title){%><div class="panel-heading">' +
       '  <h4><%-obj.title%></h4>' +
-      '</div>' +
+      '</div><%}%>' +
       '<div class="panel-body">' +
       '  <%if(obj.isInline){%>' +
       '    <ul class="list-inline">'+
       '     <%(obj.list || []).forEach(function(o){%>' +
-      '      <li><a data-on="?m=go" data-url="#!/tag/<%=o%>"><%=o%></a></li>' +
+      '      <%if(o.href){%>'+
+      '       <li><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a></li>'+
+      '      <%}else{%>'+
+      '       <li><a data-on="?m=go" data-url="#!/tag/<%=o%>"><%=o%></a></li>'+
+      '      <%}%>' +
       '     <%})%>'+
       '    </ul>' +
       '  <%}else{%>' +
@@ -22,7 +26,13 @@ module.exports = function(option) {
       '     <%})%>'+
       '    </ul>' +
       '    <%}%>' +
-      '</div>'
+      '</div>',
+    end: function(data){
+      if(!(data && data.list && data.list.length)){
+        this.hide();
+        return 'hide';
+      }
+    }
   }, option);
   return view.setView(option);
 };

@@ -1,30 +1,26 @@
 const m_util = require('common/util/index');
 const m_search = require('helper/search');
 const swPostMessage = require('helper/sw_post_message.js');
-<<<<<<< HEAD
-let pathList = []; //路径列表
-=======
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 let catalogList = []; //目录列表
-let articleList = []; //文件列表
-let originList = []; //原始文件结构列表
-let tagList = [];
-let articleDict = {};
 let catalogDict = {};
+let articleList = []; //文件列表
+let articleDict = {};
+let sidebarList = []; //sidebar文件列表(sidebar文件也可以在articleDict中索引到)
+let bookList = [];    //书籍列表
+let bookDict = {};
+let tagList = [];
+const sidebarName = '$sidebar$';
+const getSidebarPath = (path)=> path+'/'+sidebarName+'.md';
 
 BCD.addEvent('mkview', function(ele, option, data) {
   let name = m_util.getRandomName();
   let result;
   if ('idx' in option) {
-<<<<<<< HEAD
-    result = data.list[option.idx].summary;
-=======
     let item = data.list[option.idx];
     result = item.summary;
     if(result.length < item.content.length) {
       result += '...';
     }
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   } else {
     result = data.content;
   }
@@ -75,16 +71,18 @@ const getURL = (o) => o.path + '?mtime=' + o.mtime;
 const getPath = (pathWithSearch) => pathWithSearch.replace(/\?[^?]+/, '');
 
 
-const getSortContent = (content, len=500) => {
+const getSortContent = (content, paragraph=10) => {
+  let len = 500;
   let minLen = len/2;
   let ret = content.substring(0, len);
-<<<<<<< HEAD
-=======
   let partCount = 0;
   let partIndex = 0;
-  ret.replace(/\n|<br>|<\/p>/g,function($0, idx){
+  ret.replace(/([^\n]*)(\n|<br>|<\/p>)/g,function($0, $1, $2, idx){
     partCount++;
-    if(partCount==15){
+    if(partCount>	paragraph && $1.length>10 && partIndex===0){
+      partIndex = idx;
+    }
+    if(partCount==15 && partIndex===0){
       partIndex = idx;
     }
   });
@@ -94,31 +92,21 @@ const getSortContent = (content, len=500) => {
       return ret;
     }
   }
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   let getContent = (str, reg) => {
     let arr = str.split(reg).filter(o => !!o);
     let count = 0;
     if (arr && arr.length > 2) {
       let idx = arr.length - 1;
-<<<<<<< HEAD
-      arr.some((o, i) => {
-=======
       if(arr.some((o, i) => {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
         count += o.length;
         if (count > minLen && i > 1) {
           idx = i;
           return true;
         }
-<<<<<<< HEAD
-      });
-      return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '') + '...';
-=======
       })){
         return str.substr(0, str.lastIndexOf(arr[idx])).replace(/[#\s]+$/, '');
       }
       return str;
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     }
   }
   let con = getContent(ret, /\s*#+\s*/);
@@ -129,12 +117,9 @@ const getSortContent = (content, len=500) => {
   if (con) {
     return con;
   }
-<<<<<<< HEAD
-  return content.length > 300 ? ret + '...' : content;
-=======
   return ret;
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 }
+
 
 const preload = (obj) => {
   for (var pathWithSearch in obj) {
@@ -144,30 +129,30 @@ const preload = (obj) => {
       articleDict[path].summary = getSortContent(obj[pathWithSearch]);
     }
   }
-  console.log('articleDict', articleDict);
+  console.log('文章同步成功！可以离线使用');
 };
 
 const init = (list) => {
-  originList = list;
   catalogList = []; //目录列表
   articleList = []; //文件列表
+  sidebarList = [];
+  bookList = [];
   let tagSet = new Set();
   let processArticle = (o) => {
     let {
       path = '', mtime
     } = o;
-    if (o.child) {
+    if (o.isDirectory) {
       let tags = path.split('/').slice(1);
       tags.forEach(o => tagSet.add(o));
       let item = {
         path,
+        time: m_util.getTime(mtime),
         href: '#!/' + encodeURIComponent(o.path),
-        catalog: path.slice(path.lastIndexOf('/') + 1),
+        title: path.slice(path.lastIndexOf('/') + 1),
         tagList: tags
       };
-      catalogDict[path] = item;
       catalogList.push(item);
-      o.child.forEach(processArticle);
     } else {
       let tags = path.split('/').slice(1, -1);
       tags.forEach(o => tagSet.add(o));
@@ -179,23 +164,35 @@ const init = (list) => {
         time: m_util.getTime(mtime),
         tagList: tags
       };
-      articleDict[path] = item;
+      if(articleDict[path]){
+        $.extend(articleDict[path], item);
+      }else{
+        articleDict[path] = item;
+      }
       articleList.push(item);
     }
   };
   list.forEach(processArticle);
+  articleList = articleList.filter(o=>{
+    if(o.title==sidebarName){
+      sidebarList.push(o);
+      return false;
+    }
+    return true;
+  });
+  catalogList = catalogList.filter(o=>{
+    if(articleDict[getSidebarPath(o.path)]){
+      bookDict[o.path] = o;
+      bookList.push(o);
+      return false;
+    }
+    catalogDict[o.path] = o;
+    return true;
+  });
   articleList = articleList.sort((a, b) => {
     return b.mtime - a.mtime;
   });
   tagList = [...tagSet];
-<<<<<<< HEAD
-  // swPostMessage({
-  //   m: 'preload',
-  //   list: articleList.map(getURL)
-  // }, preload);
-};
-
-=======
 };
 
 let processCount = 0;
@@ -204,18 +201,20 @@ const initArticle = new Promise((resolve)=>{
   BCD.ajaxCache('./json/article.json', (data) => {
     init(data);
     processCount++;
-    if(processCount===2){
+    if(processCount===2){ //如果网络请求失败，这里不会被执行
+      let totalList = sidebarList.concat(articleList);
       let existDict = {};
-      articleList.forEach(o=>{
+      totalList.forEach(o=>{
         existDict[location.origin + '/' + o.path] = 1;
-      })
+      });
+
       swPostMessage({
         m: 'delete_not_exist_article',
         dict: existDict
       });
       swPostMessage({
         m: 'preload',
-        list: articleList.map(getURL)
+        list: totalList.map(getURL)
       }, preload);
     }
     resolve();
@@ -223,7 +222,6 @@ const initArticle = new Promise((resolve)=>{
   }, 0, 1E3, true);
 });
 
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 //获取包含相关tag文章列表
 const getTagArticles = (tag) => {
   if (tag) {
@@ -260,17 +258,28 @@ const getList = (method) => (tag, page = 0, count = 10) => {
       page,
       count,
       num: totalList.length,
-      list: list.map(o => articleDict[o.path]).filter(o => !!o)
+      list: list.map(o => articleDict[o.path]).filter(o => !!(o && o.content))
     };
   });
 };
 
+const getChildCatalog = (path) => {
+  let catalog = catalogDict[path];
+  if (catalog) {
+    let tagList = catalog.tagList;
+    let tagLength = tagList.length + 1;
+    return bookList.concat(catalogList).filter(o => o.tagList.length &&
+      tagList.every((tag, i) => o.tagList.length==tagLength && tag == o.tagList[i]));
+  }
+  return [];
+};
+
 const getCatalogArticles = (path) => {
   let catalog = catalogDict[path];
-  let tagList = catalog.tagList;
   if (catalog) {
+    let tagList = catalog.tagList;
     return articleList.filter(o => o.tagList.length &&
-      tagList.every((tag, i) => tag == o.tagList[i]));
+      tagList.every((tag, i) => tag == o.tagList[i])).sort((a, b)=>a.tagList.length - b.tagList.length);
   }
   return [];
 };
@@ -279,10 +288,12 @@ const testItem = (reg, item) => {
   let testType = 0;
   let obj = {};
   let searchWeight = 0;
+  let weightDict = {};
   if (reg.test(item.title)) {
     obj.title = item.title.replace(reg, function($0) {
-      let weight = /\w/.test($0) ? 2 : $0.length;
-      searchWeight += weight * 3;
+      if(!weightDict[$0]){
+        weightDict[$0] = 2;
+      }
       return '<span class="text-danger">' + $0 + '</span>';
     });
     testType += 1;
@@ -290,8 +301,12 @@ const testItem = (reg, item) => {
   if (item.content && reg.test(item.content)) {
     let pointList = [];
     obj.content = item.content.replace(reg, function($0, point) {
+      if(!weightDict[$0]){
+        weightDict[$0] = 1;
+      }else if(weightDict[$0]==2){
+        weightDict[$0]++;
+      }
       let weight = /\w/.test($0) ? 2 : $0.length;
-      searchWeight += weight;
       pointList.push({
         point,
         weight
@@ -301,11 +316,11 @@ const testItem = (reg, item) => {
     pointList = pointList.sort((a, b) =>b.weight - a.weight);
     let start = pointList[0].point - 20;
     let summary = item.content.substr(start < 0 ? 0 : start);
-    start = summary.search(/[。\s]/);
+    start = summary.search(/[。\n\r]/);
     if (start < 20) {
-      summary = getSortContent(summary.substr(start).replace(/^[。\s]*/, ''), 100);
+      summary = getSortContent(summary.substr(start).replace(/^[。\s]*/, ''), 5);
     } else {
-      summary = getSortContent(summary.substr(10).replace(/^[。\s]*/, ''), 100);
+      summary = getSortContent(summary.substr(10).replace(/^[。\s]*/, ''), 5);
     }
     obj.summary = summary.replace(reg, function($0) {
       return '<span class="text-danger">' + $0 + '</span>';
@@ -313,6 +328,9 @@ const testItem = (reg, item) => {
     testType += 2;
   }
   obj.testType = testType;
+  for(var key in weightDict){
+    searchWeight += /\w/.test(key) ? weightDict[key] : key.length * weightDict[key];
+  }
   obj.searchWeight = searchWeight;
   return Object.assign({}, item, obj);
 };
@@ -323,9 +341,10 @@ const searchList = (word, callback) => {
   let fitList = [];
   let remainList = [];
   let ajaxList = [];
+  let totalList = articleList.filter(o=>o);
 
   const searchCallback = (list) => callback({
-    totalNum: articleList.length,
+    totalNum: totalList.length,
     checkNum: list.length,
     searchWord: word,
     list: list.filter(o => o.testType > 0).sort((a,b)=>b.searchWeight-a.searchWeight)
@@ -341,7 +360,7 @@ const searchList = (word, callback) => {
       }
     })
   };
-  articleList.forEach(o => {
+  totalList.forEach(o => {
     let item = articleDict[o.path];
     if (item) {
       let testObj = testItem(reg, item);
@@ -379,28 +398,21 @@ const searchDirect = (word) => {
 
 
 module.exports = {
-<<<<<<< HEAD
-  init,
-  catalogDict,
-  articleDict,
-  getCatalog: (path) => catalogDict[path],
-  getArticle: (path) => articleDict[path],
-  getCatalogs: () => catalogList,
-  getTagArticles,
-  getTags: () => tagList,
-=======
+  getName,
   initArticle,
   catalogDict,
   articleDict,
   hasCatalog: (path) => !!catalogDict[path],
   hasArticle: (path) => !!articleDict[path],
+  hasBook: (path) => !!bookDict[path],
   getCatalogs: () => catalogList,
+  getBooks: () => bookList,
   getTagArticles,
   getTags: () => tagList,
+  getSidebarPath,
   getArticleList: () => articleList,
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
-  getLastPost: () => articleList.slice(0, 5),
   getListByCatalog: getList(getCatalogArticles),
+  getChildCatalog,
   getListByTag: getList(getTagArticles),
   getArticleContent: (path) => fetchContent([articleDict[path]])
     .then(() => articleDict[path]),

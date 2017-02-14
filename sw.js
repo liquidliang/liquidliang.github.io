@@ -1,69 +1,50 @@
-<<<<<<< HEAD
-var version = 'v20';
-=======
 var version = 'v21';
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 var namePrefix = 'swblog-';
 var nameReg = new RegExp('^' + namePrefix);
 var businessKey = 'business-' + version;
 var businessCacheName = namePrefix + businessKey;
+var libCacheName = namePrefix + 'lib-' + version;
+var imageCacheName = namePrefix + 'image';
+var markdownCacheName = namePrefix + 'markdown';
 
 var expectedCaches = [
-  businessCacheName, //业务代码  对于开发者常变，先用缓存，同时更新，下次进来再用新的。
-  namePrefix + 'lib', //各种引用库的资源 不常变
-  namePrefix + 'markdown', //文章资源 根据规则变
-  namePrefix + 'json' //配置资源 时效性强，直接用新的，如果拉取失败则用缓存资源。
+  businessCacheName, //业务代码  对于开发者常变，先用缓存，同时更新，下次进来再用新的(更新不需要改version)。
+  libCacheName, //各种引用库的资源 不常变，可以通过更改version实现更新。
+  markdownCacheName, //文章资源 根据规则变
+  imageCacheName  //图片资源，由于没办法完全从链接判断是否为图片，回包后再判断是否为图片，然后缓存
 ];
 //正则匹配缓存文件
-var regDict = {
-  lib: /\.js$|\.css$|\.html$|\.woff$/,
-  markdown: /\.md$|\.md\?[^?]+$/,
-  json: /\.json$/
-};
+var regDict = {};
 
+regDict[markdownCacheName] = /\.md$|\.md\?[^?]+$/;
+regDict[libCacheName] = /\.js$|\.css$|\.html$|\.woff|\.woff2$/;
 //安装文件
 var FILES = [
   '/',
   '/index.html',
+  '/source/lib/bootstrap-custom/css/custom.bootstrap.css',
   '/source/lib/blog.css',
   '/source/lib/bcd.min.js',
   '/source/dist/index.js'
 ];
 
 
-<<<<<<< HEAD
-self.addEventListener('install', function(event) {
-  console.log('[ServiceWorker] Installed version', version);
-  event.waitUntil(caches.open(businessCacheName).then(function(cache) {
-    return cache.addAll(FILES);
-  }).then(function() {
-=======
 self.addEventListener('install', function (event) {
   console.log('[ServiceWorker] Installed version', version);
   event.waitUntil(caches.open(businessCacheName).then(function (cache) {
     return cache.addAll(FILES);
   }).then(function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     console.log('[ServiceWorker] Skip waiting on install');
     return self.skipWaiting();
   }));
 });
 
-<<<<<<< HEAD
-self.addEventListener('activate', function(event) {
-
-  self.clients.matchAll({
-    includeUncontrolled: true
-  }).then(function(clientList) {
-    var urls = clientList.map(function(client) {
-=======
 self.addEventListener('activate', function (event) {
 
   self.clients.matchAll({
     includeUncontrolled: true
   }).then(function (clientList) {
     var urls = clientList.map(function (client) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       return client.url;
     });
     //如果新sw生效，对其他页面造成影响，这里可以查
@@ -71,15 +52,9 @@ self.addEventListener('activate', function (event) {
   });
 
   event.waitUntil(
-<<<<<<< HEAD
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-=======
     caches.keys().then(function (cacheNames) {
       return Promise.all(
         cacheNames.map(function (cacheName) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
           // 删除掉当前定义前缀中不在expectedCaches中的缓存集
           if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
             console.log('[ServiceWorker] Deleting old cache:', cacheName);
@@ -87,11 +62,7 @@ self.addEventListener('activate', function (event) {
           }
         })
       );
-<<<<<<< HEAD
-    }).then(function() {
-=======
     }).then(function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       //使service worker立马生效，在单页面应用中，这样是合理的
       console.log('[ServiceWorker] Claiming clients for version', version);
       return self.clients.claim();
@@ -101,28 +72,6 @@ self.addEventListener('activate', function (event) {
 
 
 //更新缓存
-<<<<<<< HEAD
-var addToCache = function(dbName, req, response) {
-
-  return fetch(req.clone()).then(function(resp) {
-
-    var cacheResp = resp.clone();
-    if (resp.status !== 200 || (resp.type !== 'basic' && resp.type !== 'cors')) {
-      return resp;
-    }
-    caches.open(dbName).then(function(cache) {
-      cache.put(req.clone(), cacheResp);
-    });
-    return resp;
-  }).catch(function(error) {
-    return caches.open(dbName).then(function(cache) {
-      return cache.match(req.clone());
-    }).then(function(response) {
-      if (response) { //请求失败用缓存保底
-        console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
-        return response;
-      } else {
-=======
 var addToCache = function (dbName, req, response) {
 
   return fetch(req.clone()).then(function (resp) {
@@ -133,6 +82,9 @@ var addToCache = function (dbName, req, response) {
       throw new Error('response status is ' + resp.status);
     }
     var cacheResp = resp.clone();
+    if(dbName===imageCacheName && !/^image\//.test(resp.headers.get('content-type'))){
+      return resp;
+    }
     caches.open(dbName).then(function (cache) {
       cache.put(req.clone(), cacheResp);
     });
@@ -159,41 +111,24 @@ var addToCache = function (dbName, req, response) {
           console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
           return resp;
         }
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
         // Respond with a 400 "Bad Request" status.
         console.log(`[ServiceWorker] fetch failed: ${ req.url }`, error);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
         });
-<<<<<<< HEAD
-      }
-    });
-=======
       });
     }
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   });
 };
 
 
-<<<<<<< HEAD
-var fetchCache = function(key, req) {
-  var dbName = namePrefix + key;
-  return caches.open(dbName).then(function(cache) {
-    return cache.match(req.clone());
-  }).then(function(response) {
-=======
-var fetchCache = function (key, req) {
-  var dbName = namePrefix + key;
+var fetchCache = function (dbName, req) {
   return caches.open(dbName).then(function (cache) {
     return cache.match(req.clone());
   }).then(function (response) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     if (response) {
-      if (key == 'json') { //对于时效性强的文件，实时拉取
-        return addToCache(dbName, req, response);
-      } else if (key == businessKey) {
+      if (dbName == businessCacheName) {
         addToCache(dbName, req, response);
       }
       return response; //如果命中缓存，直接使用缓存
@@ -202,11 +137,7 @@ var fetchCache = function (key, req) {
     }
   });
 }
-<<<<<<< HEAD
-self.addEventListener('fetch', function(event) {
-=======
 self.addEventListener('fetch', function (event) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
 
   var req, url = event.request.url;
   var requestURL = new URL(url);
@@ -224,16 +155,20 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
-    return event.respondWith(fetchCache(businessKey, req));
+    return event.respondWith(fetchCache(businessCacheName, req));
   }
 
-  for (var key in regDict) {
-    if (regDict[key].test(url)) {
-      return event.respondWith(fetchCache(key, req));
+  for (var dbName in regDict) {
+    if (regDict[dbName].test(url)) {
+      return event.respondWith(fetchCache(dbName, req));
     }
   }
 
-  return event.respondWith(fetch(req));
+  if(requestURL.protocol!='https:' || /\.json$/.test(url)){
+    return;
+  }
+
+  return event.respondWith(fetchCache(imageCacheName, req));
 
 });
 
@@ -242,81 +177,20 @@ function iterator(originList, callback) {
   if (originList && originList.length) {
     var list = originList.slice();
     var item = list.shift();
-<<<<<<< HEAD
-    var next = function() {
-=======
     var next = function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       iterator(list, callback);
     };
     callback(item, next, list);
   }
 }
 //静态资源预加载（不支持返回内容与search参数相关的接口预加载）
-<<<<<<< HEAD
-var preloadList = function(msgObj) {
-  let retDict = {};
-  return new Promise(function(resolve) {
-    iterator(msgObj.list, function(url, next, list){
-=======
 var preloadList = function (msgObj) {
   let retDict = {};
   return new Promise(function (resolve) {
     iterator(msgObj.list, function (url, next, list) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       let myRequest = new Request(url);
-      for (var key in regDict) {
-        if (regDict[key].test(url)) {
-          let dbName = namePrefix + key;
-<<<<<<< HEAD
-          caches.open(dbName).then(function(cache) {
-            return cache.match(myRequest.clone());
-          }).then(function(response) {
-            if (response) {
-              return response;
-            } else {
-              return fetch(myRequest.clone()).then(function(resp) {
-                var cacheResp = resp.clone();
-                if (resp.status !== 200 || (resp.type !== 'basic' && resp.type !== 'cors')) {
-                  return resp;
-                }
-                caches.open(dbName).then(function(cache) {
-                  //删除旧的博客文件
-                  let urlKey = url.replace(/\?[^?]+/,'');
-                  cache.keys().then(function(oldRespList){
-                    oldRespList.forEach(oldResp=>{
-                      if(oldResp.url.indexOf(urlKey) > -1){
-                        cache.delete(oldResp);
-                      }
-                    })
-                    cache.put(myRequest.clone(), cacheResp);
-                  });
-                });
-                return resp;
-              }).catch(function(error) {
-                return new Response(new Blob, {
-                      'status': 400,
-                      'statusText': 'Bad Request'
-                    });
-              });
-            }
-          }).then(function(resp){
-            if(resp.status==200){
-              retDict[url] = resp.text();
-            }
-            if(list.length){
-              next();
-            }else{
-              var pList = [];
-              var urlList = [];
-              for(var key in retDict){
-                pList.push(retDict[key]);
-                urlList.push(key);
-              }
-              Promise.all(pList).then(function(tList){
-                var rDict = {};
-                tList.forEach(function(t, i){
-=======
+      for (var dbName in regDict) {
+        if (regDict[dbName].test(url)) {
           caches.open(dbName).then(function (cache) {
             return cache.match(myRequest.clone());
           }).then(function (response) {
@@ -357,7 +231,6 @@ var preloadList = function (msgObj) {
               Promise.all(pList).then(function (tList) {
                 var rDict = {};
                 tList.forEach(function (t, i) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
                   rDict[urlList[i]] = t;
                 });
                 resolve(rDict);
@@ -375,23 +248,6 @@ var preloadList = function (msgObj) {
 //sw与页面通信
 function _processMessage(msgObj) {
   switch (msgObj.m) {
-<<<<<<< HEAD
-    case 'preload':
-      return preloadList(msgObj);
-    default:
-      return new Promise(function(resolve) {
-        resolve({
-          ms: 'msgObj.m=' + msgObj.m + ' match nothing!'
-        });
-      });
-  }
-}
-// Listen for messages from clients.
-self.addEventListener('message', function(event) {
-  // Get all the connected clients and forward the message along.
-  var promise = self.clients.matchAll()
-    .then(function(clientList) {
-=======
   case 'preload':
     return preloadList(msgObj);
   case 'delete_not_exist_article':
@@ -399,7 +255,7 @@ self.addEventListener('message', function(event) {
     if (!articleDict) {
       return new Promise(function () {});
     }
-    return caches.open(namePrefix + 'markdown').then(function (cache) {
+    return caches.open(markdownCacheName).then(function (cache) {
       //删除不存在的博客文件
       cache.keys().then(function (oldReqList) {
         oldReqList.forEach(oldReq => {
@@ -423,7 +279,6 @@ self.addEventListener('message', function (event) {
   // Get all the connected clients and forward the message along.
   var promise = self.clients.matchAll()
     .then(function (clientList) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       // event.source.id contains the ID of the sender of the message.
       // `event` in Chrome isn't an ExtendableMessageEvent yet (https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#extendablemessage-event-interface),
       // so it doesn't have the `source` property.
@@ -433,31 +288,19 @@ self.addEventListener('message', function (event) {
         cbid,
         req
       } = event.data;
-<<<<<<< HEAD
-      _processMessage(req).then(function(resp) {
-=======
       _processMessage(req).then(function (resp) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
         // We'll also print a warning, so users playing with the demo aren't confused.
         if (senderID === null) {
           console.log('event.source is null; we don\'t know the sender of the ' +
             'message');
-<<<<<<< HEAD
-          clientList.forEach(function(client) {
-=======
           clientList.forEach(function (client) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
             client.postMessage({
               cbid,
               resp
             });
           });
         } else {
-<<<<<<< HEAD
-          clientList.some(function(client) {
-=======
           clientList.some(function (client) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
             // Skip sending the message to the client that sent it.
             if (client.id === senderID) {
               client.postMessage({
@@ -469,12 +312,6 @@ self.addEventListener('message', function (event) {
           });
         }
       });
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
     });
 
   // If event.waitUntil is defined (not yet in Chrome because of the same issue detailed before),
@@ -486,11 +323,7 @@ self.addEventListener('message', function (event) {
 
 
 // Start polyfill hack
-<<<<<<< HEAD
-(function() {
-=======
 (function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   var nativeAddAll = Cache.prototype.addAll;
   var userAgent = navigator.userAgent.match(/(Firefox|Chrome)\/(\d+\.)/);
 
@@ -507,16 +340,6 @@ self.addEventListener('message', function (event) {
     CacheStorage.prototype.match = function match(request, opts) {
       var caches = this;
 
-<<<<<<< HEAD
-      return this.keys().then(function(cacheNames) {
-        var match;
-
-        return cacheNames.reduce(function(chain, cacheName) {
-          return chain.then(function() {
-            return match || caches.open(cacheName).then(function(cache) {
-              return cache.match(request, opts);
-            }).then(function(response) {
-=======
       return this.keys().then(function (cacheNames) {
         var match;
 
@@ -525,7 +348,6 @@ self.addEventListener('message', function (event) {
             return match || caches.open(cacheName).then(function (cache) {
               return cache.match(request, opts);
             }).then(function (response) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
               match = response;
               return match;
             });
@@ -557,21 +379,13 @@ self.addEventListener('message', function (event) {
 
     NetworkError.prototype = Object.create(Error.prototype);
 
-<<<<<<< HEAD
-    return Promise.resolve().then(function() {
-=======
     return Promise.resolve().then(function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       if (arguments.length < 1) throw new TypeError();
 
       // Simulate sequence<(Request or USVString)> binding:
       var sequence = [];
 
-<<<<<<< HEAD
-      requests = requests.map(function(request) {
-=======
       requests = requests.map(function (request) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
         if (request instanceof Request) {
           return request;
         } else {
@@ -580,11 +394,7 @@ self.addEventListener('message', function (event) {
       });
 
       return Promise.all(
-<<<<<<< HEAD
-        requests.map(function(request) {
-=======
         requests.map(function (request) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
           if (typeof request === 'string') {
             request = new Request(request);
           }
@@ -598,17 +408,10 @@ self.addEventListener('message', function (event) {
           return fetch(request.clone());
         })
       );
-<<<<<<< HEAD
-    }).then(function(responses) {
-      // If some of the responses has not OK-eish status,
-      // then whole operation should reject
-      if (responses.some(function(response) {
-=======
     }).then(function (responses) {
       // If some of the responses has not OK-eish status,
       // then whole operation should reject
       if (responses.some(function (response) {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
           return !response.ok;
         })) {
         throw new NetworkError('Incorrect response status');
@@ -617,19 +420,11 @@ self.addEventListener('message', function (event) {
       // TODO: check that requests don't overwrite one another
       // (don't think this is possible to polyfill due to opaque responses)
       return Promise.all(
-<<<<<<< HEAD
-        responses.map(function(response, i) {
-          return cache.put(requests[i], response);
-        })
-      );
-    }).then(function() {
-=======
         responses.map(function (response, i) {
           return cache.put(requests[i], response);
         })
       );
     }).then(function () {
->>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
       return undefined;
     });
   };

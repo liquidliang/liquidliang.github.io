@@ -43,3 +43,25 @@ a.logo-link {
 [data-url]{
   cursor: pointer;
 }
+.slidebar{
+	overflow-y: scroll;
+  top: 55px;
+  bottom: 0;
+	padding-bottom: 55px;
+  position: fixed;
+  min-height: 100%;
+  border-right-color:rgb(187, 187, 187);
+  border-right-style:solid;
+  border-right-width:0.952381px;
+}
+
+@media (max-width: 768px) {
+	.slidebar {
+		position: inherit;
+	}
+}
+.markdown-body{
+  font-size: 18px;
+  line-height: 1.8;
+  background-color: rgba(255,255,255,0.5);
+}

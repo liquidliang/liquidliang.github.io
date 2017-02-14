@@ -24,6 +24,8 @@
     "babel-preset-es2015": "^6.22.0",
     "css-loader": "^0.26.1",
     "gulp": "^3.9.1",
+    "gulp-less": "^3.3.0",
+    "gulp-minify-css": "^1.2.4",
     "gulp-open": "^2.0.0",
     "gulp-plumber": "^1.1.0",
     "simple-git": "^1.65.0",
@@ -38,6 +40,7 @@
 >>>>>>> 743c827c0b021eeef0f5818d82429b7d7238360a
   "scripts": {
     "start": "gulp watch",
-    "update": "node server/update-index.js"
+    "update": "node server/update-index.js",
+    "reset": "node server/reset_mtime.js"
   }
 }
