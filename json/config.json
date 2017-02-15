@@ -1,7 +1,7 @@
 {
   "author": "liquidliang",
   "nav": [
-    ["Home", "#!/blog%2F%E6%88%91%E7%9A%84%E6%96%87%E7%AB%A0"],
+    ["Home", "#!/index"],
     ["About", "#!/blog/about.md"]
   ]
 }
