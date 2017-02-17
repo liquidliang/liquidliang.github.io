@@ -1718,6 +1718,30 @@
   "mtime": 1486988617000
  },
  {
+  "path": "blog/阮一峰/全栈工程师培训材料/$sidebar$.md",
+  "mtime": 1487324220553
+ },
+ {
+  "path": "blog/阮一峰/全栈工程师培训材料/engineering.md",
+  "mtime": 1487324158218
+ },
+ {
+  "path": "blog/阮一峰/全栈工程师培训材料/history.md",
+  "mtime": 1487324158219
+ },
+ {
+  "path": "blog/阮一峰/全栈工程师培训材料/node.md",
+  "mtime": 1487324158219
+ },
+ {
+  "path": "blog/阮一峰/全栈工程师培训材料/preparation.md",
+  "mtime": 1486795462000
+ },
+ {
+  "path": "blog/阮一峰/全栈工程师培训材料/react.md",
+  "mtime": 1487324158219
+ },
+ {
   "path": "blog/阮一峰/2014",
   "mtime": 1486650580000,
   "isDirectory": 1,
@@ -1754,6 +1778,12 @@
   "num": 31
  },
  {
+  "path": "blog/阮一峰/全栈工程师培训材料",
+  "mtime": 1487318230787,
+  "isDirectory": 1,
+  "num": 6
+ },
+ {
   "path": "blog/about.md",
   "mtime": 1486970151000
  },
@@ -1771,8 +1801,8 @@
  },
  {
   "path": "blog/阮一峰",
-  "mtime": 1486988674000,
+  "mtime": 1487318189787,
   "isDirectory": 1,
-  "num": 344
+  "num": 351
  }
 ]
