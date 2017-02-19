@@ -64,7 +64,7 @@ BCD.addEvent('mkview', function (ele, option, data) {
 });
 
 const getName = (path) => {
-  let arr = path.match(/([^/.]+)[.\w]+$/);
+  let arr = path.match(/\/([^/.]+)[.\w-_]+$/);
   return arr ? arr[1] : '';
 }
 
@@ -122,6 +122,12 @@ const getSortContent = (content, paragraph = 10) => {
   return ret;
 }
 
+const processItem = (item, content)=>{
+  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
+  item.tfList = m_search.getTFs(content);
+  item.summary = getSortContent(content);
+  return item;
+};
 
 const preload = (obj) => {
   let count = 0;
@@ -130,9 +136,7 @@ const preload = (obj) => {
     let item;
     if (item = articleDict[path]) {
       count++;
-      item.content = obj[pathWithSearch];
-      item.tfList = m_search.getTFs(item.content);
-      item.summary = getSortContent(obj[pathWithSearch]);
+      processItem(item, obj[pathWithSearch]);
     }
   }
   let totalList = sidebarList.concat(articleList);
@@ -255,11 +259,7 @@ const fetchContent = (list) => {
   let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajax({
     url: getURL(o),
     success(str) {
-      let item = Object.assign({}, o);
-      item.content = str;
-      item.tfList = m_search.getTFs(str);
-      item.summary = getSortContent(str);
-      articleDict[o.path] = item;
+      articleDict[o.path] = processItem(o, str);
     }
   }));
   return new Promise(function (resolve) {

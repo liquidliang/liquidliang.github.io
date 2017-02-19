@@ -312,7 +312,7 @@
 	});
 	
 	var getName = function getName(path) {
-	  var arr = path.match(/([^/.]+)[.\w]+$/);
+	  var arr = path.match(/\/([^/.]+)[.\w-_]+$/);
 	  return arr ? arr[1] : '';
 	};
 	
@@ -377,6 +377,13 @@
 	  return ret;
 	};
 	
+	var processItem = function processItem(item, content) {
+	  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
+	  item.tfList = m_search.getTFs(content);
+	  item.summary = getSortContent(content);
+	  return item;
+	};
+	
 	var preload = function preload(obj) {
 	  var count = 0;
 	  for (var pathWithSearch in obj) {
@@ -384,9 +391,7 @@
 	    var item = void 0;
 	    if (item = articleDict[path]) {
 	      count++;
-	      item.content = obj[pathWithSearch];
-	      item.tfList = m_search.getTFs(item.content);
-	      item.summary = getSortContent(obj[pathWithSearch]);
+	      processItem(item, obj[pathWithSearch]);
 	    }
 	  }
 	  var totalList = sidebarList.concat(articleList);
@@ -518,11 +523,7 @@
 	    return $.ajax({
 	      url: getURL(o),
 	      success: function success(str) {
-	        var item = Object.assign({}, o);
-	        item.content = str;
-	        item.tfList = m_search.getTFs(str);
-	        item.summary = getSortContent(str);
-	        articleDict[o.path] = item;
+	        articleDict[o.path] = processItem(o, str);
 	      }
 	    });
 	  });

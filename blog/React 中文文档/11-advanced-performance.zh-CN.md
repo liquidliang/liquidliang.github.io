@@ -41,7 +41,7 @@ shouldComponentUpdate: function(nextProps, nextState) {
 
 这个一个组件的子树的结构。每一个节点表示`shouldComponentUpdate` return了什么，以及是否虚拟DOMs是相等的。最后，圆的颜色代表这个节点是否需要被重新调整。
 
-<figure><img src="/react/img/docs/should-component-update.png" /></figure>	
+<figure><img src="/images/react/docs/should-component-update.png" /></figure>	
 
 在上述例子中，C2节点的`shouldComponentUpdate`函数返回了`false`，所以React就不需要在这里产生新的虚拟DOM，也就不需要重新调整DOM。由于父节点C2已经在`shouldComponentUpdate`函数中返回`false`，所以它的所有子节点也就不会执行该函数。
 
