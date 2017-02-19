@@ -60,6 +60,7 @@ BCD.addEvent('mkview', function (ele, option, data) {
           return $0
         }));
     }
+    $('a[href^="http"]').attr('target', '_blank');
   }, 0);
 });
 
@@ -123,6 +124,28 @@ const getSortContent = (content, paragraph = 10) => {
 }
 
 const processItem = (item, content)=>{
+  let start = content.indexOf('---');
+  if(start>-1){
+    let end;
+    if(start===0){
+      start = start+3;
+      end = content.substr(start).indexOf('---') + start;
+    }else{
+      end = start;
+      start = 0;
+    }
+    let attrDict = {};
+    let arr = content.substr(start, end).match(/([^:\n]+:[^:\n]+)/g);
+    if(arr){
+      arr.forEach(function(o){
+        let kv = o.split(':');
+        attrDict[kv[0]] = kv[1];
+      });
+      item.title = attrDict.title || item.title;
+    }
+    content = content.substr(end+3).trim();
+  }
+
   item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
   item.tfList = m_search.getTFs(content);
   item.summary = getSortContent(content);
@@ -309,23 +332,31 @@ const testItem = (reg, item) => {
   let testType = 0;
   let obj = {};
   let searchWeight = 0;
-  let weightDict = {};
+  let titleMatchDict = {};
+  let contentMatchDict = {};
   if (reg.test(item.title)) {
     obj.title = item.title.replace(reg, function ($0) {
-      if (!weightDict[$0]) {
-        weightDict[$0] = 2;
+      if (titleMatchDict[$0]) {
+        titleMatchDict[$0] ++;
+      }else{
+        titleMatchDict[$0] = 1;
       }
       return '<span class="text-danger">' + $0 + '</span>';
     });
     testType += 1;
+    let titleMathLength = 0;
+    for (var key in titleMatchDict) {
+      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : key.length * titleMatchDict[key];
+    }
+    searchWeight += titleMathLength / item.title.length;
   }
   if (item.content && reg.test(item.content)) {
     let pointList = [];
     obj.content = item.content.replace(reg, function ($0, point) {
-      if (!weightDict[$0]) {
-        weightDict[$0] = 1;
-      } else if (weightDict[$0] == 2) {
-        weightDict[$0]++;
+      if (contentMatchDict[$0]) {
+        contentMatchDict[$0]++;
+      } else{
+        contentMatchDict[$0] = 1;
       }
       let weight = /\w/.test($0) ? 2 : $0.length;
       pointList.push({
@@ -348,11 +379,16 @@ const testItem = (reg, item) => {
       return '<font color=#a94442>' + $0 + '</font>';
     });
     testType += 2;
+    let contentMathLength = 0;
+
+    for (var key in contentMatchDict) {
+      contentMathLength += /\w/.test(key) ? contentMatchDict[key] : key.length * contentMatchDict[key];
+    }
+    searchWeight += contentMathLength / Math.pow(item.content.length, 0.6);
   }
   obj.testType = testType;
-  for (var key in weightDict) {
-    searchWeight += /\w/.test(key) ? weightDict[key] : key.length * weightDict[key];
-  }
+/*******calculate search weight**********/
+
   obj.searchWeight = searchWeight;
   return Object.assign({}, item, obj);
 };
@@ -366,7 +402,13 @@ const searchList = (word, callback, isCommend = false) => {
   let totalList = articleList.filter(o => o);
 
   const searchCallback = (list) => {
-    let resultList = list.filter(o => o.testType > 0).sort((a, b) => b.searchWeight - a.searchWeight);
+    let resultList = list.filter(o => o.testType > 0).sort((a, b) => {
+      let ret = b.searchWeight - a.searchWeight;
+      if(ret===0){
+        return b.content.length - a.content.length + (b.mtime - a.mtime) / 1E5;
+      }
+      return ret;
+    });
     if (resultList.length || list.length >= totalList.length) {
       console.table(resultList.map(o => {
         return {

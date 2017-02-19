@@ -308,6 +308,7 @@
 	        }));
 	      })();
 	    }
+	    $('a[href^="http"]').attr('target', '_blank');
 	  }, 0);
 	});
 	
@@ -378,6 +379,30 @@
 	};
 	
 	var processItem = function processItem(item, content) {
+	  var start = content.indexOf('---');
+	  if (start > -1) {
+	    (function () {
+	      var end = void 0;
+	      if (start === 0) {
+	        start = start + 3;
+	        end = content.substr(start).indexOf('---') + start;
+	      } else {
+	        end = start;
+	        start = 0;
+	      }
+	      var attrDict = {};
+	      var arr = content.substr(start, end).match(/([^:\n]+:[^:\n]+)/g);
+	      if (arr) {
+	        arr.forEach(function (o) {
+	          var kv = o.split(':');
+	          attrDict[kv[0]] = kv[1];
+	        });
+	        item.title = attrDict.title || item.title;
+	      }
+	      content = content.substr(end + 3).trim();
+	    })();
+	  }
+	
 	  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
 	  item.tfList = m_search.getTFs(content);
 	  item.summary = getSortContent(content);
@@ -560,7 +585,7 @@
 	var getChildCatalog = function getChildCatalog(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret2 = function () {
+	    var _ret3 = function () {
 	      var tagList = catalog.tagList;
 	      var tagLength = tagList.length + 1;
 	      return {
@@ -572,7 +597,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  }
 	  return [];
 	};
@@ -580,7 +605,7 @@
 	var getCatalogArticles = function getCatalogArticles(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret3 = function () {
+	    var _ret4 = function () {
 	      var tagList = catalog.tagList;
 	      return {
 	        v: articleList.filter(function (o) {
@@ -593,7 +618,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+	    if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
 	  }
 	  return [];
 	};
@@ -602,24 +627,34 @@
 	  var testType = 0;
 	  var obj = {};
 	  var searchWeight = 0;
-	  var weightDict = {};
+	  var titleMatchDict = {};
+	  var contentMatchDict = {};
 	  if (reg.test(item.title)) {
 	    obj.title = item.title.replace(reg, function ($0) {
-	      if (!weightDict[$0]) {
-	        weightDict[$0] = 2;
+	      if (titleMatchDict[$0]) {
+	        titleMatchDict[$0]++;
+	      } else {
+	        titleMatchDict[$0] = 1;
 	      }
 	      return '<span class="text-danger">' + $0 + '</span>';
 	    });
 	    testType += 1;
+	    var titleMathLength = 0;
+	    for (var key in titleMatchDict) {
+	      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : key.length * titleMatchDict[key];
+	    }
+	    searchWeight += titleMathLength / item.title.length;
 	  }
 	  if (item.content && reg.test(item.content)) {
+	    var key;
+	
 	    (function () {
 	      var pointList = [];
 	      obj.content = item.content.replace(reg, function ($0, point) {
-	        if (!weightDict[$0]) {
-	          weightDict[$0] = 1;
-	        } else if (weightDict[$0] == 2) {
-	          weightDict[$0]++;
+	        if (contentMatchDict[$0]) {
+	          contentMatchDict[$0]++;
+	        } else {
+	          contentMatchDict[$0] = 1;
 	        }
 	        var weight = /\w/.test($0) ? 2 : $0.length;
 	        pointList.push({
@@ -644,12 +679,17 @@
 	        return '<font color=#a94442>' + $0 + '</font>';
 	      });
 	      testType += 2;
+	      var contentMathLength = 0;
+	
+	      for (key in contentMatchDict) {
+	        contentMathLength += /\w/.test(key) ? contentMatchDict[key] : key.length * contentMatchDict[key];
+	      }
+	      searchWeight += contentMathLength / Math.pow(item.content.length, 0.6);
 	    })();
 	  }
 	  obj.testType = testType;
-	  for (var key in weightDict) {
-	    searchWeight += /\w/.test(key) ? weightDict[key] : key.length * weightDict[key];
-	  }
+	  /*******calculate search weight**********/
+	
 	  obj.searchWeight = searchWeight;
 	  return Object.assign({}, item, obj);
 	};
@@ -669,7 +709,11 @@
 	    var resultList = list.filter(function (o) {
 	      return o.testType > 0;
 	    }).sort(function (a, b) {
-	      return b.searchWeight - a.searchWeight;
+	      var ret = b.searchWeight - a.searchWeight;
+	      if (ret === 0) {
+	        return b.content.length - a.content.length + (b.mtime - a.mtime) / 1E5;
+	      }
+	      return ret;
 	    });
 	    if (resultList.length || list.length >= totalList.length) {
 	      console.table(resultList.map(function (o) {
