@@ -1727,9 +1727,9 @@
 	        if (m_article.hasArticle(fileName)) {
 	          m_article.getArticleContent(fileName).then(function (data) {
 	            m_readHistory.addHistory(fileName);
-	            $(viewSlidebar.find('li.active')).removeClass('active');
+	            $(viewSlidebar.find('.active')).removeClass('active');
 	            var currentDom = $('.slidebar [data-path="' + fileName + '"]');
-	            currentDom.parent('li').addClass('active');
+	            currentDom.parent().addClass('active');
 	            currentDom.show();
 	            viewContent.reset(data);
 	          });

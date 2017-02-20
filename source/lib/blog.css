@@ -60,8 +60,10 @@ a.logo-link {
 }
 
 .slidebar .active{
-  padding: 0 10px;
-  margin: 0 -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: -10px;
+  margin-right: -10px;
   border-radius: 60px;
   background-color: #f5f587;
 }
