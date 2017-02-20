@@ -124,26 +124,38 @@ const getSortContent = (content, paragraph = 10) => {
 }
 
 const processItem = (item, content)=>{
+  if(item.title==sidebarName){
+    item.content = content;
+    return item;
+  }
   let start = content.indexOf('---');
+  let isRaw = true;
   if(start>-1){
     let end;
     if(start===0){
       start = start+3;
-      end = content.substr(start).indexOf('---') + start;
+      end = content.substring(start).indexOf('---') + start;
     }else{
       end = start;
       start = 0;
     }
-    let attrDict = {};
-    let arr = content.substr(start, end).match(/([^:\n]+:[^:\n]+)/g);
+    let arr = content.substring(start, end).match(/([^:\n]+:[^:\n]+)/g);
     if(arr){
+      let attrDict = {};
       arr.forEach(function(o){
         let kv = o.split(':');
         attrDict[kv[0]] = kv[1];
       });
       item.title = attrDict.title || item.title;
+      isRaw = false;
+      content = content.substring(end+3).trim();
     }
-    content = content.substr(end+3).trim();
+  }
+  if(isRaw && /^#[^\n]+[\n]/.test(content)){
+    let end = content.indexOf('\n');
+    item.title = content.substring(1, end).replace(/[#\s]+/, '');
+    content = content.substring(end+1);
+    isRaw = false;
   }
 
   item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');

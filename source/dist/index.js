@@ -379,28 +379,40 @@
 	};
 	
 	var processItem = function processItem(item, content) {
+	  if (item.title == sidebarName) {
+	    item.content = content;
+	    return item;
+	  }
 	  var start = content.indexOf('---');
+	  var isRaw = true;
 	  if (start > -1) {
-	    (function () {
-	      var end = void 0;
-	      if (start === 0) {
-	        start = start + 3;
-	        end = content.substr(start).indexOf('---') + start;
-	      } else {
-	        end = start;
-	        start = 0;
-	      }
-	      var attrDict = {};
-	      var arr = content.substr(start, end).match(/([^:\n]+:[^:\n]+)/g);
-	      if (arr) {
+	    var end = void 0;
+	    if (start === 0) {
+	      start = start + 3;
+	      end = content.substring(start).indexOf('---') + start;
+	    } else {
+	      end = start;
+	      start = 0;
+	    }
+	    var arr = content.substring(start, end).match(/([^:\n]+:[^:\n]+)/g);
+	    if (arr) {
+	      (function () {
+	        var attrDict = {};
 	        arr.forEach(function (o) {
 	          var kv = o.split(':');
 	          attrDict[kv[0]] = kv[1];
 	        });
 	        item.title = attrDict.title || item.title;
-	      }
-	      content = content.substr(end + 3).trim();
-	    })();
+	        isRaw = false;
+	        content = content.substring(end + 3).trim();
+	      })();
+	    }
+	  }
+	  if (isRaw && /^#[^\n]+[\n]/.test(content)) {
+	    var _end = content.indexOf('\n');
+	    item.title = content.substring(1, _end).replace(/[#\s]+/, '');
+	    content = content.substring(_end + 1);
+	    isRaw = false;
 	  }
 	
 	  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
