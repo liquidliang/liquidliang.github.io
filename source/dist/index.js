@@ -291,11 +291,17 @@
 	      flowChart: true, // 默认不解析
 	      sequenceDiagram: true // 默认不解析
 	    });
+	
+	    var innerHtml = ele.html();
+	    if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
+	      ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
+	    }
+	
 	    if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) {
 	      (function () {
 	        //兼容TOC目录
 	        var baseHash = location.hash.replace(/\.md\/.*/, '.md');
-	        $('#' + name).html($('#' + name).html().replace(/href="#([^"]*)/g, function ($0, $1) {
+	        ele.html(ele.html().replace(/href="#([^"]*)/g, function ($0, $1) {
 	          if ($1) {
 	            return 'href="' + baseHash + '/' + $1;
 	          }

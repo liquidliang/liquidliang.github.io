@@ -731,22 +731,10 @@
  },
  {
   "path": "blog/阮一峰/2014/2014-03-14-server-setup.md",
-  "mtime": 1486650580000
+  "mtime": 1487592846332
  },
  {
   "path": "blog/阮一峰/2014/2014-03-28-undefined-vs-null.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-04-01-the-millionaire-fastlane.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-04-30-ecmascript-6-primer.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-05-05-george-heilmeier.md",
   "mtime": 1486650580000
  },
  {
@@ -754,15 +742,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2014/2014-05-16-home-depot.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2014/2014-05-22-restful-api.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-05-29-blog-book.md",
   "mtime": 1486650580000
  },
  {
@@ -770,23 +750,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2014/2014-06-06-hotel-english.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-06-11-git-remote.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2014/2014-06-12-git-remote.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-06-25-airbnb.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-07-02-database-implementation.md",
   "mtime": 1486650580000
  },
  {
@@ -794,15 +758,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2014/2014-07-15-chinese-font.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2014/2014-07-15-chinese-fonts.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-09-06-information-entropy.md",
   "mtime": 1486650580000
  },
  {
@@ -826,31 +782,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2014/2014-10-03-event-loop.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2014/2014-10-08-event-loop.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-10-27-oculus-rift-(draft).md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-10-27-oculus-rift.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-10-31-self-intro.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-11-03-100offer.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-11-03-mobile-taobao.md",
   "mtime": 1486650580000
  },
  {
@@ -862,27 +794,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2014/2014-11-29-group-buying.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-12-02-shengda.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-12-07-subtitle.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2014/2014-12-11-unicode.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-12-19-my-blog-book.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2014/2014-12-29-border-of-copyright.md",
   "mtime": 1486650580000
  },
  {
@@ -891,10 +803,6 @@
  },
  {
   "path": "blog/阮一峰/2015/2015-01-24-turing-interview.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-01-26-uber.md",
   "mtime": 1486650580000
  },
  {
@@ -918,10 +826,6 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-03-02-crowd-funding.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-03-13-build-website-with-make.md",
   "mtime": 1486650580000
  },
@@ -931,11 +835,7 @@
  },
  {
   "path": "blog/阮一峰/2015/2015-04-04-npm-modules.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-04-06-digital-legacy.md",
-  "mtime": 1486650580000
+  "mtime": 1487595284689
  },
  {
   "path": "blog/阮一峰/2015/2015-04-06-free-for-dev.md",
@@ -943,22 +843,6 @@
  },
  {
   "path": "blog/阮一峰/2015/2015-04-10-tail-call.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-04-14-fortune.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-04-24-generator.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-04-30-thunk.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-05-03-face-detection.md",
   "mtime": 1486650580000
  },
  {
@@ -974,14 +858,6 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-05-13-time-management.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-05-17-stay-hungry-stay-foolish.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-05-20-require.md",
   "mtime": 1486650580000
  },
@@ -990,19 +866,11 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-05-24-powerwall.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-05-26-commandline-with-node.md",
   "mtime": 1486650580000
  },
  {
   "path": "blog/阮一峰/2015/2015-06-08-istanbul.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-06-10-100offer.md",
   "mtime": 1486650580000
  },
  {
@@ -1026,10 +894,6 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-07-19-economics-of-inflight-wifi.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-07-26-monte-carlo-method.md",
   "mtime": 1486650580000
  },
@@ -1050,15 +914,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-08-31-100offer.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-09-01-matrix-multiplication.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-09-08-online-university.md",
   "mtime": 1486650580000
  },
  {
@@ -1082,27 +938,11 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-10-07-computer-writing.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-11-02-circular-dependency.md",
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2015/2015-11-08-seven-interactive-methods.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2015/2015-11-12-ecmascript-specification.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-12-07-safe-job.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2015/2015-12-21-engelberger.md",
   "mtime": 1486650580000
  },
  {
@@ -1118,15 +958,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-01-07-ian-murduck.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-01-08-first-robot.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-01-11-white-collar.md",
   "mtime": 1486650580000
  },
  {
@@ -1134,27 +966,11 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-01-18-ecmascript-6-primer.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-01-20-npm.md",
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-02-02-marvin-minsky.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-02-13-react-testing-tutorial.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-02-15-plan-b.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-02-22-youth-by-coetzee.md",
   "mtime": 1486650580000
  },
  {
@@ -1178,23 +994,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-03-14-is-technology-a-threat-to-equality.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-03-20-death.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-03-28-necrotizing-fasciitis.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-03-29-performance-management.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-04-11-personality.md",
   "mtime": 1486650580000
  },
  {
@@ -1202,15 +1002,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-05-09-group-chat.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-05-25-react-router.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-06-07-mule.md",
   "mtime": 1486650580000
  },
  {
@@ -1230,23 +1022,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-07-11-hen-and-developer.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-07-22-edge-recognition.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-08-03-apeclass.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-08-05-boolean-algebra.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-08-08-useless-people.md",
   "mtime": 1486650580000
  },
  {
@@ -1255,10 +1031,6 @@
  },
  {
   "path": "blog/阮一峰/2016/2016-08-26-migrate-from-http-to-https.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-08-28-online-education.md",
   "mtime": 1486650580000
  },
  {
@@ -1294,14 +1066,6 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-09-25-the_coming_times_of_paywall.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-09-30-udacity.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-10-11-npm-scripts.md",
   "mtime": 1486650580000
  },
@@ -1314,19 +1078,7 @@
   "mtime": 1486650580000
  },
  {
-  "path": "blog/阮一峰/2016/2016-10-23-retire.md",
-  "mtime": 1486650580000
- },
- {
   "path": "blog/阮一峰/2016/2016-11-02-intersectionobserver-api.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-11-15-javascript-fullstack-tutorial.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-11-21-remote-work.md",
   "mtime": 1486650580000
  },
  {
@@ -1335,14 +1087,6 @@
  },
  {
   "path": "blog/阮一峰/2016/2016-12-02-user-space-vs-kernel-space.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-12-20-year-summary.md",
-  "mtime": 1486650580000
- },
- {
-  "path": "blog/阮一峰/2016/2016-12-25-micromedia.md",
   "mtime": 1486650580000
  },
  {
@@ -2135,21 +1879,21 @@
  },
  {
   "path": "blog/阮一峰/2014",
-  "mtime": 1486650580000,
+  "mtime": 1487594260591,
   "isDirectory": 1,
-  "num": 39
+  "num": 17
  },
  {
   "path": "blog/阮一峰/2015",
-  "mtime": 1486650580000,
+  "mtime": 1487596025360,
   "isDirectory": 1,
-  "num": 56
+  "num": 38
  },
  {
   "path": "blog/阮一峰/2016",
-  "mtime": 1486650580000,
+  "mtime": 1487596989220,
   "isDirectory": 1,
-  "num": 59
+  "num": 35
  },
  {
   "path": "blog/阮一峰/2017",
@@ -2207,6 +1951,6 @@
   "path": "blog/阮一峰",
   "mtime": 1487318189787,
   "isDirectory": 1,
-  "num": 351
+  "num": 287
  }
 ]

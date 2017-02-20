@@ -1,4 +1,4 @@
-开发网站的时候，常常需要自己配置Linux服务器。
+## 配置Linux服务器
 
 本文记录配置Linux服务器的初步流程，也就是系统安装完成后，下一步要做的事情。这主要是我自己的总结和备忘，如果有遗漏，欢迎大家补充。
 
@@ -36,7 +36,7 @@ addgroup admin
 然后，添加一个新用户（假定为bill）。
 
 <blockquote><pre><code class="language-bash">
-useradd -d /home/bill -s /bin/bash -m bill 
+useradd -d /home/bill -s /bin/bash -m bill
 
 </code></pre></blockquote>
 
@@ -45,21 +45,21 @@ useradd -d /home/bill -s /bin/bash -m bill
 接着，设置新用户的密码。
 
 <blockquote><pre><code class="language-bash">
-passwd bill 
+passwd bill
 
 </code></pre></blockquote>
 
 将新用户（bill）添加到用户组（admin）。
 
 <blockquote><pre><code class="language-bash">
-usermod -a -G admin bill 
+usermod -a -G admin bill
 
 </code></pre></blockquote>
 
 接着，为新用户设定sudo权限。
 
 <blockquote><pre><code class="language-bash">
-visudo 
+visudo
 
 </code></pre></blockquote>
 
@@ -136,7 +136,7 @@ PasswordAuthentication no
 RSAAuthentication yes
 PubkeyAuthentication yes
 AuthorizedKeysFile .ssh/authorized_keys
-  
+
 UseDNS no
 
 </code></pre></blockquote>
