@@ -411,11 +411,14 @@
 	      })();
 	    }
 	  }
-	  if (isRaw && /^#[^\n]+[\n]/.test(content)) {
-	    var _end = content.indexOf('\n');
-	    item.title = content.substring(1, _end).replace(/[#\s]+/, '');
-	    content = content.substring(_end + 1);
-	    isRaw = false;
+	  if (isRaw) {
+	    var _arr = content.match(/^[\s]*#[^\n]+[\s]*/);
+	    if (_arr) {
+	      var title = _arr[0];
+	      item.title = title.replace(/[#\s]+/, '');
+	      content = content.replace(title, '');
+	      isRaw = false;
+	    }
 	  }
 	
 	  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');

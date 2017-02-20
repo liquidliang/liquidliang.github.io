@@ -154,11 +154,14 @@ const processItem = (item, content)=>{
       }
     }
   }
-  if(isRaw && /^#[^\n]+[\n]/.test(content)){
-    let end = content.indexOf('\n');
-    item.title = content.substring(1, end).replace(/[#\s]+/, '');
-    content = content.substring(end+1);
-    isRaw = false;
+  if(isRaw){
+    let arr = content.match(/^[\s]*#[^\n]+[\s]*/);
+    if(arr){
+     let title = arr[0];
+     item.title = title.replace(/[#\s]+/, '');
+     content = content.replace(title, '');
+     isRaw = false;
+    }
   }
 
   item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
