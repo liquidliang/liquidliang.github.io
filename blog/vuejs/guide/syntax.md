@@ -75,9 +75,7 @@ Mustache 不能在 HTML 属性中使用，应使用 [v-bind 指令](../api/#v-bi
 {{ var a = 1 }}
 
 <!-- 流控制也不会生效，请使用三元表达式 -->
-{{
-  if (ok) { return message } 
-}}
+{{ if (ok) return message }}
 ```
 
 <p class="tip">模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 `Math` 和 `Date` 。你不应该在模板表达式中试图访问用户定义的全局变量。</p>
