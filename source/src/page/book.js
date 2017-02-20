@@ -1,5 +1,6 @@
 const s_mainContainer = require('card/common/slidebar_container');
 const m_article = require('model/article');
+const m_readHistory = require('model/read_history');
 const c_articleList = require('card/blog/article_list');
 
 
@@ -49,10 +50,13 @@ module.exports = function (page, key) {
               item.href = baseHash + '/' + $1 + '.md';
               fileName = $1 + '.md';
             }
-            if(m_article.hasArticle(key+'/'+fileName)){
+            item.path = key+'/'+fileName;
+            if(m_article.hasArticle(item.path)){
               chapters.push(item);
             }
-            return '<a data-on="?m=replaceHash" data-url="' + item.href + '">' + item.title + '</a>';
+            return '<a data-on="?m=replaceHash" data-url="' + item.href + '">' + item.title + '</a>'+
+            '<span data-path="'+item.path+'" class="icon glyphicon glyphicon-ok" aria-hidden="true" '+
+            'style="'+(m_readHistory.hasRead(item.path) ? '' : 'display:none')+'"></span>';
           });
           viewSlidebar.reset(slidebar);
           setTimeout(function () {
@@ -62,13 +66,19 @@ module.exports = function (page, key) {
         let fileName = key + location.hash.replace(baseHash, '');
         if (m_article.hasArticle(fileName)) {
           m_article.getArticleContent(fileName).then((data) => {
+            m_readHistory.addHistory(fileName);
+            $(viewSlidebar.find('li.active')).removeClass('active');
+            let currentDom = $('.slidebar [data-path="'+fileName+'"]');
+            currentDom.parent('li').addClass('active');
+            currentDom.show();
             viewContent.reset(data);
           });
         } else if (slidebar.chapters[0]) {
           return BCD.replaceHash(slidebar.chapters[0].href);
         } else {
           viewContent.reset({
-
+            content: '敬请期待',
+            title: fileName
           });
         }
       });

@@ -482,13 +482,17 @@ const searchList = (word, callback, isCommend = false) => {
 const searchDirect = (word) => {
   let reg = m_search.getGlobalRegex(word);
   return articleList.filter(o => reg.test(o.title)).map(o => {
-    return {
+    let weight = 0;
+    let item = {
       href: o.href,
       title: o.title.replace(reg, function ($0) {
+        weight += $0.length;
         return '<span class="text-danger">' + $0 + '</span>';
       })
     };
-  })
+    item.weight = weight
+    return item;
+  }).sort((a, b)=>b.weight - a.weight);
 };
 
 

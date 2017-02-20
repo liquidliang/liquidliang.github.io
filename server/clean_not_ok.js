@@ -36,6 +36,7 @@ function clean() {
           if(attrDict.title){
             content = '## ' + attrDict.title + '\n' + content;
           }
+          console.log('去除可能导致Github 返回404的部分' + path);
           fs.writeFileSync(path, content);
         }
       }
