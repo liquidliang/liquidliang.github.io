@@ -1,9 +1,4 @@
----
-title: Vue 实例
-type: guide
-order: 3
----
-
+##  Vue 实例
 ## 构造器
 
 每个 Vue.js 应用都是通过构造函数 `Vue` 创建一个 **Vue 的根实例** 启动的：

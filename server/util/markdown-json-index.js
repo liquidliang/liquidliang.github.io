@@ -1,5 +1,5 @@
 const fs = require('fs');
-let reg = /\.md$|.markdown$/;
+let reg = /\.md$/;
 //遍历读取文件
 const getIndex = (path) => {
   let list = [];

@@ -1,11 +1,4 @@
----
-id: events-zh-CN
-title: 事件系统
-permalink: docs/events-zh-CN.html
-prev: tags-and-attributes-zh-CN.html
-next: dom-differences-zh-CN.html
----
-
+##  事件系统
 ## 合成事件
 
 事件处理程序通过 `合成事件`（`SyntheticEvent`）的实例传递，`SyntheticEvent` 是浏览器原生事件跨浏览器的封装。`SyntheticEvent` 和浏览器原生事件一样有 `stopPropagation()`、`preventDefault()` 接口，而且这些接口夸浏览器兼容。

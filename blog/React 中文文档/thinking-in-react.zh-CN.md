@@ -1,12 +1,4 @@
----
-id: thinking-in-react-zh-CN
-title: React 编程思想
-permalink: docs/thinking-in-react-zh-CN.html
-prev: tutorial-zh-CN.html
-next: conferences-zh-CN.html
-redirect_from: 'blog/2013/11/05/thinking-in-react.html'
----
-
+##  React 编程思想
 by Pete Hunt
 
 在我看来，React 是构建大型，快速 Web app 的首选方式。它已经在 Facebook 和 Instagram 被我们有了广泛的应用。

@@ -1,11 +1,4 @@
----
-id: getting-started-zh-CN
-title: 入门教程
-permalink: docs/getting-started-zh-CN.html
-next: tutorial-zh-CN.html
-redirect_from: "docs/index-zh-CN.html"
----
-
+##  入门教程
 ## JSFiddle
 
 开始 Hack React 的最简单的方法是用下面 JSFiddle 的Hello Worlds：

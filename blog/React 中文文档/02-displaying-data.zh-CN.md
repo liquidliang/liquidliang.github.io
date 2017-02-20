@@ -1,10 +1,4 @@
----
-id: displaying-data-zh-CN
-title: 显示数据
-permalink: docs/displaying-data-zh-CN.html
-prev: why-react-zh-CN.html
-next: jsx-in-depth-zh-CN.html
----
+## 显示数据
 
 用户界面能做的最基础的事就是显示一些数据。React 让显示数据变得简单，当数据变化的时候，用户界面会自动同步更新。
 

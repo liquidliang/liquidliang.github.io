@@ -1,5 +1,1 @@
----
-permalink: docs/complementary-tools-zh-CN.html
-layout: redirect
-dest_url: https://github.com/facebook/react/wiki/Complementary-Tools
----
+链接：[ https://github.com/facebook/react/wiki/Complementary-Tools]( https://github.com/facebook/react/wiki/Complementary-Tools)

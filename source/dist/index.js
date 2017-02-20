@@ -383,38 +383,36 @@
 	    item.content = content;
 	    return item;
 	  }
-	  var start = content.indexOf('---');
 	  var isRaw = true;
-	  if (start > -1) {
-	    var end = void 0;
-	    if (start === 0) {
-	      start = start + 3;
-	      end = content.substring(start).indexOf('---') + start;
-	    } else {
-	      end = start;
-	      start = 0;
-	    }
-	    var arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
-	    if (arr) {
-	      (function () {
-	        var attrDict = {};
-	        arr.forEach(function (o) {
-	          var point = o.indexOf(':');
-	          attrDict[o.substring(0, point)] = o.substring(point + 1);
-	        });
-	        item.title = attrDict.title || item.title;
-	        isRaw = false;
-	        content = content.substring(end + 3).trim();
-	        if (attrDict.dest_url) {
-	          content = '链接：[' + attrDict.dest_url + '](' + attrDict.dest_url + ')';
-	        }
-	      })();
-	    }
-	  }
+	  // let start = content.indexOf('---');
+	  // if(start>-1){
+	  //   let end;
+	  //   if(start===0){
+	  //     start = start+3;
+	  //     end = content.substring(start).indexOf('---') + start;
+	  //   }else{
+	  //     end = start;
+	  //     start = 0;
+	  //   }
+	  //   let arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
+	  //   if(arr){
+	  //     let attrDict = {};
+	  //     arr.forEach(function(o){
+	  //       let point = o.indexOf(':');
+	  //       attrDict[o.substring(0, point)] = o.substring(point+1);
+	  //     });
+	  //     item.title = attrDict.title || item.title;
+	  //     isRaw = false;
+	  //     content = content.substring(end+3).trim();
+	  //     if(attrDict.dest_url){
+	  //       content = '链接：['+attrDict.dest_url+']('+attrDict.dest_url+')'
+	  //     }
+	  //   }
+	  // }
 	  if (isRaw) {
-	    var _arr = content.match(/^[\s]*#[^\n]+[\s]*/);
-	    if (_arr) {
-	      var title = _arr[0];
+	    var arr = content.match(/^[\s]*#[^\n]+[\s]*/);
+	    if (arr) {
+	      var title = arr[0];
 	      item.title = title.replace(/[#\s]+/, '').trim();
 	      content = content.replace(title, '');
 	      isRaw = false;
@@ -603,7 +601,7 @@
 	var getChildCatalog = function getChildCatalog(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret3 = function () {
+	    var _ret2 = function () {
 	      var tagList = catalog.tagList;
 	      var tagLength = tagList.length + 1;
 	      return {
@@ -615,7 +613,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+	    if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
 	  }
 	  return [];
 	};
@@ -623,7 +621,7 @@
 	var getCatalogArticles = function getCatalogArticles(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret4 = function () {
+	    var _ret3 = function () {
 	      var tagList = catalog.tagList;
 	      return {
 	        v: articleList.filter(function (o) {
@@ -636,7 +634,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
+	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  }
 	  return [];
 	};

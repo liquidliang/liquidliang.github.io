@@ -1,9 +1,4 @@
----
-title: 路由
-type: guide
-order: 21
----
-
+##  路由
 ## 官方路由
 
 对于大多数单页面应用，都推荐使用官方支持的[vue-router库](https://github.com/vuejs/vue-router)。更多细节可以看[vue-router文档](http://vuejs.github.io/vue-router/)。

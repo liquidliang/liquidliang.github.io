@@ -1,11 +1,4 @@
----
-id: addons-zh-CN
-title: 插件
-permalink: docs/addons-zh-CN.html
-prev: tooling-integration-zh-CN.html
-next: animation-zh-CN.html
----
-
+##  插件
 React插件是一系列的用来构建 React app的有用模块。 **这些应该被认为是实验性的** 并趋向于比core变动更频繁。
 
 - [`TransitionGroup` 和 `CSSTransitionGroup`](animation.html), 用来处理通常不能简单实现的动画和转换，比如在组件移除之前。

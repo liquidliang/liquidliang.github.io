@@ -1,10 +1,4 @@
----
-id: context-zh-CN
-title: Context
-permalink: docs/context-zh-CN.html
-prev: advanced-performance-zh-CN.html
----
-
+##  Context
 React优势之一是你可以很容易地从React组件里跟踪数据流动。当你查看一个组件时，你可以很容易地判断出传入了哪些props，而这也有利于你的App进行逻辑推断。
 
 有时，你想不通过在每一级组件设置prop的方式来向组件树内传递数据。那么，React的"context"特性可以让你做到这点。

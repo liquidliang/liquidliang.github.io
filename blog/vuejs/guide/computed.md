@@ -1,9 +1,4 @@
----
-title: 计算属性
-type: guide
-order: 5
----
-
+##  计算属性
 ## 计算属性
 
 在模板中绑定表达式是非常便利的，但是它们实际上只用于简单的操作。在模板中放入太多的逻辑会让模板过重且难以维护。例如：
@@ -312,4 +307,3 @@ var watchExampleVM = new Vue({
 > 原文：http://vuejs.org/guide/computed.html
 
 ***
-

@@ -1,10 +1,4 @@
----
-id: working-with-the-browser-zh-CN
-title: 与浏览器协作
-permalink: docs/working-with-the-browser-zh-CN.html
-prev: forms-zh-CN.html
-next: more-about-refs-zh-CN.html
----
+## 与浏览器协作
 
 React提供了强大的抽象机制使你在大多数情况下免于直接接触DOM，但有时你仅仅只需要访问底层API，也许是为了与第三方库或者已有的代码协作。
 

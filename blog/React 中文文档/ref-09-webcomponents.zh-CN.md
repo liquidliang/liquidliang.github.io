@@ -1,11 +1,4 @@
----
-id: webcomponents-zh-CN
-title: Web Components
-permalink: docs/webcomponents-zh-CN.html
-prev: reconciliation-zh-CN.html
-next: glossary-zh-CN.html
----
-
+##  Web Components
 因为React和Web组件是用来解决不同问题的, 试图比较两者将不可避免地导致似是而非的结论, 。Web组件为可复用组件提供了强大的封装, 而React则提供了一个使DOM与你的数据同步的声明式库。两者的目标是互补的；工程师可以混合使用这些技术。作为一个开发者，你可以在你的Web组件中使用React，或者在React中使用Web组件，或者两者一起使用。
 
 ## 在React中使用Web组件
@@ -53,4 +46,3 @@ document.registerElement('x-search', {prototype: proto});
 ## 完整样例
 
 若要查看完整样例，请参照[starter kit](/react/downloads.html)中的`webcomponents`例子。
-

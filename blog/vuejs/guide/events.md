@@ -1,9 +1,4 @@
----
-title: 事件处理器
-type: guide
-order: 9
----
-
+##  事件处理器
 ## 监听事件
 
 可以用 `v-on` 指令监听 DOM 事件来触发一些 JavaScript 代码。
@@ -271,5 +266,3 @@ Vue.config.keyCodes.f1 = 112
 > 原文：http://vuejs.org/guide/events.html
 
 ***
-
-

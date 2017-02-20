@@ -1,11 +1,4 @@
----
-id: tags-and-attributes-zh-CN
-title: Tags和属性
-permalink: docs/tags-and-attributes-zh-CN.html
-prev: component-specs-zh-CN.html
-next: events-zh-CN.html
----
-
+##  Tags和属性
 ## 支持的Tags
 
 React试着支持所有常见的元素.如果你需要一个没有列在这里的元素,请 [file an issue](https://github.com/facebook/react/issues/new).

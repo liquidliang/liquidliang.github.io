@@ -1,9 +1,4 @@
----
-title: 条件渲染
-type: guide
-order: 7
----
-
+##  条件渲染
 ## `v-if`
 
 在字符串模板中，如 Handlebars ，我们得像这样写一个条件块：

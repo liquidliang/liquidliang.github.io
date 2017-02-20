@@ -1,11 +1,4 @@
----
-id: top-level-api-zh-CN
-title: Top-Level API
-permalink: docs/top-level-api-zh-CN.html
-next: component-api-zh-CN.html
-redirect_from: "/docs/reference-zh-CN.html"
----
-
+##  Top-Level API
 ## React
 
 `React` 是 React 库的入口点。如果你使用预编译包中的一个，则 `React` 为全局变量；如果你使用 CommonJS 模块，你可以 `require()` 它。

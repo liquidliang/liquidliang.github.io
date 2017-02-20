@@ -1,10 +1,4 @@
----
-id: transferring-props-zh-CN
-title: 传递 Props
-permalink: docs/transferring-props-zh-CN.html
-prev: reusable-components-zh-CN.html
-next: forms-zh-CN.html
----
+## 传递 Props
 
 React 里有一个非常常用的模式就是对组件做一层抽象。组件对外公开一个简单的属性（Props）来实现功能，但内部的实现可能非常复杂。
 

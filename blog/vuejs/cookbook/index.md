@@ -1,9 +1,4 @@
----
-title: Introduction
-type: cookbook
-order: 0
----
-
+##  Introduction
 ## WORK IN PROGRESS
 
 <p class="tip">This cookbook is still in its very early stages. At this point, we will not be linking to it from anywhere else. Pages may be removed or reorganized at any time. Even the goals and overall format are still in flux.</p>
@@ -39,4 +34,3 @@ Recipes should generally:
 > 7. Explain the pros and cons of your strategy, including when it is and isn't appropriate
 
 > 8. Mention alternative solutions, if relevant, but leave in-depth explorations to a separate recipe
-

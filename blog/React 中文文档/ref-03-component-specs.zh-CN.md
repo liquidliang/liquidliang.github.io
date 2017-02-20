@@ -1,11 +1,4 @@
----
-id: component-specs-zh-CN
-title: 组件的规范和生命周期
-permalink: docs/component-specs-zh-CN.html
-prev: component-api-zh-CN.html
-next: tags-and-attributes-zh-CN.html
----
-
+##  组件的规范和生命周期
 ## 组件规范(Specifications)
 
 当调用 `React.createClass()` 创建一个组件类时,你应该提供一个包含有 `render` 方法以及可选的其他生命周期方法的 规范(Specifications)对象.

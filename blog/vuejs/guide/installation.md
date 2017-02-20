@@ -1,14 +1,4 @@
----
-title: 安装
-type: guide
-order: 1
-vue_version: 2.1.3
-dev_size: "206.14"
-min_size: "67.60"
-gz_size: "24.72"
-ro_gz_size: "17.14"
----
-
+##  安装
 ### 兼容性
 
 Vue.js 不支持 IE8 及其以下版本，因为 Vue.js 使用了 IE8 不能模拟的 ECMAScript 5 特性。 Vue.js 支持所有[兼容 ECMAScript 5 的浏览器](http://caniuse.com/#feat=es5)。

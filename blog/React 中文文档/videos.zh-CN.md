@@ -1,11 +1,4 @@
----
-id: videos-zh-CN
-title: 视频
-permalink: docs/videos-zh-CN.html
-prev: conferences-zh-CN.html
-next: complementary-tools-zh-CN.html
----
-
+##  视频
 ### Rethinking best practices - JSConf.eu
 
 <iframe width="650" height="366" src="https://www.youtube-nocookie.com/embed/x7cQ3mrcKaY" frameborder="0" allowfullscreen></iframe>

@@ -1,11 +1,4 @@
----
-id: advanced-performance-zh-CN
-title: 提高性能
-permalink: docs/advanced-performance-zh-CN.html
-prev: shallow-compare-zh-CN.html
-next: context-zh-CN.html
----
-
+##  提高性能
 当人们考虑将React应用到自己的系统里时，都会想知道React是否可以和非React的应用一样可以快速的响应各种用户的操作。改变组件的state时，它会重新渲染组件的所有子节点，有人会怀疑这种重新渲染会带来很大的性能开销。但是React使用很多技术来最小化的减少DOM操作的开销达到更新UI的效果。
 
 ## 使用生产构建版本

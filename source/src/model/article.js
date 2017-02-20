@@ -128,32 +128,32 @@ const processItem = (item, content)=>{
     item.content = content;
     return item;
   }
-  let start = content.indexOf('---');
   let isRaw = true;
-  if(start>-1){
-    let end;
-    if(start===0){
-      start = start+3;
-      end = content.substring(start).indexOf('---') + start;
-    }else{
-      end = start;
-      start = 0;
-    }
-    let arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
-    if(arr){
-      let attrDict = {};
-      arr.forEach(function(o){
-        let point = o.indexOf(':');
-        attrDict[o.substring(0, point)] = o.substring(point+1);
-      });
-      item.title = attrDict.title || item.title;
-      isRaw = false;
-      content = content.substring(end+3).trim();
-      if(attrDict.dest_url){
-        content = '链接：['+attrDict.dest_url+']('+attrDict.dest_url+')'
-      }
-    }
-  }
+  // let start = content.indexOf('---');
+  // if(start>-1){
+  //   let end;
+  //   if(start===0){
+  //     start = start+3;
+  //     end = content.substring(start).indexOf('---') + start;
+  //   }else{
+  //     end = start;
+  //     start = 0;
+  //   }
+  //   let arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
+  //   if(arr){
+  //     let attrDict = {};
+  //     arr.forEach(function(o){
+  //       let point = o.indexOf(':');
+  //       attrDict[o.substring(0, point)] = o.substring(point+1);
+  //     });
+  //     item.title = attrDict.title || item.title;
+  //     isRaw = false;
+  //     content = content.substring(end+3).trim();
+  //     if(attrDict.dest_url){
+  //       content = '链接：['+attrDict.dest_url+']('+attrDict.dest_url+')'
+  //     }
+  //   }
+  // }
   if(isRaw){
     let arr = content.match(/^[\s]*#[^\n]+[\s]*/);
     if(arr){

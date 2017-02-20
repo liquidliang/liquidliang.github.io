@@ -1,9 +1,4 @@
----
-title: 过渡状态
-type: guide
-order: 14
----
-
+##  过渡状态
 Vue 的过渡系统提供了非常多简单的方法设置进入、离开和列表的动效。那么对于数据元素本身的动效呢，比如：
 
 - 数字和运算
@@ -532,4 +527,3 @@ new Vue({
 > 原文： http://vuejs.org/guide/transitioning-state.html
 
 ***
-

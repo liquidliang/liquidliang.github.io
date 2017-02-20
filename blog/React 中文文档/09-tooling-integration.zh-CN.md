@@ -1,10 +1,4 @@
----
-id: tooling-integration-zh-CN
-title: 工具集成
-permalink: docs/tooling-integration-zh-CN.html
-prev: more-about-refs-zh-CN.html
-next: addons-zh-CN.html
----
+## 工具集成
 
 我们尽可能使 React 与环境无关。大家可以在各种语言（JavaScript, TypeScript, ClojureScript, etc）与各种环境(web, iOS, Android, NodeJS, Nashorn, etc)中使用 React。这里有很多工具来帮助你创建优秀的应用。在这一节中我们介绍一些在 React 中最流行的工具。
 
