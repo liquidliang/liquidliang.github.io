@@ -1,15 +1,7 @@
 [
  {
-  "path": "blog/react/videos.markdown",
-  "mtime": 1487499590876
- },
- {
   "path": "blog/react/videos.md",
-  "mtime": 1487499590876
- },
- {
-  "path": "blog/react/videos.zh-CN - 副本.md",
-  "mtime": 1487570220124
+  "mtime": 1487570302000
  },
  {
   "path": "blog/react/videos.zh-CN.md",
@@ -2201,9 +2193,9 @@
  },
  {
   "path": "blog/react",
-  "mtime": 1487570225037,
+  "mtime": 1487570302000,
   "isDirectory": 1,
-  "num": 4
+  "num": 2
  },
  {
   "path": "blog/React 中文文档",
