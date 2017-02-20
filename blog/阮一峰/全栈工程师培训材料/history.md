@@ -162,7 +162,7 @@ App.Router = Backbone.Router.extend({
 
 ## 示例：Backbone Router
 
-打开`demos/backbone-demo/index.html`，按照[《操作说明》](../demos/README.md#backbone)，查看示例。
+打开`demos/backbone-demo/index.html`，按照[《操作说明》](https://github.com/ruanyf/jstraining/tree/master/demos/README.md#backbone)，查看示例。
 
 ![](/images/jstraining/backbone-demo.png)
 
@@ -258,7 +258,7 @@ Vue.js 是现在很热门的一种前端 MVVM 框架。
 
 Vue 的模板与数据，是双向绑定的。
 
-打开`demos/vue-demo/index1.html`，按照[《操作说明》](../demos/README.md#vue)，查看示例。
+打开`demos/vue-demo/index1.html`，按照[《操作说明》](https://github.com/ruanyf/jstraining/tree/master/demos/README.md#vue)，查看示例。
 
 ![](/images/jstraining/vue-demo.png)
 
