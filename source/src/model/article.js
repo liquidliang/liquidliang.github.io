@@ -139,16 +139,19 @@ const processItem = (item, content)=>{
       end = start;
       start = 0;
     }
-    let arr = content.substring(start, end).match(/([^:\n]+:[^:\n]+)/g);
+    let arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
     if(arr){
       let attrDict = {};
       arr.forEach(function(o){
-        let kv = o.split(':');
-        attrDict[kv[0]] = kv[1];
+        let point = o.indexOf(':');
+        attrDict[o.substring(0, point)] = o.substring(point+1);
       });
       item.title = attrDict.title || item.title;
       isRaw = false;
       content = content.substring(end+3).trim();
+      if(attrDict.dest_url){
+        content = '链接：['+attrDict.dest_url+']('+attrDict.dest_url+')'
+      }
     }
   }
   if(isRaw && /^#[^\n]+[\n]/.test(content)){
@@ -233,7 +236,7 @@ const init = (list) => {
         tagList: tags
       };
       if (articleDict[path]) {
-        $.extend(articleDict[path], item);
+        item = $.extend(articleDict[path], item);
       } else {
         articleDict[path] = item;
       }
@@ -358,7 +361,7 @@ const testItem = (reg, item) => {
     testType += 1;
     let titleMathLength = 0;
     for (var key in titleMatchDict) {
-      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : key.length * titleMatchDict[key];
+      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : Math.pow(1.6, key.length-1) * titleMatchDict[key];
     }
     searchWeight += titleMathLength / item.title.length;
   }
@@ -394,7 +397,7 @@ const testItem = (reg, item) => {
     let contentMathLength = 0;
 
     for (var key in contentMatchDict) {
-      contentMathLength += /\w/.test(key) ? contentMatchDict[key] : key.length * contentMatchDict[key];
+      contentMathLength += /\w/.test(key) ? contentMatchDict[key] : Math.pow(1.6, key.length-1) * contentMatchDict[key];
     }
     searchWeight += contentMathLength / Math.pow(item.content.length, 0.6);
   }

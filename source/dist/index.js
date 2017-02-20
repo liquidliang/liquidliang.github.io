@@ -394,17 +394,20 @@
 	      end = start;
 	      start = 0;
 	    }
-	    var arr = content.substring(start, end).match(/([^:\n]+:[^:\n]+)/g);
+	    var arr = content.substring(start, end).match(/([^:\n]+:[^\n]+)/g);
 	    if (arr) {
 	      (function () {
 	        var attrDict = {};
 	        arr.forEach(function (o) {
-	          var kv = o.split(':');
-	          attrDict[kv[0]] = kv[1];
+	          var point = o.indexOf(':');
+	          attrDict[o.substring(0, point)] = o.substring(point + 1);
 	        });
 	        item.title = attrDict.title || item.title;
 	        isRaw = false;
 	        content = content.substring(end + 3).trim();
+	        if (attrDict.dest_url) {
+	          content = '链接：[' + attrDict.dest_url + '](' + attrDict.dest_url + ')';
+	        }
 	      })();
 	    }
 	  }
@@ -494,7 +497,7 @@
 	        tagList: _tags
 	      };
 	      if (articleDict[path]) {
-	        $.extend(articleDict[path], _item);
+	        _item = $.extend(articleDict[path], _item);
 	      } else {
 	        articleDict[path] = _item;
 	      }
@@ -653,7 +656,7 @@
 	    testType += 1;
 	    var titleMathLength = 0;
 	    for (var key in titleMatchDict) {
-	      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : key.length * titleMatchDict[key];
+	      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : Math.pow(1.6, key.length - 1) * titleMatchDict[key];
 	    }
 	    searchWeight += titleMathLength / item.title.length;
 	  }
@@ -694,7 +697,7 @@
 	      var contentMathLength = 0;
 	
 	      for (key in contentMatchDict) {
-	        contentMathLength += /\w/.test(key) ? contentMatchDict[key] : key.length * contentMatchDict[key];
+	        contentMathLength += /\w/.test(key) ? contentMatchDict[key] : Math.pow(1.6, key.length - 1) * contentMatchDict[key];
 	      }
 	      searchWeight += contentMathLength / Math.pow(item.content.length, 0.6);
 	    })();
@@ -1107,8 +1110,10 @@
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
 	  var viewInput = ele.find('input');
 	  var viewDrop = ele.find('ul').setView({
-	    template: '<%(obj||[]).forEach(function(o){%>' + '<li><a data-on="?m=go" data-url="<%=o.href%>"><%=o.title%></a></li>' + '<%})%>'
+	    template: '<%(obj||[]).forEach(function(o){%>' + '<li data-on="?m=go" data-url="<%=o.href%>"><a><%=o.title%></a></li>' + //
+	    '<%})%>'
 	  });
+	
 	  var viewGroup = ele.find('.form-group');
 	  var getWord = function getWord() {
 	    return viewInput.val().trim();
@@ -1132,20 +1137,43 @@
 	    }
 	  });
 	  var selectLi = null;
+	  var selectList = null;
 	  var index = -1;
 	  var oldWord = '';
 	  viewInput.on('blur', function () {
-	    viewDrop.hide();
+	    setTimeout(function () {
+	      viewDrop.hide();
+	    }, 200);
 	  });
+	  ele.on('keydown', function (e) {
+	    //上下选择
+	    if (selectList && (e.keyCode == 40 || e.keyCode == 38)) {
+	
+	      if (e.keyCode == 40) {
+	        index++;
+	        if (index >= selectList.length) {
+	          index = 0;
+	        }
+	      }
+	      if (e.keyCode == 38) {
+	        index--;
+	        if (index <= -selectList.length) {
+	          index = 0;
+	        }
+	      }
+	      selectList.css('background-color', '');
+	      selectLi = selectList.eq(index);
+	      selectLi.css('background-color', '#b2d8fa');
+	    }
+	  });
+	
 	  ele.on('keyup', function (e) {
 	    //keypress要慢一拍 keypress input keyup
-	    //console.log(e);
 	    var word = getWord();
 	    if (word) {
 	      if (e.keyCode == 32) {
 	        return doSearch();
 	      }
-	      var lis = viewDrop.find('a');
 	      if (e.keyCode == 13) {
 	        if (selectLi) {
 	          selectLi.trigger('click');
@@ -1153,38 +1181,21 @@
 	          doSearch();
 	        }
 	      }
-	      if (e.keyCode == 40) {
-	        index++;
-	        if (index >= lis.length) {
-	          index = 0;
-	        }
-	      }
-	      if (e.keyCode == 38) {
-	        index--;
-	        if (index <= -lis.length) {
-	          index = 0;
-	        }
-	      }
 	
 	      if (word == oldWord) {
-	        //上下选择
-	        if (e.keyCode == 40 || e.keyCode == 38) {
-	          lis.css('background-color', '');
-	          selectLi = lis.eq(index);
-	          selectLi.css('background-color', 'aliceblue');
-	        }
-	
-	        return;
+	        return viewDrop.show();
 	      }
 	      oldWord = word;
 	      var list = m_article.searchDirect(word);
 	      if (list.length) {
 	        index = -1;
 	        selectLi = null;
-	        return viewDrop.reset(list);
+	        viewDrop.reset(list);
+	        selectList = viewDrop.find('li');
 	      }
+	    } else {
+	      viewDrop.hide();
 	    }
-	    viewDrop.hide();
 	  });
 	});
 	
