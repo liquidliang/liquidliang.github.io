@@ -415,13 +415,13 @@
 	    var _arr = content.match(/^[\s]*#[^\n]+[\s]*/);
 	    if (_arr) {
 	      var title = _arr[0];
-	      item.title = title.replace(/[#\s]+/, '');
+	      item.title = title.replace(/[#\s]+/, '').trim();
 	      content = content.replace(title, '');
 	      isRaw = false;
 	    }
 	  }
 	
-	  item.content = content = (content || '').replace(/^[\s]*---[\w\W]*---[\s]*/, '');
+	  item.content = content = (content || '').replace(/^[\s]*---[-]*/, '');
 	  item.tfList = m_search.getTFs(content);
 	  item.summary = getSortContent(content);
 	  return item;
