@@ -44,4 +44,4 @@
 * <%[对比其他框架](guide/comparison.md)%>
 * <%[加入Vue.js社区](guide/join.md)%>
 
-### <%[示例](https://cn.vuejs.org/v2/examples/)%>
+#### [示例](https://cn.vuejs.org/v2/examples/)
