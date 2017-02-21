@@ -516,50 +516,6 @@
   "mtime": 1487583038451
  },
  {
-  "path": "blog/vuejs/examples/commits.md",
-  "mtime": 1487583038451
- },
- {
-  "path": "blog/vuejs/examples/elastic-header.md",
-  "mtime": 1487583038452
- },
- {
-  "path": "blog/vuejs/examples/firebase.md",
-  "mtime": 1487583038453
- },
- {
-  "path": "blog/vuejs/examples/grid-component.md",
-  "mtime": 1487583038453
- },
- {
-  "path": "blog/vuejs/examples/hackernews.md",
-  "mtime": 1487583038454
- },
- {
-  "path": "blog/vuejs/examples/index.md",
-  "mtime": 1487583038454
- },
- {
-  "path": "blog/vuejs/examples/modal.md",
-  "mtime": 1487583038454
- },
- {
-  "path": "blog/vuejs/examples/select2.md",
-  "mtime": 1487583038455
- },
- {
-  "path": "blog/vuejs/examples/svg.md",
-  "mtime": 1487583038455
- },
- {
-  "path": "blog/vuejs/examples/todomvc.md",
-  "mtime": 1487583038456
- },
- {
-  "path": "blog/vuejs/examples/tree-view.md",
-  "mtime": 1487583038458
- },
- {
   "path": "blog/vuejs/guide/class-and-style.md",
   "mtime": 1487583038458
  },
@@ -677,7 +633,7 @@
  },
  {
   "path": "blog/vuejs/$sidebar$.md",
-  "mtime": 1487507453586
+  "mtime": 1487640268656
  },
  {
   "path": "blog/vuejs/api",
@@ -690,12 +646,6 @@
   "mtime": 1487505586971,
   "isDirectory": 1,
   "num": 2
- },
- {
-  "path": "blog/vuejs/examples",
-  "mtime": 1487505586987,
-  "isDirectory": 1,
-  "num": 11
  },
  {
   "path": "blog/vuejs/guide",
@@ -1937,9 +1887,9 @@
  },
  {
   "path": "blog/vuejs",
-  "mtime": 1487505776761,
+  "mtime": 1487640233842,
   "isDirectory": 1,
-  "num": 48
+  "num": 36
  },
  {
   "path": "blog/我的文章",

@@ -84,36 +84,34 @@ const getMutiSamples = () => {
       }
     }
   }
-  return retList.concat(originList.slice(0, 10-retList.length));
+  return retList.concat(originList.slice(0, 10 - retList.length));
 }
 
+
+
 const getRecommend = (callback) => {
-  let key = decodeURIComponent(BCD.getHash(0));
-  let articleList = getMutiSamples();
   let delayTime = 2E3 - (Date.now() - m_article.startTime);
   delayTime = m_article.isPreload ? 0 : (delayTime < 0 ? 0 : delayTime);
+  setTimeout(function () {
+    let key = decodeURIComponent(BCD.getHash(0));
+    let articleList = getMutiSamples();
 
-  switch (true) {
-  case key == 'tag':
-    let word = decodeURIComponent(BCD.getHash(1));
-    setTimeout(function () {
+    switch (true) {
+    case key == 'tag':
+      let word = decodeURIComponent(BCD.getHash(1));
       m_article.searchList(word, (list) => {
         callback(filter(list.concat(articleList)));
       }, true);
-    }, delayTime);
-    break;
-  case m_article.hasArticle(key):
-    setTimeout(function () {
+      break;
+    case m_article.hasArticle(key):
       m_article.getArticleContent(key).then((data) => {
         let tagList = data.tagList;
         let keyWords = (data.tfList || []).slice(0, 10).map(o => o.token);
         console.log('本文关键词为：', keyWords.join(','));
         callback(filter(getSimilarArticles(data.tfList).concat(articleList)));
       });
-    }, delayTime);
-    break;
-  case m_article.hasCatalog(key):
-    setTimeout(function () {
+      break;
+    case m_article.hasCatalog(key):
       m_article.getListByCatalog(key, 0, 999).then((data) => {
         //在目录列表中已经有当前目录文章的展示了，在这里优先展示搜索到的内容
         let catalog = m_article.getCatalogMessage(key);
@@ -122,16 +120,13 @@ const getRecommend = (callback) => {
           callback(filter(list.concat(alist.concat(articleList))));
         }, true);
       });
-    }, delayTime);
-    break;
+      break;
 
-  default:
-    callback(articleList);
-    break;
-
-  }
-
-
+    default:
+      callback(articleList);
+      break;
+    }
+  }, delayTime);
 
 };
 module.exports = {

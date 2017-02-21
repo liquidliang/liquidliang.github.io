@@ -1559,52 +1559,45 @@
 	};
 	
 	var getRecommend = function getRecommend(callback) {
-	  var key = decodeURIComponent(BCD.getHash(0));
-	  var articleList = getMutiSamples();
 	  var delayTime = 2E3 - (Date.now() - m_article.startTime);
 	  delayTime = m_article.isPreload ? 0 : delayTime < 0 ? 0 : delayTime;
+	  setTimeout(function () {
+	    var key = decodeURIComponent(BCD.getHash(0));
+	    var articleList = getMutiSamples();
 	
-	  (function () {
 	    switch (true) {
 	      case key == 'tag':
 	        var word = decodeURIComponent(BCD.getHash(1));
-	        setTimeout(function () {
-	          m_article.searchList(word, function (list) {
-	            callback(filter(list.concat(articleList)));
-	          }, true);
-	        }, delayTime);
+	        m_article.searchList(word, function (list) {
+	          callback(filter(list.concat(articleList)));
+	        }, true);
 	        break;
 	      case m_article.hasArticle(key):
-	        setTimeout(function () {
-	          m_article.getArticleContent(key).then(function (data) {
-	            var tagList = data.tagList;
-	            var keyWords = (data.tfList || []).slice(0, 10).map(function (o) {
-	              return o.token;
-	            });
-	            console.log('本文关键词为：', keyWords.join(','));
-	            callback(filter(getSimilarArticles(data.tfList).concat(articleList)));
+	        m_article.getArticleContent(key).then(function (data) {
+	          var tagList = data.tagList;
+	          var keyWords = (data.tfList || []).slice(0, 10).map(function (o) {
+	            return o.token;
 	          });
-	        }, delayTime);
+	          console.log('本文关键词为：', keyWords.join(','));
+	          callback(filter(getSimilarArticles(data.tfList).concat(articleList)));
+	        });
 	        break;
 	      case m_article.hasCatalog(key):
-	        setTimeout(function () {
-	          m_article.getListByCatalog(key, 0, 999).then(function (data) {
-	            //在目录列表中已经有当前目录文章的展示了，在这里优先展示搜索到的内容
-	            var catalog = m_article.getCatalogMessage(key);
-	            var alist = data.list || [];
-	            m_article.searchList(catalog.tagList.join(' '), function (list) {
-	              callback(filter(list.concat(alist.concat(articleList))));
-	            }, true);
-	          });
-	        }, delayTime);
+	        m_article.getListByCatalog(key, 0, 999).then(function (data) {
+	          //在目录列表中已经有当前目录文章的展示了，在这里优先展示搜索到的内容
+	          var catalog = m_article.getCatalogMessage(key);
+	          var alist = data.list || [];
+	          m_article.searchList(catalog.tagList.join(' '), function (list) {
+	            callback(filter(list.concat(alist.concat(articleList))));
+	          }, true);
+	        });
 	        break;
 	
 	      default:
 	        callback(articleList);
 	        break;
-	
 	    }
-	  })();
+	  }, delayTime);
 	};
 	module.exports = {
 	  getRecommend: getRecommend

@@ -44,15 +44,4 @@
 * <%[对比其他框架](guide/comparison.md)%>
 * <%[加入Vue.js社区](guide/join.md)%>
 
-### 示例
-* <%[Markdown 编辑器](examples/index.md)%>
-* <%[commits](examples/commits.md)%>
-* <%[elastic-header](examples/elastic-header.md)%>
-* <%[firebase](examples/firebase.md)%>
-* <%[grid-component](examples/grid-component.md)%>
-* <%[hackernews](examples/hackernews.md)%>
-* <%[modal](examples/modal.md)%>
-* <%[select2](examples/select2.md)%>
-* <%[svg](examples/svg.md)%>
-* <%[todomvc](examples/todomvc.md)%>
-* <%[tree-view](examples/tree-view.md)%>
+### <%[示例](https://cn.vuejs.org/v2/examples/)%>
