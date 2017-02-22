@@ -161,7 +161,7 @@ const processItem = (item, content)=>{
   //   }
   // }
   if(isRaw){
-    let arr = content.match(/^[\s]*#[^\n]+[\s]*/);
+    let arr = content.match(/^[\s]*#[^\n\(]+[\n]/);
     if(arr){
      let title = arr[0];
      item.title = title.replace(/[#\s]+/, '').trim();
@@ -170,7 +170,7 @@ const processItem = (item, content)=>{
     }
   }
 
-  item.content = content = (content || '').replace(/^[\s]*---[-]*/, '');
+  item.content = content;// = (content || '').replace(/^[\s]*---[-]*/, '');
   item.tfList = m_search.getTFs(content);
   item.summary = getSortContent(content);
   return item;

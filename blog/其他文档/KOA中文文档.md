@@ -1,4 +1,4 @@
-## ![koa](http://ww4.sinaimg.cn/large/61ff0de3gw1ebtqstxfuvj202g01awea.jpg) 中文文档 [![koa@npm](https://badge.fury.io/js/koa.png)](https://npmjs.org/package/koa)&nbsp;[![Build Status](https://travis-ci.org/koajs/koa.png)](https://travis-ci.org/koajs/koa)
+![koa](http://ww4.sinaimg.cn/large/61ff0de3gw1ebtqstxfuvj202g01awea.jpg)  [![koa@npm](https://badge.fury.io/js/koa.png)](https://npmjs.org/package/koa)&nbsp;[![Build Status](https://travis-ci.org/koajs/koa.png)](https://travis-ci.org/koajs/koa)
 
 [![NPM](https://nodei.co/npm/koa.png)](https://nodei.co/npm/koa/) [![NPM](https://nodei.co/npm-dl/koa.png?months=6)](https://nodei.co/npm/koa/)
 

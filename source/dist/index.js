@@ -416,7 +416,7 @@
 	  //   }
 	  // }
 	  if (isRaw) {
-	    var arr = content.match(/^[\s]*#[^\n]+[\s]*/);
+	    var arr = content.match(/^[\s]*#[^\n\(]+[\n]/);
 	    if (arr) {
 	      var title = arr[0];
 	      item.title = title.replace(/[#\s]+/, '').trim();
@@ -425,7 +425,7 @@
 	    }
 	  }
 	
-	  item.content = content = (content || '').replace(/^[\s]*---[-]*/, '');
+	  item.content = content; // = (content || '').replace(/^[\s]*---[-]*/, '');
 	  item.tfList = m_search.getTFs(content);
 	  item.summary = getSortContent(content);
 	  return item;
