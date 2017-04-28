@@ -11,13 +11,13 @@ var expectedCaches = [
   businessCacheName, //业务代码  对于开发者常变，先用缓存，同时更新，下次进来再用新的(更新不需要改version)。
   libCacheName, //各种引用库的资源 不常变，可以通过更改version实现更新。
   markdownCacheName, //文章资源 根据规则变
-  imageCacheName  //图片资源，由于没办法完全从链接判断是否为图片，回包后再判断是否为图片，然后缓存
+  imageCacheName //图片资源，由于没办法完全从链接判断是否为图片，回包后再判断是否为图片，然后缓存
 ];
 //正则匹配缓存文件
 var regDict = {};
 
 regDict[markdownCacheName] = /\.md$|\.md\?[^?]+$/;
-regDict[libCacheName] = /\.js$|\.css$|\.html$|\.woff|\.woff2$/;
+regDict[libCacheName] = /\.js$|\.css$|\.html$|\.woff|\.woff2|\.ico$/;
 //安装文件
 var FILES = [
   '/',
@@ -69,41 +69,64 @@ self.addEventListener('activate', function (event) {
     }));
 });
 
-var getNoSearch = function(url){
-  return url.replace(/\?[^?]+/,'');
+var getNoSearch = function (url) {
+  return url.replace(/\?[^?]+/, '');
 }
 
+function _fetch(url, timeout) {
+      var abort_fn = null;
+      var fetch_promise = fetch(url);
+
+      //这是一个可以被reject的promise
+      var abort_promise = new Promise(function(resolve, reject) {
+             abort_fn = function() {
+                reject(new Error('fetch timeout!'));
+             };
+      });
+
+      //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
+       var abortable_promise = Promise.race([
+             fetch_promise,
+             abort_promise
+       ]);
+
+       setTimeout(function() {
+             abort_fn();
+        }, timeout || 2E3);
+
+       return abortable_promise;
+}
 //更新缓存
 var addToCache = function (dbName, req, response) {
 
-  return fetch(req.clone()).then(function (resp) {
-    if(resp.type !== 'basic' && resp.type !== 'cors'){
-        return resp;
+  return _fetch(req.clone()).then(function (resp) {
+    if (resp.type !== 'basic' && resp.type !== 'cors') {
+      return resp;
     }
 
     if (resp.status !== 200) {
       throw new Error('response status is ' + resp.status);
     }
     var contentType = resp.headers.get('content-type');
-    if(contentType.indexOf('text/html') > -1){
+    if (contentType.indexOf('text/html') > -1) {
       //避免缓存了上网时需要先登录的页面
       var arr = req.url.match(/\.[a-z]+$/);
-      if(arr){
+      if (arr) {
         var ext = arr[0].substr(1);
-        if(ext!='html'){
+        if (ext != 'html') {
           throw new Error('response content-type is ' + contentType);
         }
       }
     }
 
     var cacheResp = resp.clone();
-    if(dbName===imageCacheName && !/^image\//.test(contentType)){
+    if (dbName === imageCacheName && !/^image\//.test(contentType)) {
       return resp;
     }
     caches.open(dbName).then(function (cache) {
       //删除旧文件
       cache.keys().then(function (oldReqList) {
-        if(req.url.indexOf('?') > 0){
+        if (req.url.indexOf('?') > 0) {
           let urlKey = getNoSearch(req.url) + '?';
           oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
             cache.delete(oldReq);
@@ -120,20 +143,20 @@ var addToCache = function (dbName, req, response) {
       console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
       return response;
     } else {
-      return caches.open(dbName).then(function(cache) {
+      return caches.open(dbName).then(function (cache) {
         //取旧缓存
         let urlKey = getNoSearch(req.url);
-        return cache.keys().then(function(oldReqList){
+        return cache.keys().then(function (oldReqList) {
           let oldReq;
-          while(oldReq=oldReqList.pop()){
-            if(oldReq.url.indexOf(urlKey) > -1){
+          while (oldReq = oldReqList.pop()) {
+            if (oldReq.url.indexOf(urlKey) > -1) {
               return cache.match(oldReq)
             }
           }
           return null;
         });
-      }).then(function(resp){
-        if(resp){
+      }).then(function (resp) {
+        if (resp) {
           console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
           return resp;
         }
@@ -190,7 +213,7 @@ self.addEventListener('fetch', function (event) {
     }
   }
 
-  if(requestURL.protocol!='https:' || /\.json$/.test(url)){
+  if (requestURL.protocol != 'https:' || /\.json$/.test(url)) {
     return;
   }
 
@@ -210,7 +233,7 @@ function iterator(originList, callback) {
   }
 }
 //dict格式：{url: resp.text()}
-var getTexts = function(dict){
+var getTexts = function (dict) {
   var pList = [];
   var urlList = [];
   for (var key in dict) {
@@ -230,8 +253,8 @@ var getTexts = function(dict){
 var preloadList = function (urlList) {
   let retDict = {};
   return new Promise(function (resolve) {
-    if(urlList.length===0){
-      return setTimeout(()=>resolve(regDict), 300);
+    if (urlList.length === 0) {
+      return setTimeout(() => resolve(regDict), 300);
     }
     iterator(urlList, function (url, next, list) {
       let myRequest = new Request(url);
@@ -262,67 +285,66 @@ var preloadList = function (urlList) {
   });
 };
 
-var preloadAtricle = function(urlList, callback){
+var preloadAtricle = function (urlList, callback, option) {
   var urlDict = {};
   var noSearchDict = {};
   var needReloadList = [];
   var retDict = {};
-  urlList.forEach(function(o){
+  urlList.forEach(function (o) {
     var url = new Request(o).url;
     noSearchDict[getNoSearch(url)] = 1;
     urlDict[url] = 1;
   });
 
-  return caches.open(markdownCacheName).then(function(cache) {
+  return caches.open(markdownCacheName).then(function (cache) {
     //取旧缓存
     // let urlKey = req.url.replace(/\?[^?]+/,'');
     // if(oldReq.url.indexOf(urlKey) > -1){
     //   return cache.match(oldReq)
     // }
-    return cache.keys().then(function(reqList){
+    return cache.keys().then(function (reqList) {
       var oldReq;
-      while(oldReq=reqList.pop()){
+      while (oldReq = reqList.pop()) {
         let noSearchURL = getNoSearch(oldReq.url);
-        if(urlDict[oldReq.url]){
+        if (urlDict[oldReq.url]) {
           delete noSearchDict[noSearchURL];
-          retDict[oldReq.url] = cache.match(oldReq).then(function(resq){
-            return resq.text();
+          retDict[oldReq.url] = cache.match(oldReq).then(function (resq) {
+            return resq && resq.text();
           });
           delete urlDict[oldReq.url];
-        }else if(noSearchDict[getNoSearch(oldReq.url)]){
-          retDict[oldReq.url] = cache.match(oldReq).then(function(resq){
-            return resq.text();
+        } else if (noSearchDict[getNoSearch(oldReq.url)]) {
+          retDict[oldReq.url] = cache.match(oldReq).then(function (resq) {
+            return resq && resq.text();
           });
         }
       }
-      for(var url in urlDict){
+      for (var url in urlDict) {
         needReloadList.push(url);
       }
-      preloadList(needReloadList).then(callback).then(sendMessage);
+      preloadList(needReloadList).then(callback).then(function(resp){
+        callbackDict.preloadAtricle.push(option);
+        sendMessage(resp);
+      });
       return getTexts(retDict);
     });
- });
+  });
 };
 
 //sw与页面通信
-function _processMessage(data, senderID) {
-  data = data || {};
-  var cbid = data.cbid;
-  var msgObj = data.req;
-  var resolveFun = function(result){
+function _processMessage(msgObj, option) {
+  var resolveFun = function (result) {
     return {
-      senderID: senderID,
-      cbid: cbid,
-      resp: result
+      m: msgObj.m,
+      result: result
     }
   };
   switch (msgObj.m) {
-  case 'preload':
-    return preloadList(msgObj.list).then(resolveFun);
-  case 'preloadAtricle':
-    return preloadAtricle(msgObj.list, resolveFun).then(resolveFun);
-  case 'delete_not_exist_article':
-    let articleDict = msgObj.dict;
+  case 'preload': //arr
+    return preloadList(msgObj.data).then(resolveFun);
+  case 'preloadAtricle': //arr
+    return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
+  case 'delete_not_exist_article': //dict
+    let articleDict = msgObj.data;
     if (!articleDict) {
       return new Promise(function () {});
     }
@@ -344,26 +366,42 @@ function _processMessage(data, senderID) {
   }
 }
 
-function sendMessage(resp){
-  if(!resp || !('cbid' in resp)){
+var callbackDict = {};
+
+function sendMessage(resp) {
+  if (!(resp && callbackDict[resp.m])) {
     return;
   }
+  var callbackList = callbackDict[resp.m];
   return self.clients.matchAll()
     .then(function (clientList) {
-      if (resp.senderID === null) {
-        console.log('event.source is null; we don\'t know the sender of the ' +
-          'message');
-        clientList.forEach(function (client) {
-          client.postMessage(resp);
-        });
-      } else {
-        clientList.some(function (client) {
-          // Skip sending the message to the client that sent it.
-          if (client.id === resp.senderID) {
-            client.postMessage(resp);
-            return true;
-          }
-        });
+      var option = {};
+      console.log('callbackList.length', callbackList.length);
+      while(option = callbackList.pop()){
+        if(!option.cbid){
+          continue;
+        }
+        if (option.senderID === null) {
+          console.log('event.source is null; we don\'t know the sender of the ' +
+            'message');
+          clientList.forEach(function (client) {
+            client.postMessage({
+              cbid: option.cbid,
+              resp: resp.result
+            });
+          });
+        } else {
+          clientList.some(function (client) {
+            // Skip sending the message to the client that sent it.
+            if (client.id === option.senderID) {
+              client.postMessage({
+                cbid: option.cbid,
+                resp: resp.result
+              });
+              return true;
+            }
+          });
+        }
       }
     });
 }
@@ -371,8 +409,20 @@ function sendMessage(resp){
 // Listen for messages from clients.
 self.addEventListener('message', function (event) {
   // Get all the connected clients and forward the message along.
+  var msgObj = event.data || {};
   var senderID = event.source ? event.source.id : null; //在低版本中可能没有“source”属性
-  var promise = _processMessage(event.data, senderID).then(sendMessage);
+  var option = {
+    cbid: msgObj.cbid,
+    senderID: senderID
+  }
+  var promise;
+  if (callbackDict[msgObj.m] && callbackDict[msgObj.m].length) {
+    callbackDict[msgObj.m].push(option);
+  } else {
+    callbackDict[msgObj.m] = [option];
+    promise = _processMessage(msgObj, option).then(sendMessage);
+  }
+
   // If event.waitUntil is defined (not yet in Chrome because of the same issue detailed before),
   // use it to extend the lifetime of the Service Worker.
   if (event.waitUntil) {
@@ -464,7 +514,7 @@ self.addEventListener('message', function (event) {
             throw new NetworkError("Invalid scheme");
           }
 
-          return fetch(request.clone());
+          return _fetch(request.clone());
         })
       );
     }).then(function (responses) {

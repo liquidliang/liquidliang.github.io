@@ -16,7 +16,10 @@ if (navigator.serviceWorker) {
   postMessage = function(req, callback){
     if(navigator.serviceWorker.controller && navigator.serviceWorker.controller.state=='activated'){
       index++;
-      let obj = {req};
+      let obj = {
+        m: req.m,
+        data: req.data
+      };
       if(callback){
         obj.cbid = m_util.getRandomName() + index;
         callbackDict[obj.cbid] = callback;
