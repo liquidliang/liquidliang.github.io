@@ -1123,6 +1123,7 @@
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
 	  var viewInput = ele.find('input');
 	  var viewDrop = ele.find('ul').setView({
+	    name: 'link/drop',
 	    template: '<%(obj||[]).forEach(function(o){%>' + '<li data-on="?m=go" data-url="<%=o.href%>"><a><%=o.title%></a></li>' + //
 	    '<%})%>'
 	  });
@@ -1189,7 +1190,7 @@
 	      }
 	      if (e.keyCode == 13) {
 	        if (selectLi) {
-	          selectLi.trigger('click');
+	          selectLi.find('a').trigger('click');
 	        } else {
 	          doSearch();
 	        }
