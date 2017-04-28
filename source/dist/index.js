@@ -449,7 +449,7 @@
 	
 	  swPostMessage({
 	    m: 'delete_not_exist_article',
-	    dict: existDict
+	    data: existDict
 	  });
 	
 	  if (isPreload) {
@@ -540,14 +540,13 @@
 	  BCD.ajaxCache('./json/article.json', function (data) {
 	    init(data);
 	    processCount++;
-	    if (processCount === 2) {
-	      //如果网络请求失败，这里不会被执行
-	      var totalList = sidebarList.concat(articleList);
-	      swPostMessage({
-	        m: 'preloadAtricle',
-	        list: totalList.map(getURL)
-	      }, preload);
-	    }
+	    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
+	    //   let totalList = sidebarList.concat(articleList);
+	    //   swPostMessage({
+	    //     m: 'preloadAtricle',
+	    //     data: totalList.map(getURL)
+	    //   }, preload);
+	    // }
 	    resolve();
 	    return 1; //缓存数据到localStorage
 	  }, 0, 1E3, true);
@@ -1039,7 +1038,10 @@
 	  postMessage = function postMessage(req, callback) {
 	    if (navigator.serviceWorker.controller && navigator.serviceWorker.controller.state == 'activated') {
 	      index++;
-	      var obj = { req: req };
+	      var obj = {
+	        m: req.m,
+	        data: req.data
+	      };
 	      if (callback) {
 	        obj.cbid = m_util.getRandomName() + index;
 	        callbackDict[obj.cbid] = callback;

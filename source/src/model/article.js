@@ -194,7 +194,7 @@ const preload = (obj) => {
 
   swPostMessage({
     m: 'delete_not_exist_article',
-    dict: existDict
+    data: existDict
   });
 
 
@@ -281,13 +281,13 @@ const initArticle = new Promise((resolve) => {
   BCD.ajaxCache('./json/article.json', (data) => {
     init(data);
     processCount++;
-    if (processCount === 2) { //如果网络请求失败，这里不会被执行
-      let totalList = sidebarList.concat(articleList);
-      swPostMessage({
-        m: 'preloadAtricle',
-        list: totalList.map(getURL)
-      }, preload);
-    }
+    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
+    //   let totalList = sidebarList.concat(articleList);
+    //   swPostMessage({
+    //     m: 'preloadAtricle',
+    //     data: totalList.map(getURL)
+    //   }, preload);
+    // }
     resolve();
     return 1; //缓存数据到localStorage
   }, 0, 1E3, true);
