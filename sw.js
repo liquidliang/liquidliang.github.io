@@ -330,7 +330,31 @@ var preloadAtricle = function (urlList, callback, option) {
   });
 };
 
-//sw与页面通信
+function sendNote(mesage){
+  console.log('send Note');
+  var title = mesage || 'No message.';
+  var body = 'We have received a push message.';
+  var icon = '/images/onion.png';
+  var tag = 'simple-push-demo-notification-tag'+ Math.random();
+  var data = {
+    doge: {
+      wow: 'such amaze notification data'
+    }
+  };
+  return self.registration.showNotification(title, {
+      body: body,
+      icon: icon,
+      tag: tag,
+      data: data,
+      actions:[
+        {
+          action:"focus",
+          title:"focus"
+        }]
+    })
+}
+
+//sw与页面通信,必须返回promise
 function _processMessage(msgObj, option) {
   var resolveFun = function (result) {
     return {
@@ -341,6 +365,8 @@ function _processMessage(msgObj, option) {
   switch (msgObj.m) {
   case 'preload': //arr
     return preloadList(msgObj.data).then(resolveFun);
+  case 'showNotification': //arr
+    return sendNote(msgObj.data);
   case 'preloadAtricle': //arr
     return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
   case 'delete_not_exist_article': //dict
@@ -373,6 +399,7 @@ function sendMessage(resp) {
     return;
   }
   var callbackList = callbackDict[resp.m];
+  callbackDict[resp.m] = undefined;
   return self.clients.matchAll()
     .then(function (clientList) {
       var option = {};

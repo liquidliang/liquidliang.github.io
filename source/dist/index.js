@@ -62,6 +62,16 @@
 	var c_pageSearch = __webpack_require__(23);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
+	Notification.requestPermission().then(function (type) {
+	  if (type == "granted") {
+	    //"denied"
+	    var swPostMessage = __webpack_require__(6);
+	    swPostMessage({
+	      m: 'showNotification',
+	      data: 'hello world'
+	    });
+	  }
+	});
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
@@ -1125,7 +1135,6 @@
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
 	  var viewInput = ele.find('input');
 	  var viewDrop = ele.find('ul').setView({
-	    name: 'link/drop',
 	    template: '<%(obj||[]).forEach(function(o){%>' + '<li data-on="?m=go" data-url="<%=o.href%>"><a><%=o.title%></a></li>' + //
 	    '<%})%>'
 	  });
@@ -1192,7 +1201,7 @@
 	      }
 	      if (e.keyCode == 13) {
 	        if (selectLi) {
-	          selectLi.find('a').trigger('click');
+	          selectLi.trigger('click');
 	        } else {
 	          doSearch();
 	        }

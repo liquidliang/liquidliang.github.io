@@ -14,6 +14,15 @@ const c_pageBlog = require('page/blog.js');
 const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
+Notification.requestPermission().then(function(type){
+  if(type == "granted"){//"denied"
+    const swPostMessage = require('helper/sw_post_message.js');
+    swPostMessage({
+      m: 'showNotification',
+      data: 'hello world'
+    });
+  }
+});
 
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {
