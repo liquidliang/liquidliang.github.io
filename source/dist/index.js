@@ -145,14 +145,15 @@
 	'use strict';
 	
 	if (typeof Set != 'function') {
-	    var _Set = function _Set() {
+	
+	    var Set = function Set() {
 	        Array.call(this);
 	    };
 	
-	    _Set.prototype = Object.create(Array.prototype);
+	    Set.prototype = Object.create(Array.prototype);
 	
 	    // 集合添加元素
-	    _Set.prototype.add = function (data) {
+	    Set.prototype.add = function (data) {
 	        if (this.indexOf(data) < 0) {
 	            this.push(data);
 	            return true;
@@ -161,7 +162,7 @@
 	    };
 	
 	    // 删除集合中的元素
-	    _Set.prototype.delete = function (data) {
+	    Set.prototype.delete = function (data) {
 	        var pos = this.indexOf(data);
 	        if (pos > -1) {
 	            this.splice(pos, 1);
@@ -171,25 +172,26 @@
 	    };
 	
 	    // 判断集合是否包括元素
-	    _Set.prototype.has = function (data) {
+	    Set.prototype.has = function (data) {
 	        if (this.indexOf(data) > -1) {
 	            return true;
 	        }
 	        return false;
 	    };
 	    // 获取集合的大小
-	    _Set.prototype.size = function () {
+	    Set.prototype.size = function () {
 	        return this.length;
 	    };
 	
 	    // 清除set集合。
-	    _Set.prototype.clear = function (set) {
+	    Set.prototype.clear = function (set) {
 	        while (this.pop()) {}
 	    };
 	
-	    _Set.prototype.values = function () {
+	    Set.prototype.values = function () {
 	        return;
 	    };
+	    window.Set = Set;
 	}
 
 /***/ },

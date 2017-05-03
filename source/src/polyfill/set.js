@@ -1,6 +1,6 @@
 if(typeof Set != 'function'){
 
-    function Set(){
+    var Set = function(){
         Array.call(this);
     }
 
@@ -46,4 +46,5 @@ if(typeof Set != 'function'){
     Set.prototype.values = function(){
         return
     }
+    window.Set = Set;
 }
