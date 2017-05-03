@@ -15,7 +15,27 @@ const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
 
-
+try{
+    Notification.requestPermission().then(function(type){
+      if(type == "granted"){//"denied"
+        const swPostMessage = require('helper/sw_post_message.js');
+        swPostMessage({
+          m: 'showNotification',
+          data: 'hello world'
+        });
+      }
+    });
+}catch(e){
+    try{
+        const swPostMessage = require('helper/sw_post_message.js');
+        swPostMessage({
+          m: 'showNotification',
+          data: 'hello world'
+        });
+    }catch(e){
+        console.log('swPostMessage', 'showNotification');
+    }
+}
 
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {

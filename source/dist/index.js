@@ -63,6 +63,29 @@
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
+	try {
+	  Notification.requestPermission().then(function (type) {
+	    if (type == "granted") {
+	      //"denied"
+	      var swPostMessage = __webpack_require__(304);
+	      swPostMessage({
+	        m: 'showNotification',
+	        data: 'hello world'
+	      });
+	    }
+	  });
+	} catch (e) {
+	  try {
+	    var swPostMessage = __webpack_require__(304);
+	    swPostMessage({
+	      m: 'showNotification',
+	      data: 'hello world'
+	    });
+	  } catch (e) {
+	    console.log('swPostMessage', 'showNotification');
+	  }
+	}
+	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
 	    viewHeader.reset();
