@@ -443,6 +443,7 @@ self.addEventListener('message', function (event) {
   var msgObj = event.data || {};
   var senderID = event.source ? event.source.id : null; //在低版本中可能没有“source”属性
   var option = {
+    m: msgObj.m,
     cbid: msgObj.cbid,
     senderID: senderID
   }
@@ -451,7 +452,7 @@ self.addEventListener('message', function (event) {
     callbackDict[msgObj.m].push(option);
   } else {
     callbackDict[msgObj.m] = [option];
-    promise = _processMessage(msgObj, option).then(sendMessage);
+    promise = event.waitUntil(_processMessage(msgObj, option).then(sendMessage));
   }
 
   // If event.waitUntil is defined (not yet in Chrome because of the same issue detailed before),
