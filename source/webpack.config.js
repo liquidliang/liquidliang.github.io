@@ -16,7 +16,8 @@ module.exports = function(method) {
         'model': 'src/model',
         'helper': 'src/helper',
         'css': 'src/css',
-        'page': 'src/page'
+        'page': 'src/page',
+        'polyfill': 'src/polyfill'
       }
     },
     module: {
