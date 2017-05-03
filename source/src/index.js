@@ -14,7 +14,7 @@ const c_pageBlog = require('page/blog.js');
 const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
-if(window.Notification && Notification.requestPermission){
+try{
     Notification.requestPermission().then(function(type){
       if(type == "granted"){//"denied"
         const swPostMessage = require('helper/sw_post_message.js');
@@ -24,6 +24,17 @@ if(window.Notification && Notification.requestPermission){
         });
       }
     });
+}catch(e){
+    console.log(e.stack);
+    try{
+        const swPostMessage = require('helper/sw_post_message.js');
+        swPostMessage({
+          m: 'showNotification',
+          data: 'hello world'
+        });
+    }catch(e){
+        console.log('swPostMessage', 'showNotification');
+    }
 }
 
 
