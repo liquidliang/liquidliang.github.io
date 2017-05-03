@@ -2,7 +2,7 @@
  * @file index 入口文件，路由定义
  * @author ljquan@qq.com
  */
-
+require("babel-polyfill");
 require('helper/common_event.js');
 const m_article = require('model/article');
 const m_config = require('model/config');

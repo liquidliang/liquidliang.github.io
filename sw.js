@@ -333,7 +333,7 @@ var preloadAtricle = function (urlList, callback, option) {
 function sendNote(mesage) {
   console.log('send Note');
   var title = mesage || 'No message.';
-  var body = 'We have received a push message.';
+  var body = '这是一个测试信息';
   var icon = '/images/onion.png';
   var tag = 'simple-push-demo-notification-tag' + Math.random();
   var data = {

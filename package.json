@@ -3,6 +3,7 @@
   "description": "我的个人主页",
   "name": "liquidliang.github.io",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "gulp": "^3.9.1",
     "koa": "^1.2.4",
     "koa-body": "^1.5.0",
