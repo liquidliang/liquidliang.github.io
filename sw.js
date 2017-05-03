@@ -365,33 +365,37 @@ function _processMessage(msgObj, option) {
       result: result
     }
   };
-  switch (msgObj.m) {
-  case 'preload': //arr
-    return preloadList(msgObj.data).then(resolveFun);
-  case 'showNotification': //arr
-    return sendNote(msgObj.data);
-  case 'preloadAtricle': //arr
-    return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
-  case 'delete_not_exist_article': //dict
-    let articleDict = msgObj.data;
-    if (!articleDict) {
-      return new Promise(function () {});
-    }
-    return caches.open(markdownCacheName).then(function (cache) {
-      //删除不存在的博客文件
-      cache.keys().then(function (oldReqList) {
-        oldReqList.forEach(oldReq => {
-          let urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
-          if (!articleDict[urlKey]) {
-            cache.delete(oldReq);
-          }
+  try{
+      switch (msgObj.m) {
+      case 'preload': //arr
+        return preloadList(msgObj.data).then(resolveFun);
+      case 'showNotification': //arr
+        return sendNote(msgObj.data);
+      case 'preloadAtricle': //arr
+        return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
+      case 'delete_not_exist_article': //dict
+        let articleDict = msgObj.data;
+        if (!articleDict) {
+          return new Promise(function () {});
+        }
+        return caches.open(markdownCacheName).then(function (cache) {
+          //删除不存在的博客文件
+          cache.keys().then(function (oldReqList) {
+            oldReqList.forEach(oldReq => {
+              let urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
+              if (!articleDict[urlKey]) {
+                cache.delete(oldReq);
+              }
+            });
+          });
         });
-      });
-    });
-  default:
-    return new Promise(function (resolve) {
-      resolve(console.log('msgObj.m=' + msgObj.m + ' match nothing!'));
-    });
+      default:
+        return new Promise(function (resolve) {
+          resolve(console.log('msgObj.m=' + msgObj.m + ' match nothing!'));
+        });
+      }
+  }catch(e){
+      console.log('_processMessage', e.stack);
   }
 }
 
