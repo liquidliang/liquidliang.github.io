@@ -15,6 +15,8 @@ const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
 
+
+
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {
     viewHeader.reset();
