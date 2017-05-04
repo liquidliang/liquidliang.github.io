@@ -1,7 +1,7 @@
 {
   "name"              : "liquidliang",
   "short_name"        : "liquid",
-  "description"       : "liquidliang的个人博客",
+  "description"       : "liquidliang blog",
   "start_url"         : "/",
   "display"           : "standalone",
   "orientation"       : "any",
