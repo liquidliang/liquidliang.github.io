@@ -461,3 +461,47 @@ self.addEventListener('message', function (event) {
     event.waitUntil(promise);
   }
 });
+
+
+
+// triggered everytime, when a push notification is received.
+self.addEventListener('push', function(event) {
+
+  console.info('Event: Push', event);
+
+  var title = 'New commit on Github Repo: swblog';
+
+  var body = {
+    'body': 'Click to see the latest commit',
+    'tag': 'pwa',
+    'icon': '/images/logo/logo072.png'
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, body)
+  );
+});
+
+function focusOpen(){
+  var url = location.href;
+  return clients.matchAll({
+    type:'window',
+    includeUncontrolled: true
+  }).then(clients=>{
+    for(var client of clients){
+      if(client.url = url) return client.focus(); // 经过测试，focus 貌似无效
+    }
+    console.log('not focus');
+    clients.openWindow(location.origin + '/');
+  })
+}
+
+self.addEventListener('notificationclick', function(event) {
+
+  event.notification.close(); //Close the notification
+  var messageId = event.notification.data;
+ // Open the app and navigate to latest.html after clicking the notification
+  if(event.action === "focus"){
+    event.waitUntil(focusOpen());
+  }
+});

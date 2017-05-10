@@ -53,39 +53,17 @@
 	//require("babel-polyfill");  //太大了
 	__webpack_require__(1);
 	__webpack_require__(4);
-	var m_article = __webpack_require__(7);
-	var m_config = __webpack_require__(10);
-	var c_header = __webpack_require__(11);
-	var c_pageList = __webpack_require__(12);
-	var c_pageBook = __webpack_require__(21);
-	var c_pageContent = __webpack_require__(23);
-	var c_pageBlog = __webpack_require__(25);
-	var c_pageSearch = __webpack_require__(26);
+	__webpack_require__(7);
+	var m_article = __webpack_require__(8);
+	var m_config = __webpack_require__(11);
+	var c_header = __webpack_require__(12);
+	var c_pageList = __webpack_require__(13);
+	var c_pageBook = __webpack_require__(22);
+	var c_pageContent = __webpack_require__(24);
+	var c_pageBlog = __webpack_require__(26);
+	var c_pageSearch = __webpack_require__(27);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
-	
-	try {
-	  Notification.requestPermission().then(function (type) {
-	    if (type == "granted") {
-	      //"denied"
-	      var swPostMessage = __webpack_require__(9);
-	      swPostMessage({
-	        m: 'showNotification',
-	        data: 'hello world'
-	      });
-	    }
-	  });
-	} catch (e) {
-	  try {
-	    var swPostMessage = __webpack_require__(9);
-	    swPostMessage({
-	      m: 'showNotification',
-	      data: 'hello world'
-	    });
-	  } catch (e) {
-	    console.log('swPostMessage', 'showNotification');
-	  }
-	}
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
@@ -107,6 +85,9 @@
 	        var page = this;
 	        if (key == 'index') {
 	          c_pageList(page, key);
+	          next();
+	        } else if (key == 'subscribe') {
+	          page.addClass('text-center').html('<p style="margin-top: 100px;"></p>' + '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-success btn-lg">订阅</button>');
 	          next();
 	        } else if (key == 'tag') {
 	          c_pageList(page, key);
@@ -343,6 +324,150 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	BCD.addEvent('subscribePush', function (fabPushElement) {
+	  //Push notification button
+	  var tipsElement = fabPushElement.prev();
+	  //To check `push notification` is supported or not
+	  var isPushSupported = function isPushSupported() {
+	    //To check `push notification` permission is denied by user
+	    if (!window.Notification || Notification.permission === 'denied') {
+	      console.log('User has blocked push notification.');
+	      return;
+	    }
+	
+	    //Check `push notification` is supported or not
+	    if (!('PushManager' in window)) {
+	      console.log('Sorry, Push notification isn\'t supported in your browser.');
+	      return;
+	    }
+	
+	    //Get `push notification` subscription
+	    //If `serviceWorker` is registered and ready
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      registration.pushManager.getSubscription().then(function (subscription) {
+	        //If already access granted, enable push button status
+	        //Tell application server to delete subscription
+	        if (subscription) {
+	          changePushStatus(true);
+	        } else {
+	          changePushStatus(false);
+	        }
+	      }).catch(function (error) {
+	        console.error('Error occurred while enabling push ', error);
+	      });
+	    });
+	  };
+	
+	  // Ask User if he/she wants to subscribe to push notifications and then
+	  // ..subscribe and send push notification
+	  function subscribePush() {
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      if (!registration.pushManager) {
+	        console.log('Your browser doesn\'t support push notification.');
+	        return false;
+	      }
+	
+	      //To subscribe `push notification` from push manager
+	      registration.pushManager.subscribe({
+	        userVisibleOnly: true //Always show notification when received
+	      }).then(function (subscription) {
+	        console.info('Push notification subscribed.');
+	        console.log(subscription);
+	        saveSubscriptionID(subscription);
+	        changePushStatus(true);
+	      }).catch(function (error) {
+	        changePushStatus(false);
+	        console.error('Push notification subscription error: ', error);
+	      });
+	    });
+	  }
+	
+	  // Unsubscribe the user from push notifications
+	  function unsubscribePush() {
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      //Get `push subscription`
+	      registration.pushManager.getSubscription().then(function (subscription) {
+	        //If no `push subscription`, then return
+	        if (!subscription) {
+	          console.log('Unable to unregister push notification.');
+	          return;
+	        }
+	
+	        //Unsubscribe `push notification`
+	        subscription.unsubscribe().then(function () {
+	          console.info('Push notification unsubscribed.');
+	          console.log(subscription);
+	          deleteSubscriptionID(subscription);
+	          changePushStatus(false);
+	        }).catch(function (error) {
+	          console.error(error);
+	        });
+	      }).catch(function (error) {
+	        console.error('Failed to unsubscribe push notification.');
+	      });
+	    });
+	  }
+	
+	  //To change status
+	  function changePushStatus(status) {
+	    fabPushElement.val(status);
+	    if (status) {
+	      tipsElement.html('您未订阅，订阅后您将可以收到更新提示');
+	      fabPushElement.removeClass('btn-warning').addClass('btn-success').html('订阅');
+	    } else {
+	      tipsElement.html('您已订阅，取消订阅后您将收不到更新提示！');
+	      fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');
+	    }
+	  }
+	
+	  //Click event for subscribe push
+	  fabPushElement.on('click', function () {
+	    var isSubscribed = fabPushElement.val() === 'true';
+	    if (isSubscribed) {
+	      unsubscribePush();
+	    } else {
+	      subscribePush();
+	    }
+	  });
+	
+	  function saveSubscriptionID(subscription) {
+	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+	
+	    console.log("Subscription ID", subscription_id);
+	
+	    fetch(' http://119.29.150.243:3333/api/users', {
+	      method: 'post',
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },
+	      body: JSON.stringify({
+	        user_id: subscription_id
+	      })
+	    });
+	  }
+	
+	  function deleteSubscriptionID(subscription) {
+	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+	
+	    fetch(' http://119.29.150.243:3333/api/user/' + subscription_id, {
+	      method: 'delete',
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      }
+	    });
+	  }
+	
+	  isPushSupported(); //Check for push notification support
+	});
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -352,8 +477,8 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(5);
-	var m_search = __webpack_require__(8);
-	var swPostMessage = __webpack_require__(9);
+	var m_search = __webpack_require__(9);
+	var swPostMessage = __webpack_require__(10);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -971,7 +1096,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1123,7 +1248,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1165,7 +1290,7 @@
 	module.exports = postMessage; //postMessage(message, callback)
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1223,14 +1348,14 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var m_util = __webpack_require__(5);
-	var m_article = __webpack_require__(7);
-	var m_config = __webpack_require__(10);
+	var m_article = __webpack_require__(8);
+	var m_config = __webpack_require__(11);
 	
 	BCD.addEvent('navigator_search', function (ele) {
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
@@ -1339,18 +1464,18 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(13);
-	var c_mainContainer = __webpack_require__(14);
-	var m_article = __webpack_require__(7);
-	var m_initOption = __webpack_require__(15);
-	var c_pannel = __webpack_require__(16);
-	var c_pannelList = __webpack_require__(17);
-	var c_articleList = __webpack_require__(20);
+	var c_footer = __webpack_require__(14);
+	var c_mainContainer = __webpack_require__(15);
+	var m_article = __webpack_require__(8);
+	var m_initOption = __webpack_require__(16);
+	var c_pannel = __webpack_require__(17);
+	var c_pannelList = __webpack_require__(18);
+	var c_articleList = __webpack_require__(21);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1418,13 +1543,13 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//页脚
-	var m_config = __webpack_require__(10);
+	var m_config = __webpack_require__(11);
 	module.exports = function (option) {
 	  var viewHeader = $('<footer></footer>');
 	  option = $.extend({
@@ -1438,7 +1563,7 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1448,7 +1573,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1479,7 +1604,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1501,14 +1626,14 @@
 	};
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_article = __webpack_require__(7);
-	var m_recommend = __webpack_require__(18);
-	var c_pannel = __webpack_require__(16);
+	var m_article = __webpack_require__(8);
+	var m_recommend = __webpack_require__(19);
+	var c_pannel = __webpack_require__(17);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -1565,7 +1690,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1573,9 +1698,9 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(5);
-	var m_article = __webpack_require__(7);
-	var m_search = __webpack_require__(8);
-	var m_readHistory = __webpack_require__(19);
+	var m_article = __webpack_require__(8);
+	var m_search = __webpack_require__(9);
+	var m_readHistory = __webpack_require__(20);
 	
 	var filter = function filter(list) {
 	  var arr = [];
@@ -1718,13 +1843,13 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(10);
-	var m_article = __webpack_require__(7);
+	var m_config = __webpack_require__(11);
+	var m_article = __webpack_require__(8);
 	var storageKey = 'read_history';
 	var readHistory = {};
 	var init = function init() {
@@ -1754,7 +1879,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1768,15 +1893,15 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(22);
-	var m_article = __webpack_require__(7);
-	var m_readHistory = __webpack_require__(19);
-	var c_articleList = __webpack_require__(20);
+	var s_mainContainer = __webpack_require__(23);
+	var m_article = __webpack_require__(8);
+	var m_readHistory = __webpack_require__(20);
+	var c_articleList = __webpack_require__(21);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -1860,7 +1985,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1868,20 +1993,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(14);
-	var c_footer = __webpack_require__(13);
-	var m_article = __webpack_require__(7);
-	var m_readHistory = __webpack_require__(19);
-	var c_pannelList = __webpack_require__(17);
-	var c_content = __webpack_require__(24);
-	var m_initOption = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(15);
+	var c_footer = __webpack_require__(14);
+	var m_article = __webpack_require__(8);
+	var m_readHistory = __webpack_require__(20);
+	var c_pannelList = __webpack_require__(18);
+	var c_content = __webpack_require__(25);
+	var m_initOption = __webpack_require__(16);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1913,12 +2038,12 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	window.CONFIG = __webpack_require__(10);
+	window.CONFIG = __webpack_require__(11);
 	//单个文章
 	module.exports = function (option) {
 	  return $.extend({
@@ -1928,18 +2053,18 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(14);
-	var c_footer = __webpack_require__(13);
-	var m_config = __webpack_require__(10);
-	var m_article = __webpack_require__(7);
-	var m_initOption = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(15);
+	var c_footer = __webpack_require__(14);
+	var m_config = __webpack_require__(11);
+	var m_article = __webpack_require__(8);
+	var m_initOption = __webpack_require__(16);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -1970,16 +2095,16 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(13);
-	var c_mainContainer = __webpack_require__(14);
-	var m_initOption = __webpack_require__(15);
-	var c_pannelList = __webpack_require__(17);
-	var m_pullArticle = __webpack_require__(27);
+	var c_footer = __webpack_require__(14);
+	var c_mainContainer = __webpack_require__(15);
+	var m_initOption = __webpack_require__(16);
+	var c_pannelList = __webpack_require__(18);
+	var m_pullArticle = __webpack_require__(28);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2009,7 +2134,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2017,7 +2142,7 @@
 	/**
 	 * 不断增加的列表
 	 */
-	var m_article = __webpack_require__(7);
+	var m_article = __webpack_require__(8);
 	var container = $('<div style="display:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
 	
 	var viewRank = $(container.find('[data-selector="pull_list"]'));

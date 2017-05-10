@@ -5,8 +5,9 @@
   "start_url"         : "/",
   "display"           : "standalone",
   "orientation"       : "any",
-  "background_color"  : "#ACE",
-  "theme_color"       : "#ACE",
+  "background_color"  : "#efefc2",
+  "theme_color"       : "#efefc2",
+  "gcm_sender_id": "889744471523",
   "icons": [
 		{
       "src"           : "/images/logo/logo072.png",
@@ -33,5 +34,11 @@
       "sizes"         : "512x512",
       "type"          : "image/png"
     }
-	]
+	],
+    "related_applications": [
+      {
+      "platform": "play",
+      "id": "com.tencent.mtt"
+      }
+    ]
 }

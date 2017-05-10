@@ -5,6 +5,7 @@
 //require("babel-polyfill");  //太大了
 require("polyfill/");
 require('helper/common_event.js');
+require('helper/notification.js');
 const m_article = require('model/article');
 const m_config = require('model/config');
 const c_header = require('card/common/navigator');
@@ -15,28 +16,6 @@ const c_pageBlog = require('page/blog.js');
 const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
-
-try{
-    Notification.requestPermission().then(function(type){
-      if(type == "granted"){//"denied"
-        const swPostMessage = require('helper/sw_post_message.js');
-        swPostMessage({
-          m: 'showNotification',
-          data: 'hello world'
-        });
-      }
-    });
-}catch(e){
-    try{
-        const swPostMessage = require('helper/sw_post_message.js');
-        swPostMessage({
-          m: 'showNotification',
-          data: 'hello world'
-        });
-    }catch(e){
-        console.log('swPostMessage', 'showNotification');
-    }
-}
 
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {
@@ -58,6 +37,12 @@ m_config.getConfig.then(() =>
         var page = this;
         if (key == 'index') {
           c_pageList(page, key);
+          next();
+        }else if (key == 'subscribe') {
+          page.addClass('text-center').html('<p style="margin-top: 100px;"></p>'+
+           '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"'+
+          ' data-on="?m=subscribePush"'+
+          ' class="btn btn-success btn-lg">订阅</button>');
           next();
         } else if (key == 'tag') {
           c_pageList(page, key);
