@@ -25,10 +25,16 @@ const leftFillString = function(num, length) {
 const getRandomName = function() {
   return ("aaaaaaaaaa" + Math.random().toString(36).replace(/[.\d]/g, '')).substr(-10)
 };
+
+//https://developers.google.com/web/tools/lighthouse/audits/date-now
+let _date = window.performance || Date;
 module.exports = {
   getTime,
   leftFillString,
   getRandomName,
   stopBubble: m_event.stopBubble,
-  stopBubbleEx: m_event.stopBubbleEx
+  stopBubbleEx: m_event.stopBubbleEx,
+  now: function(){
+      return _date.now();
+  }
 };

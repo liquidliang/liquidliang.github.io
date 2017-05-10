@@ -22,8 +22,8 @@ module.exports = function (option) {
       '</article>' +
       '<ul class="pager">' +
       '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' +
-      ' <li><a target="_blank" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' +
-      ' <li class="next"><a target="_blank" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' +
+      ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' +
+      ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' +
       '</ul>'
   }, option);
 };

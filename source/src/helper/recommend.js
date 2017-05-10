@@ -1,3 +1,4 @@
+const m_util = require('common/util');
 const m_article = require('model/article');
 const m_search = require('helper/search');
 const m_readHistory = require('model/read_history');
@@ -90,7 +91,7 @@ const getMutiSamples = () => {
 
 
 const getRecommend = (callback) => {
-  let delayTime = 2E3 - (Date.now() - m_article.startTime);
+  let delayTime = 2E3 - (m_util.now() - m_article.startTime);
   delayTime = m_article.isPreload ? 0 : (delayTime < 0 ? 0 : delayTime);
   setTimeout(function () {
     let key = decodeURIComponent(BCD.getHash(0));

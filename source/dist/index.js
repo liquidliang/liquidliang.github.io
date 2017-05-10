@@ -289,12 +289,18 @@
 	var getRandomName = function getRandomName() {
 	  return ("aaaaaaaaaa" + Math.random().toString(36).replace(/[.\d]/g, '')).substr(-10);
 	};
+	
+	//https://developers.google.com/web/tools/lighthouse/audits/date-now
+	var _date = window.performance || Date;
 	module.exports = {
 	  getTime: getTime,
 	  leftFillString: leftFillString,
 	  getRandomName: getRandomName,
 	  stopBubble: m_event.stopBubble,
-	  stopBubbleEx: m_event.stopBubbleEx
+	  stopBubbleEx: m_event.stopBubbleEx,
+	  now: function now() {
+	    return _date.now();
+	  }
 	};
 
 /***/ },
@@ -356,7 +362,7 @@
 	var bookList = []; //书籍列表
 	var bookDict = {};
 	var tagList = [];
-	var startTime = Date.now();
+	var startTime = m_util.now();
 	var isPreload = false;
 	var sidebarName = '$sidebar$';
 	var getSidebarPath = function getSidebarPath(path) {
@@ -419,6 +425,7 @@
 	      })();
 	    }
 	    $('a[href^="http"]').attr('target', '_blank');
+	    $('a[href^="http"]').attr('rel', 'noopener');
 	  }, 0);
 	});
 	
@@ -1565,6 +1572,7 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
+	var m_util = __webpack_require__(5);
 	var m_article = __webpack_require__(7);
 	var m_search = __webpack_require__(8);
 	var m_readHistory = __webpack_require__(19);
@@ -1665,7 +1673,7 @@
 	};
 	
 	var getRecommend = function getRecommend(callback) {
-	  var delayTime = 2E3 - (Date.now() - m_article.startTime);
+	  var delayTime = 2E3 - (m_util.now() - m_article.startTime);
 	  delayTime = m_article.isPreload ? 0 : delayTime < 0 ? 0 : delayTime;
 	  setTimeout(function () {
 	    var key = decodeURIComponent(BCD.getHash(0));
@@ -1915,7 +1923,7 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/content',
-	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
 	  }, option);
 	};
 

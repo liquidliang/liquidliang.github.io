@@ -9,7 +9,7 @@ let sidebarList = []; //sidebar文件列表(sidebar文件也可以在articleDict
 let bookList = []; //书籍列表
 let bookDict = {};
 let tagList = [];
-let startTime = Date.now();
+let startTime = m_util.now();
 let isPreload = false;
 const sidebarName = '$sidebar$';
 const getSidebarPath = (path) => path + '/' + sidebarName + '.md';
@@ -67,6 +67,7 @@ BCD.addEvent('mkview', function (ele, option, data) {
         }));
     }
     $('a[href^="http"]').attr('target', '_blank');
+    $('a[href^="http"]').attr('rel', 'noopener');
   }, 0);
 });
 
