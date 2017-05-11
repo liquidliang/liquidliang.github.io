@@ -436,29 +436,33 @@
 	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
 	
 	    console.log("Subscription ID", subscription_id);
+	    new Image().src = 'http://119.29.150.243:3333/api/subscript/' + subscription_id;
 	
-	    fetch(location.protocol == 'http:' ? 'http://119.29.150.243:3333/api/users' : 'https://119.29.150.243:3011/api/users', {
-	      method: 'post',
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
-	      },
-	      body: JSON.stringify({
-	        user_id: subscription_id
-	      })
-	    });
+	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/users'
+	    // : 'https://119.29.150.243:3011/api/users'), {
+	    //   method: 'post',
+	    //   headers: {
+	    //     'Accept': 'application/json',
+	    //     'Content-Type': 'application/json'
+	    //   },
+	    //   body: JSON.stringify({
+	    //     user_id: subscription_id
+	    //   })
+	    // });
 	  }
 	
 	  function deleteSubscriptionID(subscription) {
 	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
 	
-	    fetch((location.protocol == 'http:' ? 'http://119.29.150.243:3333/api/user/' : 'https://119.29.150.243:3011/api/user/') + subscription_id, {
-	      method: 'get',
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
-	      }
-	    });
+	    new Image().src = 'http://119.29.150.243:3333/api/unsubscript/' + subscription_id;
+	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/user/'
+	    // : 'https://119.29.150.243:3011/api/user/') + subscription_id, {
+	    //   method: 'get',
+	    //   headers: {
+	    //     'Accept': 'application/json',
+	    //     'Content-Type': 'application/json'
+	    //   }
+	    // });
 	  }
 	
 	  isPushSupported(); //Check for push notification support
