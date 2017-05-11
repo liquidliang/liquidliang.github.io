@@ -14,7 +14,15 @@ BCD.addEvent('subscribePush', function (fabPushElement) {
       console.log('Sorry, Push notification isn\'t supported in your browser.');
       return;
     }
-
+    //Click event for subscribe push
+    fabPushElement.on('click', function () {
+      var isSubscribed = (fabPushElement.val() === 'true');
+      if (isSubscribed) {
+        unsubscribePush();
+      } else {
+        subscribePush();
+      }
+    });
     //Get `push notification` subscription
     //If `serviceWorker` is registered and ready
     navigator.serviceWorker.ready
@@ -104,15 +112,6 @@ BCD.addEvent('subscribePush', function (fabPushElement) {
     }
   }
 
-  //Click event for subscribe push
-  fabPushElement.on('click', function () {
-    var isSubscribed = (fabPushElement.val() === 'true');
-    if (isSubscribed) {
-      unsubscribePush();
-    } else {
-      subscribePush();
-    }
-  });
 
   function saveSubscriptionID(subscription) {
     var subscription_id = subscription.endpoint.split('gcm/send/')[1];

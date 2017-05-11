@@ -87,7 +87,7 @@
 	          c_pageList(page, key);
 	          next();
 	        } else if (key == 'subscribe') {
-	          page.addClass('text-center').html('<p style="margin-top: 100px;"></p>' + '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-success btn-lg">订阅</button>');
+	          page.addClass('text-center').html('<p style="margin-top: 100px;">您的浏览器不支持该特性，请使用最新的Chrome浏览器</p>' + '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-warning btn-lg">订阅</button>');
 	          next();
 	        } else if (key == 'tag') {
 	          c_pageList(page, key);
@@ -344,7 +344,15 @@
 	      console.log('Sorry, Push notification isn\'t supported in your browser.');
 	      return;
 	    }
-	
+	    //Click event for subscribe push
+	    fabPushElement.on('click', function () {
+	      var isSubscribed = fabPushElement.val() === 'true';
+	      if (isSubscribed) {
+	        unsubscribePush();
+	      } else {
+	        subscribePush();
+	      }
+	    });
 	    //Get `push notification` subscription
 	    //If `serviceWorker` is registered and ready
 	    navigator.serviceWorker.ready.then(function (registration) {
@@ -423,16 +431,6 @@
 	      fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');
 	    }
 	  }
-	
-	  //Click event for subscribe push
-	  fabPushElement.on('click', function () {
-	    var isSubscribed = fabPushElement.val() === 'true';
-	    if (isSubscribed) {
-	      unsubscribePush();
-	    } else {
-	      subscribePush();
-	    }
-	  });
 	
 	  function saveSubscriptionID(subscription) {
 	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];

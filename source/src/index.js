@@ -39,10 +39,10 @@ m_config.getConfig.then(() =>
           c_pageList(page, key);
           next();
         }else if (key == 'subscribe') {
-          page.addClass('text-center').html('<p style="margin-top: 100px;"></p>'+
+          page.addClass('text-center').html('<p style="margin-top: 100px;">您的浏览器不支持该特性，请使用最新的Chrome浏览器</p>'+
            '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"'+
           ' data-on="?m=subscribePush"'+
-          ' class="btn btn-success btn-lg">订阅</button>');
+          ' class="btn btn-warning btn-lg">订阅</button>');
           next();
         } else if (key == 'tag') {
           c_pageList(page, key);
