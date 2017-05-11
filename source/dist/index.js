@@ -424,11 +424,11 @@
 	  function changePushStatus(status) {
 	    fabPushElement.val(status);
 	    if (status) {
-	      tipsElement.html('您未订阅，订阅后您将可以收到更新提示');
-	      fabPushElement.removeClass('btn-warning').addClass('btn-success').html('订阅');
-	    } else {
 	      tipsElement.html('您已订阅，取消订阅后您将收不到更新提示！');
 	      fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');
+	    } else {
+	      tipsElement.html('您未订阅，订阅后您将可以收到更新提示');
+	      fabPushElement.removeClass('btn-warning').addClass('btn-success').html('订阅');
 	    }
 	  }
 	
@@ -437,7 +437,7 @@
 	
 	    console.log("Subscription ID", subscription_id);
 	
-	    fetch(' http://119.29.150.243:3333/api/users', {
+	    fetch(location.protocol == 'http:' ? 'http://119.29.150.243:3333/api/users' : 'https://119.29.150.243:3011/api/users', {
 	      method: 'post',
 	      headers: {
 	        'Accept': 'application/json',
@@ -452,8 +452,8 @@
 	  function deleteSubscriptionID(subscription) {
 	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
 	
-	    fetch(' http://119.29.150.243:3333/api/user/' + subscription_id, {
-	      method: 'delete',
+	    fetch((location.protocol == 'http:' ? 'http://119.29.150.243:3333/api/user/' : 'https://119.29.150.243:3011/api/user/') + subscription_id, {
+	      method: 'get',
 	      headers: {
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json'
