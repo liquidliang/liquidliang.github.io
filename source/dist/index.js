@@ -52,16 +52,16 @@
 	 */
 	//require("babel-polyfill");  //太大了
 	__webpack_require__(1);
-	__webpack_require__(4);
-	__webpack_require__(7);
-	var m_article = __webpack_require__(8);
-	var m_config = __webpack_require__(11);
-	var c_header = __webpack_require__(12);
-	var c_pageList = __webpack_require__(13);
-	var c_pageBook = __webpack_require__(22);
-	var c_pageContent = __webpack_require__(24);
-	var c_pageBlog = __webpack_require__(26);
-	var c_pageSearch = __webpack_require__(27);
+	__webpack_require__(5);
+	__webpack_require__(8);
+	var m_article = __webpack_require__(9);
+	var m_config = __webpack_require__(12);
+	var c_header = __webpack_require__(13);
+	var c_pageList = __webpack_require__(14);
+	var c_pageBook = __webpack_require__(23);
+	var c_pageContent = __webpack_require__(25);
+	var c_pageBlog = __webpack_require__(27);
+	var c_pageSearch = __webpack_require__(28);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -127,6 +127,7 @@
 	
 	__webpack_require__(2);
 	__webpack_require__(3);
+	__webpack_require__(4);
 
 /***/ },
 /* 2 */
@@ -201,11 +202,21 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	if (!Object.assign) {
+	  Object.assign = $.extend;
+	}
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_util = __webpack_require__(5);
+	var m_util = __webpack_require__(6);
 	//data-on="?m=go" data-url="<%=o.href%>"
 	var go = function go(ele, option, data) {
 	  ele.on('click', function (e) {
@@ -238,12 +249,12 @@
 	};
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_event = __webpack_require__(6);
+	var m_event = __webpack_require__(7);
 	var getTime = function getTime(date) {
 	  date = new Date(date);
 	  var now = new Date();
@@ -285,7 +296,7 @@
 	};
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -323,7 +334,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -469,7 +480,7 @@
 	});
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -478,9 +489,9 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
-	var m_util = __webpack_require__(5);
-	var m_search = __webpack_require__(9);
-	var swPostMessage = __webpack_require__(10);
+	var m_util = __webpack_require__(6);
+	var m_search = __webpack_require__(10);
+	var swPostMessage = __webpack_require__(11);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -1098,7 +1109,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1250,12 +1261,12 @@
 	};
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_util = __webpack_require__(5);
+	var m_util = __webpack_require__(6);
 	
 	var index = 0;
 	var postMessage = function postMessage() {};
@@ -1292,7 +1303,7 @@
 	module.exports = postMessage; //postMessage(message, callback)
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1350,14 +1361,14 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_util = __webpack_require__(5);
-	var m_article = __webpack_require__(8);
-	var m_config = __webpack_require__(11);
+	var m_util = __webpack_require__(6);
+	var m_article = __webpack_require__(9);
+	var m_config = __webpack_require__(12);
 	
 	BCD.addEvent('navigator_search', function (ele) {
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
@@ -1466,18 +1477,18 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(14);
-	var c_mainContainer = __webpack_require__(15);
-	var m_article = __webpack_require__(8);
-	var m_initOption = __webpack_require__(16);
-	var c_pannel = __webpack_require__(17);
-	var c_pannelList = __webpack_require__(18);
-	var c_articleList = __webpack_require__(21);
+	var c_footer = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(16);
+	var m_article = __webpack_require__(9);
+	var m_initOption = __webpack_require__(17);
+	var c_pannel = __webpack_require__(18);
+	var c_pannelList = __webpack_require__(19);
+	var c_articleList = __webpack_require__(22);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1545,13 +1556,13 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//页脚
-	var m_config = __webpack_require__(11);
+	var m_config = __webpack_require__(12);
 	module.exports = function (option) {
 	  var viewHeader = $('<footer></footer>');
 	  option = $.extend({
@@ -1565,7 +1576,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1575,7 +1586,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1606,7 +1617,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1628,14 +1639,14 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_article = __webpack_require__(8);
-	var m_recommend = __webpack_require__(19);
-	var c_pannel = __webpack_require__(17);
+	var m_article = __webpack_require__(9);
+	var m_recommend = __webpack_require__(20);
+	var c_pannel = __webpack_require__(18);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -1692,17 +1703,17 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
-	var m_util = __webpack_require__(5);
-	var m_article = __webpack_require__(8);
-	var m_search = __webpack_require__(9);
-	var m_readHistory = __webpack_require__(20);
+	var m_util = __webpack_require__(6);
+	var m_article = __webpack_require__(9);
+	var m_search = __webpack_require__(10);
+	var m_readHistory = __webpack_require__(21);
 	
 	var filter = function filter(list) {
 	  var arr = [];
@@ -1845,13 +1856,13 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(11);
-	var m_article = __webpack_require__(8);
+	var m_config = __webpack_require__(12);
+	var m_article = __webpack_require__(9);
 	var storageKey = 'read_history';
 	var readHistory = {};
 	var init = function init() {
@@ -1881,7 +1892,7 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1895,15 +1906,15 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(23);
-	var m_article = __webpack_require__(8);
-	var m_readHistory = __webpack_require__(20);
-	var c_articleList = __webpack_require__(21);
+	var s_mainContainer = __webpack_require__(24);
+	var m_article = __webpack_require__(9);
+	var m_readHistory = __webpack_require__(21);
+	var c_articleList = __webpack_require__(22);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -1987,7 +1998,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1995,20 +2006,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(15);
-	var c_footer = __webpack_require__(14);
-	var m_article = __webpack_require__(8);
-	var m_readHistory = __webpack_require__(20);
-	var c_pannelList = __webpack_require__(18);
-	var c_content = __webpack_require__(25);
-	var m_initOption = __webpack_require__(16);
+	var c_mainContainer = __webpack_require__(16);
+	var c_footer = __webpack_require__(15);
+	var m_article = __webpack_require__(9);
+	var m_readHistory = __webpack_require__(21);
+	var c_pannelList = __webpack_require__(19);
+	var c_content = __webpack_require__(26);
+	var m_initOption = __webpack_require__(17);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2040,12 +2051,12 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	window.CONFIG = __webpack_require__(11);
+	window.CONFIG = __webpack_require__(12);
 	//单个文章
 	module.exports = function (option) {
 	  return $.extend({
@@ -2055,18 +2066,18 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(15);
-	var c_footer = __webpack_require__(14);
-	var m_config = __webpack_require__(11);
-	var m_article = __webpack_require__(8);
-	var m_initOption = __webpack_require__(16);
+	var c_mainContainer = __webpack_require__(16);
+	var c_footer = __webpack_require__(15);
+	var m_config = __webpack_require__(12);
+	var m_article = __webpack_require__(9);
+	var m_initOption = __webpack_require__(17);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -2097,16 +2108,16 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(14);
-	var c_mainContainer = __webpack_require__(15);
-	var m_initOption = __webpack_require__(16);
-	var c_pannelList = __webpack_require__(18);
-	var m_pullArticle = __webpack_require__(28);
+	var c_footer = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(16);
+	var m_initOption = __webpack_require__(17);
+	var c_pannelList = __webpack_require__(19);
+	var m_pullArticle = __webpack_require__(29);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2136,7 +2147,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2144,7 +2155,7 @@
 	/**
 	 * 不断增加的列表
 	 */
-	var m_article = __webpack_require__(8);
+	var m_article = __webpack_require__(9);
 	var container = $('<div style="display:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
 	
 	var viewRank = $(container.find('[data-selector="pull_list"]'));
