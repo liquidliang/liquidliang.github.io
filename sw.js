@@ -177,13 +177,16 @@ var fetchCache = function (dbName, req) {
     return cache.match(req.clone());
   }).then(function (response) {
     if (response) {
-      if (dbName == businessCacheName) {
-        addToCache(dbName, req, response);
-      }
-      return response; //如果命中缓存，直接使用缓存
+      // if (dbName == businessCacheName) {
+      //   addToCache(dbName, req, response);  //更新缓存，下次使用
+      // }
+      return response; //如果命中缓存，直接使用缓存.
     } else {
       return addToCache(dbName, req);
     }
+  }).catch(function(e){
+    console.log(e);
+    return addToCache(dbName, req);
   });
 }
 self.addEventListener('fetch', function (event) {
