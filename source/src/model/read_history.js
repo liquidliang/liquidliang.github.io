@@ -1,5 +1,4 @@
 const m_config = require('model/config');
-const m_article = require('model/article');
 let storageKey = 'read_history';
 let readHistory = {};
 const init = ()=> {

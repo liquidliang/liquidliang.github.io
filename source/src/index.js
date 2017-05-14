@@ -35,7 +35,7 @@ m_config.getConfig.then(() =>
       },
       initPage: function (key, next) {
         var page = this;
-        if (key == 'index') {
+        if (['index', 'favor', 'tag'].indexOf(key) > -1) {
           c_pageList(page, key);
           next();
         }else if (key == 'subscribe') {
@@ -44,9 +44,6 @@ m_config.getConfig.then(() =>
           '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"'+
           ' data-on="?m=subscribePush"'+
           ' class="btn btn-warning btn-lg">订阅</button>');
-          next();
-        } else if (key == 'tag') {
-          c_pageList(page, key);
           next();
         } else if (key == 'blog') {
           c_pageBlog(page);

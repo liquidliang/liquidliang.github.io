@@ -1,8 +1,22 @@
 const m_util = require('common/util');
 const m_article = require('model/article');
 const m_config = require('model/config');
+const m_commonEvent = require('helper/common_event');
+let viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
 
-
+function hideNavigator(){
+  if(viewHeader.find('.navbar-nav').height() > 66){
+    viewHeader.find('.navbar-toggle').trigger('click');
+  }
+}
+m_commonEvent.onClick('navigator_go', function(ele){
+  hideNavigator();
+  m_commonEvent.go.apply(this, arguments);
+});
+m_commonEvent.onClick('navigator_replaceHash', function(ele){
+  hideNavigator();
+  m_commonEvent.replaceHash.apply(this, arguments);
+});
 BCD.addEvent('navigator_search', function(ele){
   ele.html('<div class="form-group open">'+
   '  <input type="text" class="form-control" placeholder="Search">'+
@@ -12,7 +26,7 @@ BCD.addEvent('navigator_search', function(ele){
   let viewInput = ele.find('input');
   let viewDrop = ele.find('ul').setView({
     template:'<%(obj||[]).forEach(function(o){%>'+
-    '<li data-on="?m=go" data-url="<%=o.href%>"><a><%=o.title%></a></li>'+ //
+    '<li data-on="?m=navigator_go" data-url="<%=o.href%>"><a><%=o.title%></a></li>'+ //
     '<%})%>'
   });
 
@@ -20,6 +34,7 @@ BCD.addEvent('navigator_search', function(ele){
   const getWord = ()=> viewInput.val().trim();
   const doSearch = ()=>{
     let hash = '#!/search/'+encodeURIComponent(getWord());
+    hideNavigator();
     if(BCD.getHash(0)=='search'){
       BCD.replaceHash(hash);
     }else{
@@ -90,6 +105,8 @@ BCD.addEvent('navigator_search', function(ele){
         selectLi = null;
         viewDrop.reset(list);
         selectList = viewDrop.find('li');
+      }else{
+        viewDrop.hide();
       }
     }else{
       viewDrop.hide();
@@ -100,7 +117,6 @@ BCD.addEvent('navigator_search', function(ele){
 
  //顶部导航
 module.exports = function(option) {
-  let viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
   option = $.extend({
     name: 'common/header',
     getData: function() {
@@ -114,12 +130,12 @@ module.exports = function(option) {
       '        <span class="icon-bar"></span>' +
       '        <span class="icon-bar"></span>' +
       '      </button>' +
-      '      <a data-on="?m=go" data-url="<%=CONFIG.getIndex()%>" class="logo-link" style="padding: 12px;"><%-obj.logoTitle%></a>' +
+      '      <a data-on="?m=navigator_go" data-url="<%=CONFIG.getIndex()%>" class="logo-link" style="padding: 12px;"><%-obj.logoTitle%></a>' +
       '    </div>' +
       '    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">' +
       '      <div class="navbar-form navbar-right" data-on="?m=navigator_search"></div>'+
       '      <ul class="nav navbar-nav"><%(obj.nav || []).forEach(function(o){%>' +
-      '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a data-on="?m=replaceHash" data-url="<%=o[1]%>"><%-o[0]%></a></li>' +
+      '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a data-on="?m=navigator_replaceHash" data-url="<%=o[1]%>"><%-o[0]%></a></li>' +
       '        <%})%>' +
       '      </ul>' +
       '    </nav>' +

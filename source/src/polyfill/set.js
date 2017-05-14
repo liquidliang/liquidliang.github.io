@@ -1,7 +1,11 @@
-if(typeof Set != 'function'){
+if(!window.Set){
 
-    var Set = function(){
+    var Set = function(list){
         Array.call(this);
+        list = list || [];
+        for(var i=0; i<list.length; i++){
+          this.add(list[i]);
+        }
     }
 
     Set.prototype = Object.create(Array.prototype);

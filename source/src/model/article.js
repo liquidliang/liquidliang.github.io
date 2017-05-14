@@ -1,5 +1,7 @@
 const m_util = require('common/util/index');
 const m_search = require('helper/search');
+const m_readHistory = require('model/read_history');
+const m_readFavor = require('model/read_favor');
 const swPostMessage = require('helper/sw_post_message.js');
 let catalogList = []; //目录列表
 let catalogDict = {};
@@ -296,11 +298,14 @@ const initArticle = new Promise((resolve) => {
 
 //获取包含相关tag文章列表
 const getTagArticles = (tag) => {
+  var retList = articleList;
   if (tag) {
-    return articleList.filter(o => o.tagList &&
+    retList = articleList.filter(o => o.tagList &&
       o.tagList.indexOf(tag) > -1);
   }
-  return articleList;
+  return retList.sort(function(a, b){
+    return (b.mtime - (m_readHistory.getReadTime(b.path) || 0)) - (a.mtime - (m_readHistory.getReadTime(a.path) || 0));
+  });;
 };
 
 const fetchContent = (list) => {
@@ -351,6 +356,9 @@ const getCatalogArticles = (path) => {
       tagList.every((tag, i) => tag == o.tagList[i])).sort((a, b) => a.tagList.length - b.tagList.length);
   }
   return [];
+};
+const getFavorArticles = () => {
+  return articleList.filter(o => m_readFavor.isFavor(o.path)).sort((a, b) => m_readFavor.getFavorTime(b.path) - m_readFavor.getFavorTime(a.path));
 };
 
 const testItem = (reg, item) => {
@@ -523,6 +531,7 @@ module.exports = {
   getListByCatalog: getList(getCatalogArticles),
   getChildCatalog,
   getListByTag: getList(getTagArticles),
+  getListByFavor: getList(getFavorArticles),
   getArticleContent: (path) => fetchContent([articleDict[path]])
     .then(() => articleDict[path]),
   searchDirect,

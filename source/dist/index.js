@@ -56,12 +56,12 @@
 	__webpack_require__(8);
 	var m_article = __webpack_require__(9);
 	var m_config = __webpack_require__(12);
-	var c_header = __webpack_require__(13);
-	var c_pageList = __webpack_require__(14);
-	var c_pageBook = __webpack_require__(23);
-	var c_pageContent = __webpack_require__(25);
-	var c_pageBlog = __webpack_require__(27);
-	var c_pageSearch = __webpack_require__(28);
+	var c_header = __webpack_require__(15);
+	var c_pageList = __webpack_require__(16);
+	var c_pageBook = __webpack_require__(24);
+	var c_pageContent = __webpack_require__(26);
+	var c_pageBlog = __webpack_require__(28);
+	var c_pageSearch = __webpack_require__(29);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -83,14 +83,11 @@
 	      },
 	      initPage: function initPage(key, next) {
 	        var page = this;
-	        if (key == 'index') {
+	        if (['index', 'favor', 'tag'].indexOf(key) > -1) {
 	          c_pageList(page, key);
 	          next();
 	        } else if (key == 'subscribe') {
 	          page.addClass('text-center').html('<p style="margin-top: 100px;">' + (window.Notification ? '您已禁止了通知，请重新设置' : '您的浏览器不支持该特性，请使用最新的Chrome浏览器') + '</p>' + '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-warning btn-lg">订阅</button>');
-	          next();
-	        } else if (key == 'tag') {
-	          c_pageList(page, key);
 	          next();
 	        } else if (key == 'blog') {
 	          c_pageBlog(page);
@@ -148,12 +145,16 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
-	if (typeof Set != 'function') {
+	if (!window.Set) {
 	
-	    var Set = function Set() {
+	    var Set = function Set(list) {
 	        Array.call(this);
+	        list = list || [];
+	        for (var i = 0; i < list.length; i++) {
+	            this.add(list[i]);
+	        }
 	    };
 	
 	    Set.prototype = Object.create(Array.prototype);
@@ -218,31 +219,35 @@
 	
 	var m_util = __webpack_require__(6);
 	//data-on="?m=go" data-url="<%=o.href%>"
+	
+	function onClick(name, fun) {
+	  if (fun) {
+	    BCD.addEvent(name, function (ele, option, data) {
+	      ele.on('click', function (e) {
+	        fun(ele, option, data);
+	        m_util.stopBubble(e);
+	      });
+	    });
+	  }
+	}
+	
 	var go = function go(ele, option, data) {
-	  ele.on('click', function (e) {
-	    BCD.go(ele.data('url'));
-	    m_util.stopBubble(e);
-	  });
+	  BCD.go(ele.data('url'));
 	};
-	BCD.addEvent('go', go);
+	onClick('go', go);
 	//data-on="?m=back"
 	var back = function back(ele, option, data) {
-	  ele.on('click', function (e) {
-	    history.back();
-	    m_util.stopBubble(e);
-	  });
+	  history.back();
 	};
-	BCD.addEvent('back', back);
+	onClick('back', back);
 	
 	var replaceHash = function replaceHash(ele, option, data) {
-	  ele.on('click', function (e) {
-	    BCD.replaceHash(ele.data('url'));
-	    m_util.stopBubble(e);
-	  });
+	  BCD.replaceHash(ele.data('url'));
 	};
-	BCD.addEvent('replaceHash', replaceHash);
+	onClick('replaceHash', replaceHash);
 	//事件绑定
 	module.exports = {
+	  onClick: onClick,
 	  go: go,
 	  back: back,
 	  replaceHash: replaceHash
@@ -491,7 +496,9 @@
 	
 	var m_util = __webpack_require__(6);
 	var m_search = __webpack_require__(10);
-	var swPostMessage = __webpack_require__(11);
+	var m_readHistory = __webpack_require__(11);
+	var m_readFavor = __webpack_require__(13);
+	var swPostMessage = __webpack_require__(14);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -803,12 +810,15 @@
 	
 	//获取包含相关tag文章列表
 	var getTagArticles = function getTagArticles(tag) {
+	  var retList = articleList;
 	  if (tag) {
-	    return articleList.filter(function (o) {
+	    retList = articleList.filter(function (o) {
 	      return o.tagList && o.tagList.indexOf(tag) > -1;
 	    });
 	  }
-	  return articleList;
+	  return retList.sort(function (a, b) {
+	    return b.mtime - (m_readHistory.getReadTime(b.path) || 0) - (a.mtime - (m_readHistory.getReadTime(a.path) || 0));
+	  });;
 	};
 	
 	var fetchContent = function fetchContent(list) {
@@ -891,6 +901,13 @@
 	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  }
 	  return [];
+	};
+	var getFavorArticles = function getFavorArticles() {
+	  return articleList.filter(function (o) {
+	    return m_readFavor.isFavor(o.path);
+	  }).sort(function (a, b) {
+	    return m_readFavor.getFavorTime(b.path) - m_readFavor.getFavorTime(a.path);
+	  });
 	};
 	
 	var testItem = function testItem(reg, item) {
@@ -1099,6 +1116,7 @@
 	  getListByCatalog: getList(getCatalogArticles),
 	  getChildCatalog: getChildCatalog,
 	  getListByTag: getList(getTagArticles),
+	  getListByFavor: getList(getFavorArticles),
 	  getArticleContent: function getArticleContent(path) {
 	    return fetchContent([articleDict[path]]).then(function () {
 	      return articleDict[path];
@@ -1266,41 +1284,34 @@
 
 	'use strict';
 	
-	var m_util = __webpack_require__(6);
+	var m_config = __webpack_require__(12);
+	var storageKey = 'read_history';
+	var readHistory = {};
+	var init = function init() {
+	  try {
+	    readHistory = $.extend({}, JSON.parse(localStorage.getItem(storageKey)), readHistory);
+	  } catch (e) {}
+	};
 	
-	var index = 0;
-	var postMessage = function postMessage() {};
-	var callbackDict = {};
+	m_config.getConfig.then(function () {
+	  storageKey = 'read_history_' + m_config.username;
+	  init();
+	});
 	
-	if (navigator.serviceWorker) {
-	  navigator.serviceWorker.addEventListener('message', function (event) {
-	    var _event$data = event.data,
-	        cbid = _event$data.cbid,
-	        resp = _event$data.resp;
+	var addHistory = function addHistory(path) {
+	  readHistory[path] = Date.now();
+	  localStorage.setItem(storageKey, JSON.stringify(readHistory));
+	};
 	
-	    if (cbid && callbackDict[cbid]) {
-	      if (!callbackDict[cbid](resp)) {
-	        delete callbackDict[cbid];
-	      }
-	    }
-	  }); //页面通过监听service worker的message事件接收service worker的信息
-	  postMessage = function postMessage(req, callback) {
-	    if (navigator.serviceWorker.controller && navigator.serviceWorker.controller.state == 'activated') {
-	      index++;
-	      var obj = {
-	        m: req.m,
-	        data: req.data
-	      };
-	      if (callback) {
-	        obj.cbid = m_util.getRandomName() + index;
-	        callbackDict[obj.cbid] = callback;
-	      }
-	      navigator.serviceWorker.controller.postMessage(obj); //页面向service worker发送信息
-	    }
-	  };
-	}
-	
-	module.exports = postMessage; //postMessage(message, callback)
+	module.exports = {
+	  addHistory: addHistory,
+	  hasRead: function hasRead(path) {
+	    return !!readHistory[path];
+	  },
+	  getReadTime: function getReadTime(path) {
+	    return readHistory[path];
+	  }
+	};
 
 /***/ },
 /* 12 */
@@ -1319,12 +1330,12 @@
 	var newIssueURL = void 0;
 	
 	var update = function update() {
-	  var author = config.author;
+	  var author = username = config.author;
 	  config.logoTitle = config.logoTitle || author + "的博客";
 	  searchIssueURL = 'https://github.com/' + author + '/' + author + '.github.io/issues?utf8=%E2%9C%93&q=';
 	  newIssueURL = 'https://github.com/' + author + '/' + author + '.github.io/issues/new?title=';
 	  if (window.CONFIG) {
-	    CONFIG.username = username = config.author;
+	    CONFIG.username = username;
 	  }
 	};
 	update();
@@ -1366,15 +1377,140 @@
 
 	'use strict';
 	
+	var m_config = __webpack_require__(12);
+	var storageKey = 'read_favor';
+	var readFavor = {};
+	var init = function init() {
+	  try {
+	    readFavor = $.extend({}, BCD.cache.getLocal(storageKey), readFavor);
+	  } catch (e) {}
+	};
+	
+	m_config.getConfig.then(function () {
+	  storageKey = 'read_favor_' + m_config.username;
+	  init();
+	});
+	
+	var addFavor = function addFavor(path) {
+	  readFavor[path] = Date.now();
+	  BCD.cache.setLocal(storageKey, readFavor, { permanent: true });
+	};
+	
+	var delFavor = function delFavor(path) {
+	  if (path in readFavor) {
+	    delete readFavor[path];
+	    BCD.cache.setLocal(storageKey, readFavor, { permanent: true });
+	  }
+	};
+	
+	var isFavor = function isFavor(path) {
+	  return !!readFavor[path];
+	};
+	
+	BCD.addEvent('favor', function (ele, option, data) {
+	  var article = data;
+	  if ('idx' in option && data.list) {
+	    article = data.list[option.idx];
+	  }
+	  var favor = isFavor(article.path);
+	  ele.val(favor);
+	  if (favor) {
+	    ele.removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+	  }
+	  ele.on('click', function () {
+	    if (ele.val()) {
+	      ele.removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+	      delFavor(article.path);
+	      ele.val(false);
+	    } else {
+	      ele.removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+	      addFavor(article.path);
+	      ele.val(true);
+	    }
+	  });
+	});
+	
+	module.exports = {
+	  addFavor: addFavor,
+	  delFavor: delFavor,
+	  isFavor: isFavor,
+	  getFavorTime: function getFavorTime(path) {
+	    return readFavor[path];
+	  }
+	};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var m_util = __webpack_require__(6);
+	
+	var index = 0;
+	var postMessage = function postMessage() {};
+	var callbackDict = {};
+	
+	if (navigator.serviceWorker) {
+	  navigator.serviceWorker.addEventListener('message', function (event) {
+	    var _event$data = event.data,
+	        cbid = _event$data.cbid,
+	        resp = _event$data.resp;
+	
+	    if (cbid && callbackDict[cbid]) {
+	      if (!callbackDict[cbid](resp)) {
+	        delete callbackDict[cbid];
+	      }
+	    }
+	  }); //页面通过监听service worker的message事件接收service worker的信息
+	  postMessage = function postMessage(req, callback) {
+	    if (navigator.serviceWorker.controller && navigator.serviceWorker.controller.state == 'activated') {
+	      index++;
+	      var obj = {
+	        m: req.m,
+	        data: req.data
+	      };
+	      if (callback) {
+	        obj.cbid = m_util.getRandomName() + index;
+	        callbackDict[obj.cbid] = callback;
+	      }
+	      navigator.serviceWorker.controller.postMessage(obj); //页面向service worker发送信息
+	    }
+	  };
+	}
+	
+	module.exports = postMessage; //postMessage(message, callback)
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var m_util = __webpack_require__(6);
 	var m_article = __webpack_require__(9);
 	var m_config = __webpack_require__(12);
+	var m_commonEvent = __webpack_require__(5);
+	var viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
 	
+	function hideNavigator() {
+	  if (viewHeader.find('.navbar-nav').height() > 66) {
+	    viewHeader.find('.navbar-toggle').trigger('click');
+	  }
+	}
+	m_commonEvent.onClick('navigator_go', function (ele) {
+	  hideNavigator();
+	  m_commonEvent.go.apply(this, arguments);
+	});
+	m_commonEvent.onClick('navigator_replaceHash', function (ele) {
+	  hideNavigator();
+	  m_commonEvent.replaceHash.apply(this, arguments);
+	});
 	BCD.addEvent('navigator_search', function (ele) {
 	  ele.html('<div class="form-group open">' + '  <input type="text" class="form-control" placeholder="Search">' + '  <ul class="dropdown-menu" style="right:auto;display:none"></ul>' + '</div>' + '<button type="submit" class="btn btn-primary">Submit</button>');
 	  var viewInput = ele.find('input');
 	  var viewDrop = ele.find('ul').setView({
-	    template: '<%(obj||[]).forEach(function(o){%>' + '<li data-on="?m=go" data-url="<%=o.href%>"><a><%=o.title%></a></li>' + //
+	    template: '<%(obj||[]).forEach(function(o){%>' + '<li data-on="?m=navigator_go" data-url="<%=o.href%>"><a><%=o.title%></a></li>' + //
 	    '<%})%>'
 	  });
 	
@@ -1384,6 +1520,7 @@
 	  };
 	  var doSearch = function doSearch() {
 	    var hash = '#!/search/' + encodeURIComponent(getWord());
+	    hideNavigator();
 	    if (BCD.getHash(0) == 'search') {
 	      BCD.replaceHash(hash);
 	    } else {
@@ -1456,6 +1593,8 @@
 	        selectLi = null;
 	        viewDrop.reset(list);
 	        selectList = viewDrop.find('li');
+	      } else {
+	        viewDrop.hide();
 	      }
 	    } else {
 	      viewDrop.hide();
@@ -1465,30 +1604,29 @@
 	
 	//顶部导航
 	module.exports = function (option) {
-	  var viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
 	  option = $.extend({
 	    name: 'common/header',
 	    getData: function getData() {
 	      return m_config.getConfigSync();
 	    },
-	    template: '  <div class="container">' + '    <div class="navbar-header">' + '      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">' + '        <span class="sr-only">Toggle navigation</span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '      </button>' + '      <a data-on="?m=go" data-url="<%=CONFIG.getIndex()%>" class="logo-link" style="padding: 12px;"><%-obj.logoTitle%></a>' + '    </div>' + '    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">' + '      <div class="navbar-form navbar-right" data-on="?m=navigator_search"></div>' + '      <ul class="nav navbar-nav"><%(obj.nav || []).forEach(function(o){%>' + '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a data-on="?m=replaceHash" data-url="<%=o[1]%>"><%-o[0]%></a></li>' + '        <%})%>' + '      </ul>' + '    </nav>' + '  </div>'
+	    template: '  <div class="container">' + '    <div class="navbar-header">' + '      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">' + '        <span class="sr-only">Toggle navigation</span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '        <span class="icon-bar"></span>' + '      </button>' + '      <a data-on="?m=navigator_go" data-url="<%=CONFIG.getIndex()%>" class="logo-link" style="padding: 12px;"><%-obj.logoTitle%></a>' + '    </div>' + '    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">' + '      <div class="navbar-form navbar-right" data-on="?m=navigator_search"></div>' + '      <ul class="nav navbar-nav"><%(obj.nav || []).forEach(function(o){%>' + '        <li class="<%=location.hash==o[1] ? "active" : ""%>"><a data-on="?m=navigator_replaceHash" data-url="<%=o[1]%>"><%-o[0]%></a></li>' + '        <%})%>' + '      </ul>' + '    </nav>' + '  </div>'
 	  }, option);
 	  return viewHeader.setView(option);
 	};
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(15);
-	var c_mainContainer = __webpack_require__(16);
+	var c_footer = __webpack_require__(17);
+	var c_mainContainer = __webpack_require__(18);
 	var m_article = __webpack_require__(9);
-	var m_initOption = __webpack_require__(17);
-	var c_pannel = __webpack_require__(18);
-	var c_pannelList = __webpack_require__(19);
-	var c_articleList = __webpack_require__(22);
+	var m_initOption = __webpack_require__(19);
+	var c_pannel = __webpack_require__(20);
+	var c_pannelList = __webpack_require__(21);
+	var c_articleList = __webpack_require__(23);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1509,15 +1647,22 @@
 	      viewList.empty();
 	      if (key == 'index') {
 	        m_article.getListByTag(0, BCD.getHash(1)).then(function (data) {
-	          data.title = "最新文章";
+	          data.title = "最新未读文章";
 	          data.hrefHead = '#!/index';
+	          viewList.reset(data);
+	        });
+	      }if (key == 'favor') {
+	        m_article.getListByFavor(0, BCD.getHash(1)).then(function (data) {
+	          data.title = "文章收藏";
+	          data.hrefHead = '#!/favor';
+	          console.log(data);
 	          viewList.reset(data);
 	        });
 	      } else if (key == 'tag') {
 	        (function () {
 	          var tag = BCD.getHash(1);
 	          m_article.getListByTag(tag, BCD.getHash(2)).then(function (data) {
-	            data.title = '"' + tag + '" 的最新文章';
+	            data.title = '"' + tag + '" 的最新未读文章';
 	            data.hrefHead = '#!/tag/' + tag;
 	            viewList.reset(data);
 	          });
@@ -1556,7 +1701,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1576,7 +1721,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1586,7 +1731,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1617,7 +1762,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1639,14 +1784,14 @@
 	};
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var m_article = __webpack_require__(9);
-	var m_recommend = __webpack_require__(20);
-	var c_pannel = __webpack_require__(18);
+	var m_recommend = __webpack_require__(22);
+	var c_pannel = __webpack_require__(20);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -1703,7 +1848,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1713,7 +1858,7 @@
 	var m_util = __webpack_require__(6);
 	var m_article = __webpack_require__(9);
 	var m_search = __webpack_require__(10);
-	var m_readHistory = __webpack_require__(21);
+	var m_readHistory = __webpack_require__(11);
 	
 	var filter = function filter(list) {
 	  var arr = [];
@@ -1856,43 +2001,7 @@
 	};
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var m_config = __webpack_require__(12);
-	var m_article = __webpack_require__(9);
-	var storageKey = 'read_history';
-	var readHistory = {};
-	var init = function init() {
-	  try {
-	    readHistory = $.extend({}, JSON.parse(localStorage.getItem(storageKey)), readHistory);
-	  } catch (e) {}
-	};
-	
-	m_config.getConfig.then(function () {
-	  storageKey = 'read_history_' + m_config.username;
-	  init();
-	});
-	
-	var addHistory = function addHistory(path) {
-	  readHistory[path] = Date.now();
-	  localStorage.setItem(storageKey, JSON.stringify(readHistory));
-	};
-	
-	module.exports = {
-	  addHistory: addHistory,
-	  hasRead: function hasRead(path) {
-	    return !!readHistory[path];
-	  },
-	  getReadTime: function getReadTime(path) {
-	    return readHistory[path];
-	  }
-	};
-
-/***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1901,20 +2010,20 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/article_list',
-	    template: '<h3><%=obj.title%></h3>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, idx){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(o.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=idx%>">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
+	    template: '<h3><%=obj.title%></h3>' + '<%if(!(obj.list && obj.list.length)){%>' + '<br><hr><center><h3>暂无内容</h3></center>' + '<%}else{(obj.list || []).forEach(function(o, idx){%><article>' + '  <h2><a data-on="?m=go" data-url="<%=o.href%>"><%-o.title%></a></h2>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(o.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span data-on="?m=favor&idx=<%=idx%>" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-o.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview&idx=<%=idx%>">' + '  </div><br />' + '' + '  <p class="text-right">' + '    <a data-on="?m=go" data-url="<%=o.href%>">' + '      continue reading...' + '    </a>' + '  </p>' + '  <hr>' + '</article><%})%>' + '' + '<ul class="pager">' + '  <li class="previous"><a <%if(obj.page==0){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page-1)%>"<%}%>>&larr; Previous</a></li>' + '  <li class="next"><a <%if(obj.page==Math.floor(obj.num/obj.count)){%>style="opacity: 0.5;"<%}else{%>' + 'data-on="?m=go" data-url="<%=obj.hrefHead+"/"+(obj.page+1)%>"<%}%>>Next &rarr;</a></li>' + '</ul><%}%>'
 	  }, option);
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(24);
+	var s_mainContainer = __webpack_require__(25);
 	var m_article = __webpack_require__(9);
-	var m_readHistory = __webpack_require__(21);
-	var c_articleList = __webpack_require__(22);
+	var m_readHistory = __webpack_require__(11);
+	var c_articleList = __webpack_require__(23);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -1998,7 +2107,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2006,20 +2115,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(16);
-	var c_footer = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(18);
+	var c_footer = __webpack_require__(17);
 	var m_article = __webpack_require__(9);
-	var m_readHistory = __webpack_require__(21);
-	var c_pannelList = __webpack_require__(19);
-	var c_content = __webpack_require__(26);
-	var m_initOption = __webpack_require__(17);
+	var m_readHistory = __webpack_require__(11);
+	var c_pannelList = __webpack_require__(21);
+	var c_content = __webpack_require__(27);
+	var m_initOption = __webpack_require__(19);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2051,33 +2160,34 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	window.CONFIG = __webpack_require__(12);
+	
 	//单个文章
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/content',
-	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span data-on="?m=favor" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
 	  }, option);
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(16);
-	var c_footer = __webpack_require__(15);
+	var c_mainContainer = __webpack_require__(18);
+	var c_footer = __webpack_require__(17);
 	var m_config = __webpack_require__(12);
 	var m_article = __webpack_require__(9);
-	var m_initOption = __webpack_require__(17);
+	var m_initOption = __webpack_require__(19);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -2108,16 +2218,16 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(15);
-	var c_mainContainer = __webpack_require__(16);
-	var m_initOption = __webpack_require__(17);
-	var c_pannelList = __webpack_require__(19);
-	var m_pullArticle = __webpack_require__(29);
+	var c_footer = __webpack_require__(17);
+	var c_mainContainer = __webpack_require__(18);
+	var m_initOption = __webpack_require__(19);
+	var c_pannelList = __webpack_require__(21);
+	var m_pullArticle = __webpack_require__(30);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2147,7 +2257,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -2,6 +2,7 @@
   "author": "liquidliang",
   "nav": [
     ["Home", "#!/index"],
+    ["收藏", "#!/favor"],
     ["About", "#!/blog/about.md"],
     ["订阅", "#!/subscribe"]
   ]
