@@ -1,5 +1,5 @@
 
-var baseUrl = "https://liquidliang.github.io/";
+var baseUrl = location.origin + "/";
 var dataUrl = baseUrl + "json/";
 var cacheName = "chat-cache-name";
 var dataCacheName = "chat-data-cache-name";
@@ -40,7 +40,7 @@ self.addEventListener("fetch", function(e) {
                 return response;
             });
         }));
-    } else {
+    } else if(cacheFiles.indexOf(e.request.url.replace(baseUrl, '/')) > -1){
         e.respondWith(caches.match(e.request).then(function(response) {
             return response || fetch(e.request);
         }));
