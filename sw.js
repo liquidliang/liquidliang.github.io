@@ -177,9 +177,9 @@ var fetchCache = function (dbName, req) {
     return cache.match(req.clone());
   }).then(function (response) {
     if (response) {
-      // if (dbName == businessCacheName) {
-      //   addToCache(dbName, req, response);  //更新缓存，下次使用
-      // }
+      if (dbName == businessCacheName) {
+        addToCache(dbName, req, response);  //更新缓存，下次使用
+      }
       return response; //如果命中缓存，直接使用缓存.
     } else {
       return addToCache(dbName, req);
@@ -459,9 +459,9 @@ function sendNote(message) {
         data: data,
         image: '/images/onion.png',
         actions: [{
-          action: "focus",
+          action: "open",
           title: "打开",
-          icon: '/images/logo/logo072.png'
+          icon: '/images/toolbar-icons/forward.png'
         }]
     }).then(function(){
         return {
@@ -499,8 +499,9 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close(); //Close the notification
   var messageId = event.notification.data;
  // Open the app and navigate to latest.html after clicking the notification
-  console.log('notificationclick', event.action);
-  if(event.action === "focus"){
-    event.waitUntil(focusOpen());
+  console.log('notificationclick action=', event.action);
+  if(event.action === "open"){
+    return event.waitUntil(clients.openWindow(location.origin + '/#!/index'));
   }
+  event.waitUntil(focusOpen());
 });
