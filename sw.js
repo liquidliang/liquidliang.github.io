@@ -333,32 +333,7 @@ var preloadAtricle = function (urlList, callback, option) {
   });
 };
 
-function sendNote(mesage) {
-  console.log('send Note');
-  var title = mesage || 'No message.';
-  var body = '这是一个测试信息';
-  var icon = '/images/onion.png';
-  var tag = 'simple-push-demo-notification-tag' + Math.random();
-  var data = {
-    doge: {
-      wow: 'such amaze notification data'
-    }
-  };
-  return self.registration.showNotification(title, {
-        body: body,
-        icon: icon,
-        tag: tag,
-        data: data,
-        actions: [{
-          action: "focus",
-          title: "focus"
-        }]
-    }).then(function(){
-        return {
-            m: 'showNotification'
-        }
-    });
-}
+
 
 //sw与页面通信,必须返回promise
 function _processMessage(msgObj, option) {
@@ -466,22 +441,42 @@ self.addEventListener('message', function (event) {
 });
 
 
-
+function sendNote(message) {
+  console.log('send Note');
+  var title = message || 'No message.';
+  var body = '这是一个测试信息';
+  var icon = '/images/logo/logo072.png';
+  var tag = 'simple-push-demo-notification-tag' + Math.random();
+  var data = {
+    doge: {
+      wow: 'such amaze notification data'
+    }
+  };
+  return self.registration.showNotification(title, {
+        body: body,
+        icon: icon,
+        tag: tag,
+        data: data,
+        image: '/images/onion.png',
+        actions: [{
+          action: "focus",
+          title: "打开",
+          icon: '/images/logo/logo072.png'
+        }]
+    }).then(function(){
+        return {
+            m: 'showNotification'
+        }
+    });
+}
 // triggered everytime, when a push notification is received.
 self.addEventListener('push', function(event) {
 
   console.info('Event: Push', event);
-
-  var title = 'New commit on Github Repo: swblog';
-
-  var body = {
-    'body': 'Click to see the latest commit',
-    'tag': 'pwa',
-    'icon': '/images/logo/logo072.png'
-  };
+  var message = event.data.text();
 
   event.waitUntil(
-    self.registration.showNotification(title, body)
+    sendNote(message)
   );
 });
 
@@ -504,6 +499,7 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close(); //Close the notification
   var messageId = event.notification.data;
  // Open the app and navigate to latest.html after clicking the notification
+  console.log('notificationclick', event.action);
   if(event.action === "focus"){
     event.waitUntil(focusOpen());
   }
