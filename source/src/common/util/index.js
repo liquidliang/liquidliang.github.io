@@ -36,5 +36,6 @@ module.exports = {
   stopBubbleEx: m_event.stopBubbleEx,
   now: function(){
       return _date.now();
-  }
+  },
+  load: require('./load.js')
 };

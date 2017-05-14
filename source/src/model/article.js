@@ -3,6 +3,7 @@ const m_search = require('helper/search');
 const m_readHistory = require('model/read_history');
 const m_readFavor = require('model/read_favor');
 const swPostMessage = require('helper/sw_post_message.js');
+const m_loadJS = require('helper/load_lib');
 let catalogList = []; //目录列表
 let catalogDict = {};
 let articleList = []; //文件列表
@@ -31,45 +32,47 @@ BCD.addEvent('mkview', function (ele, option, data) {
 
   ele.attr('id', name);
   setTimeout(function () { //dom元素展示出来之后再绑定，不然流程图等会有样式问题
-    editormd.markdownToHTML(name, {
-      markdown: result, //+ "\r\n" + $("#append-test").text(),
-      // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
-      htmlDecode: "style,script,iframe", // you can filter tags decode
-      //toc             : false,
-      tocm: true, // Using [TOCM]
-      //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
-      //gfm             : false,
-      //tocDropdown     : true,
-      // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
-      emoji: true,
-      taskList: true,
-      tex: true, // 默认不解析
-      flowChart: true, // 默认不解析
-      sequenceDiagram: true // 默认不解析
-    });
+    m_loadJS.then(function(){
+      editormd.markdownToHTML(name, {
+        markdown: result, //+ "\r\n" + $("#append-test").text(),
+        // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
+        htmlDecode: "style,script,iframe", // you can filter tags decode
+        //toc             : false,
+        tocm: true, // Using [TOCM]
+        //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+        //gfm             : false,
+        //tocDropdown     : true,
+        // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+        emoji: true,
+        taskList: true,
+        tex: true, // 默认不解析
+        flowChart: true, // 默认不解析
+        sequenceDiagram: true // 默认不解析
+      });
 
-    let innerHtml = ele.html();
-    if(/(<br>|<p><\/p>){2,}/.test(innerHtml)){
-      ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
-    }
+      let innerHtml = ele.html();
+      if(/(<br>|<p><\/p>){2,}/.test(innerHtml)){
+        ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
+      }
 
-    if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) { //兼容TOC目录
-      let baseHash = location.hash.replace(/\.md\/.*/, '.md');
-      ele.html(ele.html()
-        .replace(/href="#([^"]*)/g, function ($0, $1) {
-          if ($1) {
-            return 'href="' + baseHash + '/' + $1;
-          }
-          return $0
-        }).replace(/name="([^"]*)/g, function ($0, $1) {
-          if ($1) {
-            return 'name="' + baseHash.substr(1) + '/' + $1;
-          }
-          return $0
-        }));
-    }
-    $('a[href^="http"]').attr('target', '_blank');
-    $('a[href^="http"]').attr('rel', 'noopener');
+      if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) { //兼容TOC目录
+        let baseHash = location.hash.replace(/\.md\/.*/, '.md');
+        ele.html(ele.html()
+          .replace(/href="#([^"]*)/g, function ($0, $1) {
+            if ($1) {
+              return 'href="' + baseHash + '/' + $1;
+            }
+            return $0
+          }).replace(/name="([^"]*)/g, function ($0, $1) {
+            if ($1) {
+              return 'name="' + baseHash.substr(1) + '/' + $1;
+            }
+            return $0
+          }));
+      }
+      $('a[href^="http"]').attr('target', '_blank');
+      $('a[href^="http"]').attr('rel', 'noopener');
+    })
   }, 0);
 });
 

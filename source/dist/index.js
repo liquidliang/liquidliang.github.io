@@ -53,15 +53,15 @@
 	//require("babel-polyfill");  //太大了
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(8);
-	var m_article = __webpack_require__(9);
-	var m_config = __webpack_require__(12);
-	var c_header = __webpack_require__(15);
-	var c_pageList = __webpack_require__(16);
-	var c_pageBook = __webpack_require__(24);
-	var c_pageContent = __webpack_require__(26);
-	var c_pageBlog = __webpack_require__(28);
-	var c_pageSearch = __webpack_require__(29);
+	__webpack_require__(9);
+	var m_article = __webpack_require__(10);
+	var m_config = __webpack_require__(13);
+	var c_header = __webpack_require__(17);
+	var c_pageList = __webpack_require__(18);
+	var c_pageBook = __webpack_require__(26);
+	var c_pageContent = __webpack_require__(28);
+	var c_pageBlog = __webpack_require__(30);
+	var c_pageSearch = __webpack_require__(31);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -297,7 +297,8 @@
 	  stopBubbleEx: m_event.stopBubbleEx,
 	  now: function now() {
 	    return _date.now();
-	  }
+	  },
+	  load: __webpack_require__(8)
 	};
 
 /***/ },
@@ -340,6 +341,71 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var scriptDict = {};
+	window.LOAD_CALLBACK = function (ele, callback) {
+	  console.log(arguments);
+	};
+	
+	module.exports = function (list, callback) {
+	  var promiseLoad = new Promise(function (resolve) {
+	    if (!callback) {
+	      callback = resolve;
+	    }
+	  });
+	  var head = document.getElementsByTagName('head')[0];
+	  var loadList = [];
+	  if (BCD.is.s(list)) {
+	    list = [list];
+	  }
+	  list = list.map(function (src) {
+	    src = BCD.url.abs(src);
+	    if (!scriptDict[src]) {
+	      loadList.push(src);
+	    }
+	    return src;
+	  });
+	
+	  if (loadList.length) {
+	    loadList.forEach(function (src) {
+	      var loadDom = void 0;
+	      if (/\.js$/.test(src)) {
+	        loadDom = document.createElement('script');
+	        loadDom.type = 'text/javascript';
+	        loadDom.charset = 'utf-8';
+	        loadDom.async = false;
+	        loadDom.src = src;
+	      } else {
+	        loadDom = document.createElement('link');
+	        loadDom.rel = 'stylesheet';
+	        loadDom.href = src;
+	      }
+	
+	      loadDom.onload = function () {
+	        scriptDict[src] = true;
+	        if (loadList.every(function (src) {
+	          return scriptDict[src];
+	        })) {
+	          callback(list.map(function (src) {
+	            return scriptDict[src];
+	          }));
+	        }
+	      };
+	      head.appendChild(loadDom);
+	    });
+	  } else {
+	    callback(list.map(function (src) {
+	      return scriptDict[src];
+	    }));
+	  }
+	  return promiseLoad;
+	};
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -485,7 +551,7 @@
 	});
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -495,10 +561,11 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(6);
-	var m_search = __webpack_require__(10);
-	var m_readHistory = __webpack_require__(11);
-	var m_readFavor = __webpack_require__(13);
-	var swPostMessage = __webpack_require__(14);
+	var m_search = __webpack_require__(11);
+	var m_readHistory = __webpack_require__(12);
+	var m_readFavor = __webpack_require__(14);
+	var swPostMessage = __webpack_require__(15);
+	var m_loadJS = __webpack_require__(16);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -530,47 +597,49 @@
 	  ele.attr('id', name);
 	  setTimeout(function () {
 	    //dom元素展示出来之后再绑定，不然流程图等会有样式问题
-	    editormd.markdownToHTML(name, {
-	      markdown: result, //+ "\r\n" + $("#append-test").text(),
-	      // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
-	      htmlDecode: "style,script,iframe", // you can filter tags decode
-	      //toc             : false,
-	      tocm: true, // Using [TOCM]
-	      //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
-	      //gfm             : false,
-	      //tocDropdown     : true,
-	      // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
-	      emoji: true,
-	      taskList: true,
-	      tex: true, // 默认不解析
-	      flowChart: true, // 默认不解析
-	      sequenceDiagram: true // 默认不解析
+	    m_loadJS.then(function () {
+	      editormd.markdownToHTML(name, {
+	        markdown: result, //+ "\r\n" + $("#append-test").text(),
+	        // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
+	        htmlDecode: "style,script,iframe", // you can filter tags decode
+	        //toc             : false,
+	        tocm: true, // Using [TOCM]
+	        //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+	        //gfm             : false,
+	        //tocDropdown     : true,
+	        // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+	        emoji: true,
+	        taskList: true,
+	        tex: true, // 默认不解析
+	        flowChart: true, // 默认不解析
+	        sequenceDiagram: true // 默认不解析
+	      });
+	
+	      var innerHtml = ele.html();
+	      if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
+	        ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
+	      }
+	
+	      if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) {
+	        (function () {
+	          //兼容TOC目录
+	          var baseHash = location.hash.replace(/\.md\/.*/, '.md');
+	          ele.html(ele.html().replace(/href="#([^"]*)/g, function ($0, $1) {
+	            if ($1) {
+	              return 'href="' + baseHash + '/' + $1;
+	            }
+	            return $0;
+	          }).replace(/name="([^"]*)/g, function ($0, $1) {
+	            if ($1) {
+	              return 'name="' + baseHash.substr(1) + '/' + $1;
+	            }
+	            return $0;
+	          }));
+	        })();
+	      }
+	      $('a[href^="http"]').attr('target', '_blank');
+	      $('a[href^="http"]').attr('rel', 'noopener');
 	    });
-	
-	    var innerHtml = ele.html();
-	    if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
-	      ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
-	    }
-	
-	    if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) {
-	      (function () {
-	        //兼容TOC目录
-	        var baseHash = location.hash.replace(/\.md\/.*/, '.md');
-	        ele.html(ele.html().replace(/href="#([^"]*)/g, function ($0, $1) {
-	          if ($1) {
-	            return 'href="' + baseHash + '/' + $1;
-	          }
-	          return $0;
-	        }).replace(/name="([^"]*)/g, function ($0, $1) {
-	          if ($1) {
-	            return 'name="' + baseHash.substr(1) + '/' + $1;
-	          }
-	          return $0;
-	        }));
-	      })();
-	    }
-	    $('a[href^="http"]').attr('target', '_blank');
-	    $('a[href^="http"]').attr('rel', 'noopener');
 	  }, 0);
 	});
 	
@@ -1127,7 +1196,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1279,12 +1348,12 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(12);
+	var m_config = __webpack_require__(13);
 	var storageKey = 'read_history';
 	var readHistory = {};
 	var init = function init() {
@@ -1321,7 +1390,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1379,12 +1448,12 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(12);
+	var m_config = __webpack_require__(13);
 	var storageKey = 'read_favor';
 	var readFavor = {};
 	var init = function init() {
@@ -1447,7 +1516,7 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1489,14 +1558,24 @@
 	module.exports = postMessage; //postMessage(message, callback)
 
 /***/ },
-/* 15 */
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var m_util = __webpack_require__(6);
+	
+	module.exports = m_util.load(["./source/lib/editor.md/editormd.preview.min.css", "./source/lib/blog.css", "./source/lib/editor.md/lib/marked.min.js", "./source/lib/editor.md/lib/prettify.min.js", "./source/lib/editor.md/lib/raphael.min.js", "./source/lib/editor.md/lib/underscore.min.js", "./source/lib/editor.md/lib/sequence-diagram.min.js", "./source/lib/editor.md/lib/flowchart.min.js", "./source/lib/editor.md/lib/jquery.flowchart.min.js", "./source/lib/editor.md/editormd.min.js"]);
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var m_util = __webpack_require__(6);
-	var m_article = __webpack_require__(9);
-	var m_config = __webpack_require__(12);
+	var m_article = __webpack_require__(10);
+	var m_config = __webpack_require__(13);
 	var m_commonEvent = __webpack_require__(5);
 	var viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
 	
@@ -1622,18 +1701,18 @@
 	};
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(17);
-	var c_mainContainer = __webpack_require__(18);
-	var m_article = __webpack_require__(9);
-	var m_initOption = __webpack_require__(19);
-	var c_pannel = __webpack_require__(20);
-	var c_pannelList = __webpack_require__(21);
-	var c_articleList = __webpack_require__(23);
+	var c_footer = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(20);
+	var m_article = __webpack_require__(10);
+	var m_initOption = __webpack_require__(21);
+	var c_pannel = __webpack_require__(22);
+	var c_pannelList = __webpack_require__(23);
+	var c_articleList = __webpack_require__(25);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1708,13 +1787,13 @@
 	};
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//页脚
-	var m_config = __webpack_require__(12);
+	var m_config = __webpack_require__(13);
 	module.exports = function (option) {
 	  var viewHeader = $('<footer></footer>');
 	  option = $.extend({
@@ -1728,7 +1807,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1738,7 +1817,7 @@
 	};
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1769,7 +1848,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1791,14 +1870,14 @@
 	};
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_article = __webpack_require__(9);
-	var m_recommend = __webpack_require__(22);
-	var c_pannel = __webpack_require__(20);
+	var m_article = __webpack_require__(10);
+	var m_recommend = __webpack_require__(24);
+	var c_pannel = __webpack_require__(22);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -1855,7 +1934,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1863,9 +1942,9 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(6);
-	var m_article = __webpack_require__(9);
-	var m_search = __webpack_require__(10);
-	var m_readHistory = __webpack_require__(11);
+	var m_article = __webpack_require__(10);
+	var m_search = __webpack_require__(11);
+	var m_readHistory = __webpack_require__(12);
 	
 	var filter = function filter(list) {
 	  var arr = [];
@@ -2008,7 +2087,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2022,15 +2101,15 @@
 	};
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(25);
-	var m_article = __webpack_require__(9);
-	var m_readHistory = __webpack_require__(11);
-	var c_articleList = __webpack_require__(23);
+	var s_mainContainer = __webpack_require__(27);
+	var m_article = __webpack_require__(10);
+	var m_readHistory = __webpack_require__(12);
+	var c_articleList = __webpack_require__(25);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -2114,7 +2193,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2122,20 +2201,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(18);
-	var c_footer = __webpack_require__(17);
-	var m_article = __webpack_require__(9);
-	var m_readHistory = __webpack_require__(11);
-	var c_pannelList = __webpack_require__(21);
-	var c_content = __webpack_require__(27);
-	var m_initOption = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(20);
+	var c_footer = __webpack_require__(19);
+	var m_article = __webpack_require__(10);
+	var m_readHistory = __webpack_require__(12);
+	var c_pannelList = __webpack_require__(23);
+	var c_content = __webpack_require__(29);
+	var m_initOption = __webpack_require__(21);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2167,12 +2246,12 @@
 	};
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	window.CONFIG = __webpack_require__(12);
+	window.CONFIG = __webpack_require__(13);
 	
 	//单个文章
 	module.exports = function (option) {
@@ -2183,18 +2262,18 @@
 	};
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(18);
-	var c_footer = __webpack_require__(17);
-	var m_config = __webpack_require__(12);
-	var m_article = __webpack_require__(9);
-	var m_initOption = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(20);
+	var c_footer = __webpack_require__(19);
+	var m_config = __webpack_require__(13);
+	var m_article = __webpack_require__(10);
+	var m_initOption = __webpack_require__(21);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -2225,16 +2304,16 @@
 	};
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(17);
-	var c_mainContainer = __webpack_require__(18);
-	var m_initOption = __webpack_require__(19);
-	var c_pannelList = __webpack_require__(21);
-	var m_pullArticle = __webpack_require__(30);
+	var c_footer = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(20);
+	var m_initOption = __webpack_require__(21);
+	var c_pannelList = __webpack_require__(23);
+	var m_pullArticle = __webpack_require__(32);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2264,7 +2343,7 @@
 	};
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2272,7 +2351,7 @@
 	/**
 	 * 不断增加的列表
 	 */
-	var m_article = __webpack_require__(9);
+	var m_article = __webpack_require__(10);
 	var container = $('<div style="display:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
 	
 	var viewRank = $(container.find('[data-selector="pull_list"]'));
