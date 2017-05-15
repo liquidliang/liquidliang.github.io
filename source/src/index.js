@@ -4,18 +4,18 @@
  */
 //require("babel-polyfill");  //太大了
 require("polyfill/");
-// require('helper/common_event.js');
+require('helper/common_event.js');
 // require('helper/notification.js');
-// const m_article = require('model/article');
-// const m_config = require('model/config');
-// const c_header = require('card/common/navigator');
-// const c_pageList = require('page/list.js');
-// const c_pageBook = require('page/book.js');
-// const c_pageContent = require('page/content.js');
-// const c_pageBlog = require('page/blog.js');
-// const c_pageSearch = require('page/search.js');
-// let viewHeader = c_header();
-// $('body').append(viewHeader);
+const m_article = require('model/article');
+const m_config = require('model/config');
+const c_header = require('card/common/navigator');
+const c_pageList = require('page/list.js');
+const c_pageBook = require('page/book.js');
+const c_pageContent = require('page/content.js');
+const c_pageBlog = require('page/blog.js');
+const c_pageSearch = require('page/search.js');
+let viewHeader = c_header();
+$('body').append(viewHeader);
 //
 // m_config.getConfig.then(() =>
 //   m_article.initArticle.then(() => {
