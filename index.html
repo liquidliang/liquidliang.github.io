@@ -30,7 +30,6 @@
 
 	<script>
 		window.global_isDebug=1;
-        window.service_worker_register = function() {
     		if( 'serviceWorker' in navigator ){
     		    navigator.serviceWorker.register('/service-worker.js', {scope: './'}).then(function(registration) {
     		        // Registration was successful
@@ -42,7 +41,6 @@
     		} else {
     		    console.log('[client] ServiceWorker is not supported in this browser.')
     		}
-        }
 	</script>
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="stylesheet" href="./source/lib/bootstrap-custom/css/custom.bootstrap.css">
@@ -54,7 +52,7 @@
 
 </head>
 
-<body onload="service_worker_register()">
+<body>
     <noscript>
       请允许Javascript，否则您将无法使用
     </noscript>
