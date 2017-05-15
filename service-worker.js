@@ -1,7 +1,7 @@
 var version = 'v22';
 var namePrefix = 'swblog-';
 var nameReg = new RegExp('^' + namePrefix);
-var businessKey = 'business-' + version;    //cachestorage名称，可以加上版本号予以区分
+var businessKey = 'business-' + version; //cachestorage名称，可以加上版本号予以区分
 var businessCacheName = namePrefix + businessKey;
 var libCacheName = namePrefix + 'lib-' + version;
 var imageCacheName = namePrefix + 'image';
@@ -31,18 +31,18 @@ var FILES = [
 ];
 
 //Service Worker安装事件，其中可以预缓存资源
-self.addEventListener('install', function (event) {
+self.addEventListener('install', function(event) {
   console.log('[ServiceWorker] Installed version', version);
-  event.waitUntil(caches.open(businessCacheName).then(function (cache) {
+  event.waitUntil(caches.open(businessCacheName).then(function(cache) {
     return cache.addAll(FILES);
-  }).then(function () {
+  }).then(function() {
     console.log('[ServiceWorker] Skip waiting on install');
     return self.skipWaiting();
   }));
 });
 
 //Service Worker激活事件
-self.addEventListener('activate', function (event) {
+self.addEventListener('activate', function(event) {
 
   // self.clients.matchAll({
   //   includeUncontrolled: true
@@ -55,9 +55,9 @@ self.addEventListener('activate', function (event) {
   // });
 
   event.waitUntil(
-    caches.keys().then(function (cacheNames) {
+    caches.keys().then(function(cacheNames) {
       return Promise.all(
-        cacheNames.map(function (cacheName) {
+        cacheNames.map(function(cacheName) {
           // 删除掉当前定义前缀中不在expectedCaches中的缓存集
           // 避免用户存储空间急剧膨胀
           if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
@@ -66,7 +66,7 @@ self.addEventListener('activate', function (event) {
           }
         })
       );
-    }).then(function () {
+    }).then(function() {
       //使service worker立马生效，在单页面应用中，这样是合理的
       console.log('[ServiceWorker] Claiming clients for version', version);
       return self.clients.claim();
@@ -74,7 +74,7 @@ self.addEventListener('activate', function (event) {
 });
 
 
-var getNoSearch = function (url) {
+var getNoSearch = function(url) {
   return url.replace(/\?[^?]+/, '');
 }
 
@@ -83,8 +83,8 @@ function _fetch(url, timeout) {
   var fetch_promise = fetch(url);
 
   //这是一个可以被reject的promise
-  var abort_promise = new Promise(function (resolve, reject) {
-    abort_fn = function () {
+  var abort_promise = new Promise(function(resolve, reject) {
+    abort_fn = function() {
       reject(new Error('fetch timeout!'));
     };
   });
@@ -95,15 +95,15 @@ function _fetch(url, timeout) {
     abort_promise
   ]);
 
-  setTimeout(function () {
+  setTimeout(function() {
     abort_fn();
   }, timeout || 2E3);
 
   return abortable_promise;
 }
 //更新缓存
-var addToCache = function (dbName, req, response) {
-  return _fetch(req.clone()).then(function (resp) {
+var addToCache = function(dbName, req, response) {
+  return _fetch(req.clone()).then(function(resp) {
     if (resp.type !== 'basic' && resp.type !== 'cors') {
       return resp;
     }
@@ -127,12 +127,14 @@ var addToCache = function (dbName, req, response) {
     if (dbName === imageCacheName && !/^image\//.test(contentType)) {
       return resp;
     }
-    caches.open(dbName).then(function (cache) {
-      cache.keys().then(function (oldReqList) {
+    caches.open(dbName).then(function(cache) {
+      cache.keys().then(function(oldReqList) {
         //删除旧文件
         if (req.url.indexOf('?') > 0) {
           var urlKey = getNoSearch(req.url) + '?';
-          oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
+          oldReqList.filter(function(oldReq) {
+            return oldReq.url.indexOf(urlKey) > -1;
+          }).forEach(function(oldReq) {
             cache.delete(oldReq);
           });
         }
@@ -142,7 +144,7 @@ var addToCache = function (dbName, req, response) {
     });
 
     return resp;
-  }).catch(function (error) {
+  }).catch(function(error) {
     // if (response) { //请求失败用缓存保底
     //   console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
     //   return response;
@@ -176,10 +178,10 @@ var addToCache = function (dbName, req, response) {
 };
 
 
-var fetchCache = function (dbName, req) {
-  return caches.open(dbName).then(function (cache) {
+var fetchCache = function(dbName, req) {
+  return caches.open(dbName).then(function(cache) {
     return cache.match(req.clone());
-  }).then(function (response) {
+  }).then(function(response) {
     if (response) {
       if (dbName == businessCacheName) {
         addToCache(dbName, req, response); //更新缓存，下次使用
@@ -188,12 +190,12 @@ var fetchCache = function (dbName, req) {
     } else {
       return addToCache(dbName, req);
     }
-  }).catch(function (e) {
+  }).catch(function(e) {
     console.log(e);
     return addToCache(dbName, req);
   });
 }
-self.addEventListener('fetch', function (event) {
+self.addEventListener('fetch', function(event) {
 
   var req, url = event.request.url;
   var requestURL = new URL(url);
