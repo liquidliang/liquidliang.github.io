@@ -142,7 +142,7 @@ var addToCache = function (dbName, req, response) {
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
-      console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
+      console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
       return response;
     } else {
       return caches.open(dbName).then(function (cache) {
@@ -159,11 +159,11 @@ var addToCache = function (dbName, req, response) {
         });
       }).then(function (resp) {
         if (resp) {
-          console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
+          console.log('[ServiceWorker] fetch failed ('+req.url+') and use old cache', error);
           return resp;
         }
         // Respond with a 400 "Bad Request" status.
-        console.log(`[ServiceWorker] fetch failed: ${ req.url }`, error);
+        console.log('[ServiceWorker] fetch failed ('+req.url+')', error);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
@@ -504,7 +504,8 @@ function focusOpen() {
     type: 'window',
     includeUncontrolled: true
   }).then(function(clients){
-    for (var client of clients) {
+    for (var i=0; i < clients.length; i++) {
+      var client = clients[i];
       if (client.url = url) return client.focus(); // 经过测试，focus 貌似无效
     }
     console.log('not focus');
