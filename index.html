@@ -32,7 +32,7 @@
 		window.global_isDebug=1;
         window.service_worker_register = function() {
     		if( 'serviceWorker' in navigator ){
-    		    navigator.serviceWorker.register('/swtest.js', {scope: './'}).then(function(registration) {
+    		    navigator.serviceWorker.register('/swtest.js').then(function(registration) {
     		        // Registration was successful
     		        console.log('[client] ServiceWorker registration successful with scope: ', registration.scope);
     		    }).catch(function(err) {
