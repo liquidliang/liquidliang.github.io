@@ -1525,15 +1525,21 @@
 	
 	var index = 0;
 	var postMessage = function postMessage() {};
-	var callbackDict = {};
+	var callbackDict = {
+	  log: function log(resp) {
+	    console.log.apply(this, resp);
+	    return true;
+	  }
+	};
 	
 	if (navigator.serviceWorker) {
 	  navigator.serviceWorker.addEventListener('message', function (event) {
-	    var _event$data = event.data,
-	        cbid = _event$data.cbid,
-	        resp = _event$data.resp;
+	    var _JSON$parse = JSON.parse(event.data),
+	        cbid = _JSON$parse.cbid,
+	        resp = _JSON$parse.resp;
 	
 	    if (cbid && callbackDict[cbid]) {
+	      console.log('[client] serviceWorker message:' + cbid);
 	      if (!callbackDict[cbid](resp)) {
 	        delete callbackDict[cbid];
 	      }
@@ -1547,7 +1553,7 @@
 	        data: req.data
 	      };
 	      if (callback) {
-	        obj.cbid = m_util.getRandomName() + index;
+	        obj.cbid = req.m + '_' + index;
 	        callbackDict[obj.cbid] = callback;
 	      }
 	      navigator.serviceWorker.controller.postMessage(obj); //页面向service worker发送信息

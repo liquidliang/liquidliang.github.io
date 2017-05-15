@@ -30,11 +30,11 @@ var FILES = [
 
 
 self.addEventListener('install', function (event) {
-  console.log('[ServiceWorker] Installed version', version);
+  consoleLog('[ServiceWorker] Installed version', version);
   event.waitUntil(caches.open(businessCacheName).then(function (cache) {
     return cache.addAll(FILES);
   }).then(function () {
-    console.log('[ServiceWorker] Skip waiting on install');
+    consoleLog('[ServiceWorker] Skip waiting on install');
     return self.skipWaiting();
   }));
 });
@@ -48,7 +48,7 @@ self.addEventListener('activate', function (event) {
       return client.url;
     });
     //如果新sw生效，对其他页面造成影响，这里可以查
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
+    consoleLog('[ServiceWorker] Matching clients:', urls.join(', '));
   });
 
   event.waitUntil(
@@ -57,14 +57,14 @@ self.addEventListener('activate', function (event) {
         cacheNames.map(function (cacheName) {
           // 删除掉当前定义前缀中不在expectedCaches中的缓存集
           if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
-            console.log('[ServiceWorker] Deleting old cache:', cacheName);
+            consoleLog('[ServiceWorker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     }).then(function () {
       //使service worker立马生效，在单页面应用中，这样是合理的
-      console.log('[ServiceWorker] Claiming clients for version', version);
+      consoleLog('[ServiceWorker] Claiming clients for version', version);
       return self.clients.claim();
     }));
 });
@@ -140,7 +140,7 @@ var addToCache = function (dbName, req, response) {
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
-      console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
+      consoleLog(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
       return response;
     } else {
       return caches.open(dbName).then(function (cache) {
@@ -157,11 +157,11 @@ var addToCache = function (dbName, req, response) {
         });
       }).then(function (resp) {
         if (resp) {
-          console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
+          consoleLog(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
           return resp;
         }
         // Respond with a 400 "Bad Request" status.
-        console.log(`[ServiceWorker] fetch failed: ${ req.url }`, error);
+        consoleLog(`[ServiceWorker] fetch failed: ${ req.url }`, error);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
@@ -178,14 +178,14 @@ var fetchCache = function (dbName, req) {
   }).then(function (response) {
     if (response) {
       if (dbName == businessCacheName) {
-        addToCache(dbName, req, response);  //更新缓存，下次使用
+        addToCache(dbName, req, response); //更新缓存，下次使用
       }
       return response; //如果命中缓存，直接使用缓存.
     } else {
       return addToCache(dbName, req);
     }
-  }).catch(function(e){
-    console.log(e);
+  }).catch(function (e) {
+    consoleLog(e);
     return addToCache(dbName, req);
   });
 }
@@ -343,45 +343,64 @@ function _processMessage(msgObj, option) {
       result: result
     }
   };
-  try{
-      switch (msgObj.m) {
-      case 'preload': //arr
-        return preloadList(msgObj.data).then(resolveFun);
-      case 'showNotification': //arr
-        return sendNote(msgObj.data);
-      case 'preloadAtricle': //arr
-        return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
-      case 'delete_not_exist_article': //dict
-        let articleDict = msgObj.data;
-        if (!articleDict) {
-          return new Promise(function () {});
-        }
-        return caches.open(markdownCacheName).then(function (cache) {
-          //删除不存在的博客文件
-          cache.keys().then(function (oldReqList) {
-            oldReqList.forEach(oldReq => {
-              let urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
-              if (!articleDict[urlKey]) {
-                cache.delete(oldReq);
-              }
-            });
-          });
-        });
-      default:
-        return new Promise(function (resolve) {
-          resolve(console.log('msgObj.m=' + msgObj.m + ' match nothing!'));
+  try {
+    switch (msgObj.m) {
+    case 'preload': //arr
+      return preloadList(msgObj.data).then(resolveFun);
+    case 'showNotification': //arr
+      return sendNote(msgObj.data);
+    case 'preloadAtricle': //arr
+      return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
+    case 'delete_not_exist_article': //dict
+      let articleDict = msgObj.data;
+      if (!articleDict) {
+        return new Promise(function (r) {
+          r();
         });
       }
-  }catch(e){
-      console.log('_processMessage', e.stack);
+      return caches.open(markdownCacheName).then(function (cache) {
+        //删除不存在的博客文件
+        cache.keys().then(function (oldReqList) {
+          oldReqList.forEach(oldReq => {
+            let urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
+            if (!articleDict[urlKey]) {
+              cache.delete(oldReq);
+            }
+          });
+        });
+      });
+    default:
+      return new Promise(function (resolve) {
+        resolve(consoleLog('msgObj.m=' + msgObj.m + ' match nothing!'));
+      });
+    }
+  } catch (e) {
+    consoleLog('_processMessage', e.stack);
   }
 }
 
 var callbackDict = {};
 
+function consoleLog() {
+  callbackDict['log'] = [{
+    cbid: 'log'
+  }];
+  sendMessage({
+    m: 'log',
+    result: [].concat.apply(['[service]'], arguments)
+  })
+}
+
 function sendMessage(resp) {
-  var callbackList = callbackDict[resp.m];
-  callbackDict[resp.m] = undefined;
+  if (!(resp && resp.m)) {
+    return new Promise(function (r) {
+      r();
+    });
+  }
+  var callbackList = callbackDict[resp.m] || [{
+    cbid: 'log'
+  }];
+  callbackDict[resp.m] = [];
   return self.clients.matchAll()
     .then(function (clientList) {
       var option = {};
@@ -390,23 +409,29 @@ function sendMessage(resp) {
         if (!option.cbid) {
           continue;
         }
-        if (option.senderID === null) {
-          console.log('event.source is null; we don\'t know the sender of the ' +
-            'message');
-          clientList.forEach(function (client) {
-            client.postMessage({
-              cbid: option.cbid,
-              resp: resp.result
+        if (!option.senderID) {
+          if (option.cbid != 'log') {
+            console.log('event.source is null; we don\'t know the sender of the ' +
+              'message');
+          }
+          try {
+            clientList.forEach(function (client) {
+              client.postMessage(JSON.stringify({
+                cbid: option.cbid,
+                resp: resp.result
+              }));
             });
-          });
+          } catch (e) {
+            console.log(e);
+          }
         } else {
           clientList.some(function (client) {
             // Skip sending the message to the client that sent it.
             if (client.id === option.senderID) {
-              client.postMessage({
+              client.postMessage(JSON.stringify({
                 cbid: option.cbid,
                 resp: resp.result
-              });
+              }));
               return true;
             }
           });
@@ -442,7 +467,7 @@ self.addEventListener('message', function (event) {
 
 
 function sendNote(message) {
-  console.log('send Note');
+  consoleLog('send Note');
   var title = message || 'No message.';
   var body = '这是一个测试信息';
   var icon = '/images/logo/logo072.png';
@@ -453,24 +478,24 @@ function sendNote(message) {
     }
   };
   return self.registration.showNotification(title, {
-        body: body,
-        icon: icon,
-        tag: tag,
-        data: data,
-        image: '/images/onion.png',
-        actions: [{
-          action: "open",
-          title: "打开",
-          icon: '/images/toolbar-icons/forward.png'
-        }]
-    }).then(function(){
-        return {
-            m: 'showNotification'
-        }
-    });
+    body: body,
+    icon: icon,
+    tag: tag,
+    data: data,
+    image: '/images/onion.png',
+    actions: [{
+      action: "open",
+      title: "打开",
+      icon: '/images/toolbar-icons/forward.png'
+    }]
+  }).then(function () {
+    return {
+      m: 'showNotification'
+    }
+  });
 }
 // triggered everytime, when a push notification is received.
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
 
   console.info('Event: Push', event);
   var message = event.data.text();
@@ -480,27 +505,27 @@ self.addEventListener('push', function(event) {
   );
 });
 
-function focusOpen(){
+function focusOpen() {
   var url = location.href;
   return clients.matchAll({
-    type:'window',
+    type: 'window',
     includeUncontrolled: true
-  }).then(clients=>{
-    for(var client of clients){
-      if(client.url = url) return client.focus(); // 经过测试，focus 貌似无效
+  }).then(clients => {
+    for (var client of clients) {
+      if (client.url = url) return client.focus(); // 经过测试，focus 貌似无效
     }
-    console.log('not focus');
+    consoleLog('not focus');
     clients.openWindow(location.origin + '/');
   })
 }
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
 
   event.notification.close(); //Close the notification
   var messageId = event.notification.data;
- // Open the app and navigate to latest.html after clicking the notification
-  console.log('notificationclick action=', event.action);
-  if(event.action === "open"){
+  // Open the app and navigate to latest.html after clicking the notification
+  consoleLog('notificationclick action=', event.action);
+  if (event.action === "open") {
     return event.waitUntil(clients.openWindow(location.origin + '/#!/index'));
   }
   event.waitUntil(focusOpen());

@@ -2,12 +2,18 @@ const m_util = require('common/util');
 
 let index = 0;
 let postMessage = function(){};
-let callbackDict = {};
+let callbackDict = {
+    log: function(resp){
+        console.log.apply(this, resp);
+        return true;
+    }
+};
 
 if (navigator.serviceWorker) {
   navigator.serviceWorker.addEventListener('message', function(event) {
-    let {cbid, resp} = event.data;
+    let {cbid, resp} = JSON.parse(event.data);
     if(cbid && callbackDict[cbid]){
+      console.log('[client] serviceWorker message:'+cbid);
       if(!callbackDict[cbid](resp)){
         delete callbackDict[cbid];
       }
@@ -21,7 +27,7 @@ if (navigator.serviceWorker) {
         data: req.data
       };
       if(callback){
-        obj.cbid = m_util.getRandomName() + index;
+        obj.cbid = req.m + '_' + index;
         callbackDict[obj.cbid] = callback;
       }
       navigator.serviceWorker.controller.postMessage(obj);  //页面向service worker发送信息
