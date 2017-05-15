@@ -127,19 +127,19 @@ var addToCache = function (dbName, req, response) {
     if (dbName === imageCacheName && !/^image\//.test(contentType)) {
       return resp;
     }
-    // caches.open(dbName).then(function (cache) {
-    //   //删除旧文件
-    //   cache.keys().then(function (oldReqList) {
-    //     if (req.url.indexOf('?') > 0) {
-    //       let urlKey = getNoSearch(req.url) + '?';
-    //       oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
-    //         cache.delete(oldReq);
-    //       });
-    //     }
-    //     //添加新文件
-    //     cache.put(req.clone(), cacheResp);
-    //   });
-    // });
+    caches.open(dbName).then(function (cache) {
+      //删除旧文件
+      cache.keys().then(function (oldReqList) {
+        if (req.url.indexOf('?') > 0) {
+          let urlKey = getNoSearch(req.url) + '?';
+          oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
+            cache.delete(oldReq);
+          });
+        }
+        //添加新文件
+        cache.put(req.clone(), cacheResp);
+      });
+    });
 
     return resp;
   }).catch(function (error) {
