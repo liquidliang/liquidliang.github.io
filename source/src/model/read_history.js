@@ -1,5 +1,4 @@
 const m_config = require('model/config');
-const m_article = require('model/article');
 let storageKey = 'read_history';
 let readHistory = {};
 const init = ()=> {
@@ -18,6 +17,12 @@ const addHistory = (path)=>{
   localStorage.setItem(storageKey, JSON.stringify(readHistory));
 };
 
+BCD.addEvent('article_down', function(ele){
+  ele.on('click', function(e){
+    ele.hide();
+    addHistory(ele.data('url'));
+  });
+});
 
 module.exports = {
   addHistory,

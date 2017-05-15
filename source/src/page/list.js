@@ -27,14 +27,21 @@ module.exports = function (page, key) {
       viewList.empty();
       if (key == 'index') {
         m_article.getListByTag(0, BCD.getHash(1)).then((data) => {
-          data.title = "最新文章";
+          data.title = "最新未读文章";
           data.hrefHead = '#!/index';
+          viewList.reset(data);
+        });
+      } if (key == 'favor') {
+        m_article.getListByFavor(0, BCD.getHash(1)).then((data) => {
+          data.title = "文章收藏";
+          data.hrefHead = '#!/favor';
+          console.log(data);
           viewList.reset(data);
         });
       } else if (key == 'tag') {
         let tag = BCD.getHash(1);
         m_article.getListByTag(tag, BCD.getHash(2)).then((data) => {
-          data.title = '"' + tag + '" 的最新文章';
+          data.title = '"' + tag + '" 的最新未读文章';
           data.hrefHead = '#!/tag/' + tag;
           viewList.reset(data);
         });

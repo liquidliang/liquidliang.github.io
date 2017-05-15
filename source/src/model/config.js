@@ -12,12 +12,12 @@ let searchIssueURL;
 let newIssueURL;
 
 const update = ()=>{
-  let author = config.author;
+  let author = username = config.author;
   config.logoTitle = config.logoTitle || author+"的博客";
   searchIssueURL = 'https://github.com/'+author+'/'+author+'.github.io/issues?utf8=%E2%9C%93&q=';
   newIssueURL = 'https://github.com/' +author+'/'+author+'.github.io/issues/new?title=';
   if(window.CONFIG){
-    CONFIG.username = username = config.author;
+    CONFIG.username = username;
   }
 };
 update();
