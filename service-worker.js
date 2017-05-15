@@ -145,35 +145,35 @@ var addToCache = function(dbName, req, response) {
 
     return resp;
   }).catch(function(error) {
-    // if (response) { //请求失败用缓存保底
-    //   console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
-    //   return response;
-    // } else {
-    //   return caches.open(dbName).then(function (cache) {
-    //     //取旧缓存
-    //     var urlKey = getNoSearch(req.url);
-    //     return cache.keys().then(function (oldReqList) {
-    //       var oldReq;
-    //       while (oldReq = oldReqList.pop()) {
-    //         if (oldReq.url.indexOf(urlKey) > -1) {
-    //           return cache.match(oldReq)
-    //         }
-    //       }
-    //       return null;
-    //     });
-    //   }).then(function (resp) {
-    //     if (resp) {
-    //       console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
-    //       return resp;
-    //     }
-    //     // Respond with a 400 "Bad Request" status.
-    //     console.log(`[ServiceWorker] fetch failed: ${ req.url }`, error);
-    //     return new Response(new Blob, {
-    //       'status': 400,
-    //       'statusText': 'Bad Request'
-    //     });
-    //   });
-    // }
+    if (response) { //请求失败用缓存保底
+      console.log(`[ServiceWorker] fetch failed (${ req.url }) and use cache`, error);
+      return response;
+    } else {
+      return caches.open(dbName).then(function (cache) {
+        //取旧缓存
+        var urlKey = getNoSearch(req.url);
+        return cache.keys().then(function (oldReqList) {
+          var oldReq;
+          while (oldReq = oldReqList.pop()) {
+            if (oldReq.url.indexOf(urlKey) > -1) {
+              return cache.match(oldReq)
+            }
+          }
+          return null;
+        });
+      }).then(function (resp) {
+        if (resp) {
+          console.log(`[ServiceWorker] fetch failed (${ req.url }) and use old cache`, error);
+          return resp;
+        }
+        // Respond with a 400 "Bad Request" status.
+        console.log(`[ServiceWorker] fetch failed: ${ req.url }`, error);
+        return new Response(new Blob, {
+          'status': 400,
+          'statusText': 'Bad Request'
+        });
+      });
+    }
   });
 };
 
