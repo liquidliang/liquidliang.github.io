@@ -42,19 +42,36 @@ self.addEventListener('install', function (event) {
 });
 
 //Service Worker激活事件
-this.addEventListener('activate', function(event) {
-  //在激活事件中清除非当前版本的缓存避免用户存储空间急剧膨胀
-  event.waitUntil(caches.keys().then(function(cacheNames) {
-    return Promise.all(cacheNames.map(function(cacheName) {
-        if (cacheName !== businessKey) {
-          if(cacheName.indexOf(namePrefix) != -1) {
+self.addEventListener('activate', function (event) {
+
+  self.clients.matchAll({
+    includeUncontrolled: true
+  }).then(function (clientList) {
+    var urls = clientList.map(function (client) {
+      return client.url;
+    });
+    //如果新sw生效，对其他页面造成影响，这里可以查
+    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
+  });
+
+  event.waitUntil(
+    caches.keys().then(function (cacheNames) {
+      return Promise.all(
+        cacheNames.map(function (cacheName) {
+          // 删除掉当前定义前缀中不在expectedCaches中的缓存集
+          // 避免用户存储空间急剧膨胀
+          if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
+            console.log('[ServiceWorker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
-        }
+        })
+      );
+    }).then(function () {
+      //使service worker立马生效，在单页面应用中，这样是合理的
+      console.log('[ServiceWorker] Claiming clients for version', version);
+      return self.clients.claim();
     }));
-  }));
 });
-
 
 //Service Worker 请求拦截事件
 this.addEventListener('fetch', function(event)  {
