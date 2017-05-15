@@ -44,15 +44,15 @@ self.addEventListener('install', function (event) {
 //Service Worker激活事件
 self.addEventListener('activate', function (event) {
 
-  self.clients.matchAll({
-    includeUncontrolled: true
-  }).then(function (clientList) {
-    var urls = clientList.map(function (client) {
-      return client.url;
-    });
-    //如果新sw生效，对其他页面造成影响，这里可以查
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
-  });
+  // self.clients.matchAll({
+  //   includeUncontrolled: true
+  // }).then(function (clientList) {
+  //   var urls = clientList.map(function (client) {
+  //     return client.url;
+  //   });
+  //   //如果新sw生效，对其他页面造成影响，这里可以查
+  //   console.log('[ServiceWorker] Matching clients:', urls.join(', '));
+  // });
 
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
