@@ -178,15 +178,12 @@ var fetchCache = function (dbName, req) {
   }).then(function (response) {
     if (response) {
       if (dbName == businessCacheName) {
-        addToCache(dbName, req, response);  //更新缓存，下次使用
+        addToCache(dbName, req, response);
       }
-      return response; //如果命中缓存，直接使用缓存.
+      return response; //如果命中缓存，直接使用缓存
     } else {
       return addToCache(dbName, req);
     }
-  }).catch(function(e){
-    console.log(e);
-    return addToCache(dbName, req);
   });
 }
 self.addEventListener('fetch', function (event) {
@@ -333,7 +330,32 @@ var preloadAtricle = function (urlList, callback, option) {
   });
 };
 
-
+function sendNote(mesage) {
+  console.log('send Note');
+  var title = mesage || 'No message.';
+  var body = '这是一个测试信息';
+  var icon = '/images/onion.png';
+  var tag = 'simple-push-demo-notification-tag' + Math.random();
+  var data = {
+    doge: {
+      wow: 'such amaze notification data'
+    }
+  };
+  return self.registration.showNotification(title, {
+        body: body,
+        icon: icon,
+        tag: tag,
+        data: data,
+        actions: [{
+          action: "focus",
+          title: "focus"
+        }]
+    }).then(function(){
+        return {
+            m: 'showNotification'
+        }
+    });
+}
 
 //sw与页面通信,必须返回promise
 function _processMessage(msgObj, option) {
@@ -441,42 +463,22 @@ self.addEventListener('message', function (event) {
 });
 
 
-function sendNote(message) {
-  console.log('send Note');
-  var title = message || 'No message.';
-  var body = '这是一个测试信息';
-  var icon = '/images/logo/logo072.png';
-  var tag = 'simple-push-demo-notification-tag' + Math.random();
-  var data = {
-    doge: {
-      wow: 'such amaze notification data'
-    }
-  };
-  return self.registration.showNotification(title, {
-        body: body,
-        icon: icon,
-        tag: tag,
-        data: data,
-        image: '/images/onion.png',
-        actions: [{
-          action: "open",
-          title: "打开",
-          icon: '/images/toolbar-icons/forward.png'
-        }]
-    }).then(function(){
-        return {
-            m: 'showNotification'
-        }
-    });
-}
+
 // triggered everytime, when a push notification is received.
 self.addEventListener('push', function(event) {
 
   console.info('Event: Push', event);
-  var message = event.data.text();
+
+  var title = 'New commit on Github Repo: swblog';
+
+  var body = {
+    'body': 'Click to see the latest commit',
+    'tag': 'pwa',
+    'icon': '/images/logo/logo072.png'
+  };
 
   event.waitUntil(
-    sendNote(message)
+    self.registration.showNotification(title, body)
   );
 });
 
@@ -499,123 +501,7 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close(); //Close the notification
   var messageId = event.notification.data;
  // Open the app and navigate to latest.html after clicking the notification
-  console.log('notificationclick action=', event.action);
-  if(event.action === "open"){
-    return event.waitUntil(clients.openWindow(location.origin + '/#!/index'));
+  if(event.action === "focus"){
+    event.waitUntil(focusOpen());
   }
-  event.waitUntil(focusOpen());
 });
-
-
-
-// Start polyfill hack
-(function () {
-  var nativeAddAll = Cache.prototype.addAll;
-  var userAgent = navigator.userAgent.match(/(Firefox|Chrome)\/(\d+\.)/);
-
-  // Has nice behavior of `var` which everyone hates
-  if (userAgent) {
-    var agent = userAgent[1];
-    var version = parseInt(userAgent[2]);
-  }
-
-
-  //https://github.com/jakearchibald/offline-news-service-worker 未知使用情景
-  if (!CacheStorage.prototype.match) {
-    // This is probably vulnerable to race conditions (removing caches etc)
-    CacheStorage.prototype.match = function match(request, opts) {
-      var caches = this;
-
-      return this.keys().then(function (cacheNames) {
-        var match;
-
-        return cacheNames.reduce(function (chain, cacheName) {
-          return chain.then(function () {
-            return match || caches.open(cacheName).then(function (cache) {
-              return cache.match(request, opts);
-            }).then(function (response) {
-              match = response;
-              return match;
-            });
-          });
-        }, Promise.resolve());
-      });
-    };
-  }
-  // End polyfill hack
-
-  if (
-    nativeAddAll && (!userAgent ||
-      (agent === 'Firefox' && version >= 46) ||
-      (agent === 'Chrome' && version >= 50)
-    )
-  ) {
-    return;
-  }
-
-  Cache.prototype.addAll = function addAll(requests) {
-    var cache = this;
-
-    // Since DOMExceptions are not constructable:
-    function NetworkError(message) {
-      this.name = 'NetworkError';
-      this.code = 19;
-      this.message = message;
-    }
-
-    NetworkError.prototype = Object.create(Error.prototype);
-
-    return Promise.resolve().then(function () {
-      if (arguments.length < 1) throw new TypeError();
-
-      // Simulate sequence<(Request or USVString)> binding:
-      var sequence = [];
-
-      requests = requests.map(function (request) {
-        if (request instanceof Request) {
-          return request;
-        } else {
-          return String(request); // may throw TypeError
-        }
-      });
-
-      return Promise.all(
-        requests.map(function (request) {
-          if (typeof request === 'string') {
-            request = new Request(request);
-          }
-
-          var scheme = new URL(request.url).protocol;
-
-          if (scheme !== 'http:' && scheme !== 'https:') {
-            throw new NetworkError("Invalid scheme");
-          }
-
-          return fetch(request.clone());
-        })
-      );
-    }).then(function (responses) {
-      // If some of the responses has not OK-eish status,
-      // then whole operation should reject
-      if (responses.some(function (response) {
-          return !response.ok;
-        })) {
-        throw new NetworkError('Incorrect response status');
-      }
-
-      // TODO: check that requests don't overwrite one another
-      // (don't think this is possible to polyfill due to opaque responses)
-      return Promise.all(
-        responses.map(function (response, i) {
-          return cache.put(requests[i], response);
-        })
-      );
-    }).then(function () {
-      return undefined;
-    });
-  };
-
-  Cache.prototype.add = function add(request) {
-    return this.addAll([request]);
-  };
-}());
