@@ -381,15 +381,6 @@ function _processMessage(msgObj, option) {
 
 var callbackDict = {};
 
-function console.log() {
-  callbackDict['log'] = [{
-    cbid: 'log'
-  }];
-  sendMessage({
-    m: 'log',
-    result: [].concat.apply(['[service]'], arguments)
-  })
-}
 
 function sendMessage(resp) {
   if (!(resp && resp.m)) {
@@ -397,9 +388,7 @@ function sendMessage(resp) {
       r();
     });
   }
-  var callbackList = callbackDict[resp.m] || [{
-    cbid: 'log'
-  }];
+  var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
   return self.clients.matchAll()
     .then(function (clientList) {
