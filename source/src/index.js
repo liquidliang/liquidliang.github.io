@@ -5,7 +5,7 @@
 //require("babel-polyfill");  //太大了
 require("polyfill/");
 require('helper/common_event.js');
-// require('helper/notification.js');
+require('helper/notification.js');
 const m_article = require('model/article');
 const m_config = require('model/config');
 const c_header = require('card/common/navigator');

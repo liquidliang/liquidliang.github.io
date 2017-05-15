@@ -3,6 +3,7 @@ BCD.addEvent('subscribePush', function (fabPushElement) {
   var tipsElement = fabPushElement.prev();
   //To check `push notification` is supported or not
   var isPushSupported = function () {
+    console.log('check support');
     //To check `push notification` permission is denied by user
     if (!window.Notification || Notification.permission === 'denied') {
       console.log('User has blocked push notification.');
