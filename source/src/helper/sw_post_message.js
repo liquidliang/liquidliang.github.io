@@ -20,18 +20,19 @@ if (navigator.serviceWorker) {
     }
   }); //页面通过监听service worker的message事件接收service worker的信息
   postMessage = function(req, callback){
-    if(navigator.serviceWorker.controller && navigator.serviceWorker.controller.state=='activated'){
-      index++;
-      let obj = {
-        m: req.m,
-        data: req.data
-      };
-      if(callback){
-        obj.cbid = req.m + '_' + index;
-        callbackDict[obj.cbid] = callback;
-      }
-      navigator.serviceWorker.controller.postMessage(obj);  //页面向service worker发送信息
-    }
+    // if(navigator.serviceWorker.controller && navigator.serviceWorker.controller.state=='activated'){
+    //    console.log('postMessage');
+    //   index++;
+    //   let obj = {
+    //     m: req.m,
+    //     data: req.data
+    //   };
+    //   if(callback){
+    //     obj.cbid = req.m + '_' + index;
+    //     callbackDict[obj.cbid] = callback;
+    //   }
+    //   navigator.serviceWorker.controller.postMessage(obj);  //页面向service worker发送信息
+    // }
   }
 }
 
