@@ -131,10 +131,10 @@ var addToCache = function (dbName, req, response) {
       cache.keys().then(function (oldReqList) {
         //删除旧文件
         if (req.url.indexOf('?') > 0) {
-          let urlKey = getNoSearch(req.url) + '?';
-          // oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
-          //   cache.delete(oldReq);
-          // });
+          var urlKey = getNoSearch(req.url) + '?';
+          oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
+            cache.delete(oldReq);
+          });
         }
         //添加新文件
         cache.put(req.clone(), cacheResp);
@@ -149,9 +149,9 @@ var addToCache = function (dbName, req, response) {
     // } else {
     //   return caches.open(dbName).then(function (cache) {
     //     //取旧缓存
-    //     let urlKey = getNoSearch(req.url);
+    //     var urlKey = getNoSearch(req.url);
     //     return cache.keys().then(function (oldReqList) {
-    //       let oldReq;
+    //       var oldReq;
     //       while (oldReq = oldReqList.pop()) {
     //         if (oldReq.url.indexOf(urlKey) > -1) {
     //           return cache.match(oldReq)
