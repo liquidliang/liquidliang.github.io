@@ -127,8 +127,10 @@ var addToCache = function (dbName, req, response) {
       //删除旧文件
       cache.keys().then(function (oldReqList) {
         if (req.url.indexOf('?') > 0) {
-          let urlKey = getNoSearch(req.url) + '?';
-          oldReqList.filter(oldReq => oldReq.url.indexOf(urlKey) > -1).forEach(function (oldReq) {
+          var urlKey = getNoSearch(req.url) + '?';
+          oldReqList.filter(function(oldReq) {
+            return oldReq.url.indexOf(urlKey) > -1;
+          }).forEach(function(oldReq) {
             cache.delete(oldReq);
           });
         }
@@ -145,9 +147,9 @@ var addToCache = function (dbName, req, response) {
     } else {
       return caches.open(dbName).then(function (cache) {
         //取旧缓存
-        let urlKey = getNoSearch(req.url);
+        var urlKey = getNoSearch(req.url);
         return cache.keys().then(function (oldReqList) {
-          let oldReq;
+          var oldReq;
           while (oldReq = oldReqList.pop()) {
             if (oldReq.url.indexOf(urlKey) > -1) {
               return cache.match(oldReq)
@@ -254,13 +256,15 @@ var getTexts = function (dict) {
 
 //静态资源预加载（不支持返回内容与search参数相关的接口预加载）
 var preloadList = function (urlList) {
-  let retDict = {};
+  var retDict = {};
   return new Promise(function (resolve) {
     if (urlList.length === 0) {
-      return setTimeout(() => resolve(regDict), 300);
+      return setTimeout(function(){
+          resolve(regDict);
+      }, 300);
     }
     iterator(urlList, function (url, next, list) {
-      let myRequest = new Request(url);
+      var myRequest = new Request(url);
       for (var dbName in regDict) {
         if (regDict[dbName].test(url)) {
           caches.open(dbName).then(function (cache) {
@@ -301,14 +305,14 @@ var preloadAtricle = function (urlList, callback, option) {
 
   return caches.open(markdownCacheName).then(function (cache) {
     //取旧缓存
-    // let urlKey = req.url.replace(/\?[^?]+/,'');
+    // var urlKey = req.url.replace(/\?[^?]+/,'');
     // if(oldReq.url.indexOf(urlKey) > -1){
     //   return cache.match(oldReq)
     // }
     return cache.keys().then(function (reqList) {
       var oldReq;
       while (oldReq = reqList.pop()) {
-        let noSearchURL = getNoSearch(oldReq.url);
+        var noSearchURL = getNoSearch(oldReq.url);
         if (urlDict[oldReq.url]) {
           delete noSearchDict[noSearchURL];
           retDict[oldReq.url] = cache.match(oldReq).then(function (resq) {
@@ -352,7 +356,7 @@ function _processMessage(msgObj, option) {
     case 'preloadAtricle': //arr
       return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
     case 'delete_not_exist_article': //dict
-      let articleDict = msgObj.data;
+      var articleDict = msgObj.data;
       if (!articleDict) {
         return new Promise(function (r) {
           r();
@@ -361,8 +365,8 @@ function _processMessage(msgObj, option) {
       return caches.open(markdownCacheName).then(function (cache) {
         //删除不存在的博客文件
         cache.keys().then(function (oldReqList) {
-          oldReqList.forEach(oldReq => {
-            let urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
+          oldReqList.forEach(function(oldReq){
+            var urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
             if (!articleDict[urlKey]) {
               cache.delete(oldReq);
             }
@@ -499,13 +503,13 @@ function focusOpen() {
   return clients.matchAll({
     type: 'window',
     includeUncontrolled: true
-  }).then(clients => {
+  }).then(function(clients){
     for (var client of clients) {
       if (client.url = url) return client.focus(); // 经过测试，focus 貌似无效
     }
     console.log('not focus');
     clients.openWindow(location.origin + '/');
-  })
+  });
 }
 
 self.addEventListener('notificationclick', function (event) {
