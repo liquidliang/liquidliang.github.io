@@ -66,7 +66,7 @@
 	$('body').append(viewHeader);
 	
 	setInterval(function () {
-	  $.getJSON('/console?t=' + Date.now(), function (list) {
+	  $.getJSON('/console.json', function (list) {
 	    list = list || [];
 	    var item;
 	    while (item = list.shift()) {
