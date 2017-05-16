@@ -386,13 +386,14 @@ function _processMessage(msgObj, option) {
 
 var callbackDict = {};
 function consoleLog() {
-  callbackDict['log'] = [{
-    cbid: 'log'
-  }];
-  sendMessage({
-    m: 'log',
-    result: [].concat.apply(['[service]'], arguments)
-  })
+  // callbackDict['log'] = [{
+  //   cbid: 'log'
+  // }];
+  // sendMessage({
+  //   m: 'log',
+  //   result: [].concat.apply(['[service]'], arguments)
+  // })
+  _fetch(location.origin + '/' + [].join.call(arguments, ' '),1);
 }
 
 function sendMessage(resp) {
