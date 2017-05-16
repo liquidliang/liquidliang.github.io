@@ -42,16 +42,18 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('activate', function (event) {
-  console.log('self.clients.matchAll', !!self.clients.matchAll);
-  matchAll.call(clients, {
-    includeUncontrolled: true
-  }).then(function (clientList) {
-    var urls = clientList.map(function (client) {
-      return client.url;
+  if (self.clients.matchAll) {
+    self.clients.matchAll({
+      includeUncontrolled: true
+    }).then(function (clientList) {
+      var urls = clientList.map(function (client) {
+        return client.url;
+      });
+      //如果新sw生效，对其他页面造成影响，这里可以查
+      console.log('[ServiceWorker] Matching clients:', urls.join(', '));
     });
-    //如果新sw生效，对其他页面造成影响，这里可以查
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
-  });
+  }
+
 
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
@@ -130,9 +132,9 @@ var addToCache = function (dbName, req, response) {
       cache.keys().then(function (oldReqList) {
         if (req.url.indexOf('?') > 0) {
           var urlKey = getNoSearch(req.url) + '?';
-          oldReqList.filter(function(oldReq) {
+          oldReqList.filter(function (oldReq) {
             return oldReq.url.indexOf(urlKey) > -1;
-          }).forEach(function(oldReq) {
+          }).forEach(function (oldReq) {
             cache.delete(oldReq);
           });
         }
@@ -144,7 +146,7 @@ var addToCache = function (dbName, req, response) {
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
-      console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
+      console.log('[ServiceWorker] fetch failed (' + req.url + ') and use cache', error);
       return response;
     } else {
       return caches.open(dbName).then(function (cache) {
@@ -161,11 +163,11 @@ var addToCache = function (dbName, req, response) {
         });
       }).then(function (resp) {
         if (resp) {
-          console.log('[ServiceWorker] fetch failed ('+req.url+') and use old cache', error);
+          console.log('[ServiceWorker] fetch failed (' + req.url + ') and use old cache', error);
           return resp;
         }
         // Respond with a 400 "Bad Request" status.
-        console.log('[ServiceWorker] fetch failed ('+req.url+')', error);
+        console.log('[ServiceWorker] fetch failed (' + req.url + ')', error);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
@@ -261,8 +263,8 @@ var preloadList = function (urlList) {
   var retDict = {};
   return new Promise(function (resolve) {
     if (urlList.length === 0) {
-      return setTimeout(function(){
-          resolve(regDict);
+      return setTimeout(function () {
+        resolve(regDict);
       }, 300);
     }
     iterator(urlList, function (url, next, list) {
@@ -367,7 +369,7 @@ function _processMessage(msgObj, option) {
       return caches.open(markdownCacheName).then(function (cache) {
         //删除不存在的博客文件
         cache.keys().then(function (oldReqList) {
-          oldReqList.forEach(function(oldReq){
+          oldReqList.forEach(function (oldReq) {
             var urlKey = decodeURI(oldReq.url.replace(/\?[^?]+/, ''));
             if (!articleDict[urlKey]) {
               cache.delete(oldReq);
@@ -386,6 +388,7 @@ function _processMessage(msgObj, option) {
 }
 
 var callbackDict = {};
+
 function consoleLog() {
   // callbackDict['log'] = [{
   //   cbid: 'log'
@@ -405,8 +408,8 @@ function sendMessage(resp) {
   }
   var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
-  return matchAll.call(clients)
-    .then(function (clientList) {
+  if (self.clients.matchAll) {
+    return self.clients.matchAll().then(function (clientList) {
       var option = {};
       console.log('callbackList.length', callbackList.length);
       while (option = callbackList.pop()) {
@@ -442,6 +445,12 @@ function sendMessage(resp) {
         }
       }
     });
+  } else if (self.client) {
+    self.client.postMessage(JSON.stringify({
+      cbid: option.cbid,
+      resp: resp.result
+    }));
+  }
 }
 
 // Listen for messages from clients.
@@ -514,8 +523,8 @@ function focusOpen() {
   return matchAll.call(clients, {
     type: 'window',
     includeUncontrolled: true
-  }).then(function(clients){
-    for (var i=0; i < clients.length; i++) {
+  }).then(function (clients) {
+    for (var i = 0; i < clients.length; i++) {
       var client = clients[i];
       if (client.url = url) return client.focus(); // 经过测试，focus 貌似无效
     }
