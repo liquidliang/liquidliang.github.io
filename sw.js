@@ -195,10 +195,11 @@ var fetchCache = function (dbName, req) {
     return addToCache(dbName, req);
   });
 }
-self.addEventListener('fetch', function (event) {
 
+self.addEventListener('fetch', function (event) {
   var req, url = event.request.url;
   var requestURL = new URL(url);
+  consoleLog('fetch:' + url);
 
   // if (url.indexOf('http:') === 0) {
   //   return event.respondWith(fetch(event.request.clone()));
@@ -213,12 +214,13 @@ self.addEventListener('fetch', function (event) {
   }
 
   if(/console/.test(requestURL.pathname)){
-      event.waitUntil(event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
+      setTimeout(function(){
+          consoleList = [];
+      }, 100);
+      return event.waitUntil(event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
           url: url,
           'status': 200
       })));
-      consoleList = [];
-      return;
   }
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
