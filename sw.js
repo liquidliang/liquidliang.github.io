@@ -29,8 +29,6 @@ var FILES = [
 ];
 var consoleList = [];
 
-consoleLog('in_sw');
-
 var matchAll = self.clients.matchAll || self.clients.getAll;
 
 self.addEventListener('install', function (event) {
@@ -195,25 +193,14 @@ var fetchCache = function (dbName, req) {
     return addToCache(dbName, req);
   });
 }
-
 self.addEventListener('fetch', function (event) {
+
   var req, url = event.request.url;
   var requestURL = new URL(url);
-  consoleLog('fetch:' + url);
 
   // if (url.indexOf('http:') === 0) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
-
-  if(/console/.test(requestURL.pathname)){
-      setTimeout(function(){
-          consoleList = [];
-      }, 100);
-      return event.respondWith(new Response(JSON.stringify(consoleList), {
-          url: url,
-          'status': 200
-      }));
-  }
 
   if (requestURL.search.indexOf('cors=1') !== -1) {
     req = new Request(url, {
@@ -222,6 +209,7 @@ self.addEventListener('fetch', function (event) {
   } else {
     req = event.request.clone();
   }
+
   if (FILES.indexOf(requestURL.pathname) > -1) {
     return event.respondWith(fetchCache(businessCacheName, req));
   }
@@ -237,6 +225,7 @@ self.addEventListener('fetch', function (event) {
   }
 
   return event.respondWith(fetchCache(imageCacheName, req));
+
 });
 
 
@@ -405,7 +394,6 @@ function consoleLog() {
   //   m: 'log',
   //   result: [].concat.apply(['[service]'], arguments)
   // })
-  console.log.apply(this, arguments);
   consoleList.push([].slice.call(arguments).join(' '));
 }
 
