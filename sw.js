@@ -213,11 +213,11 @@ self.addEventListener('fetch', function (event) {
   }
 
 
-  event.respondWith(new Response(JSON.stringify(consoleList), {
-        'status': 200
-  }));
-  consoleList = [];
-  return;
+      event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
+            'status': 200
+      }));
+      consoleList = [];
+      return;
 
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
