@@ -147,7 +147,7 @@ var addToCache = function (dbName, req, response) {
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
       consoleLog('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
-      return response;
+      return response.clone();
     } else {
       return caches.open(dbName).then(function (cache) {
         //取旧缓存
@@ -186,7 +186,7 @@ var fetchCache = function (dbName, req) {
       if (dbName == businessCacheName) {
         addToCache(dbName, req, response); //更新缓存，下次使用
       }
-      return response; //如果命中缓存，直接使用缓存.
+      return response.clone(); //如果命中缓存，直接使用缓存.
     } else {
       return addToCache(dbName, req);
     }
@@ -284,7 +284,7 @@ var preloadList = function (urlList) {
             return cache.match(myRequest.clone());
           }).then(function (response) {
             if (response) {
-              return response;
+              return response.clone();
             } else {
               return addToCache(dbName, myRequest);
             }
