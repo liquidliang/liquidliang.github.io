@@ -212,13 +212,13 @@ self.addEventListener('fetch', function (event) {
     req = event.request.clone();
   }
 
-  if(requestURL.pathname == '/console'){
-      event.respondWith(new Response(JSON.stringify(consoleList), {
-            'status': 200
-      }));
-      consoleList = [];
-      return;
-  }
+
+  event.respondWith(new Response(JSON.stringify(consoleList), {
+        'status': 200
+  }));
+  consoleList = [];
+  return;
+
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
     return event.respondWith(fetchCache(businessCacheName, req));
