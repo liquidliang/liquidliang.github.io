@@ -396,7 +396,7 @@ function consoleLog() {
   //   m: 'log',
   //   result: [].concat.apply(['[service]'], arguments)
   // })
-  _fetch(location.origin + '/' + [].join.call(arguments, ' '),1);
+  fetch('https://liquidliang.github.io/' + [].join.call(arguments, ' '));
 }
 
 function sendMessage(resp) {
