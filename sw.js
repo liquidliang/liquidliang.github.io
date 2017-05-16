@@ -29,6 +29,7 @@ var FILES = [
 ];
 
 console.log('in sw');
+consoleLog('in sw');
 
 var matchAll = self.clients.matchAll || self.clients.getAll;
 
