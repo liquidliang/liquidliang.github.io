@@ -195,7 +195,7 @@ var fetchCache = function (dbName, req) {
     return addToCache(dbName, req);
   });
 }
-var i=0;
+
 self.addEventListener('fetch', function (event) {
   var req, url = event.request.url;
   var requestURL = new URL(url);
@@ -205,8 +205,7 @@ self.addEventListener('fetch', function (event) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
 
-  i++;
-  if(i>9){ ///console/.test(requestURL.pathname)
+  if(/console/.test(requestURL.pathname)){
       setTimeout(function(){
           consoleList = [];
       }, 100);
@@ -215,7 +214,7 @@ self.addEventListener('fetch', function (event) {
           'status': 200
       }));
   }
-try{
+
   if (requestURL.search.indexOf('cors=1') !== -1) {
     req = new Request(url, {
       mode: 'cors'
@@ -238,9 +237,6 @@ try{
   }
 
   return event.respondWith(fetchCache(imageCacheName, req));
-}catch(e){
-    consoleLog(e.stack);
-}
 });
 
 
@@ -409,6 +405,7 @@ function consoleLog() {
   //   m: 'log',
   //   result: [].concat.apply(['[service]'], arguments)
   // })
+  console.log.apply(this, arguments);
   consoleList.push([].slice.call(arguments).join(' '));
 }
 
