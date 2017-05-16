@@ -30,17 +30,17 @@ var FILES = [
 
 
 self.addEventListener('install', function (event) {
-  console.log('[ServiceWorker] Installed version', version);
+  consoleLog('[ServiceWorker] Installed version', version);
   event.waitUntil(caches.open(businessCacheName).then(function (cache) {
     return cache.addAll(FILES);
   }).then(function () {
-    console.log('[ServiceWorker] Skip waiting on install');
+    consoleLog('[ServiceWorker] Skip waiting on install');
     return self.skipWaiting();
   }));
 });
 
 self.addEventListener('activate', function (event) {
-
+  consoleLog('self.clients.matchAll', !!self.clients.matchAll);
   self.clients.matchAll({
     includeUncontrolled: true
   }).then(function (clientList) {
@@ -48,7 +48,7 @@ self.addEventListener('activate', function (event) {
       return client.url;
     });
     //如果新sw生效，对其他页面造成影响，这里可以查
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
+    consoleLog('[ServiceWorker] Matching clients:', urls.join(', '));
   });
 
   event.waitUntil(
@@ -57,14 +57,14 @@ self.addEventListener('activate', function (event) {
         cacheNames.map(function (cacheName) {
           // 删除掉当前定义前缀中不在expectedCaches中的缓存集
           if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
-            console.log('[ServiceWorker] Deleting old cache:', cacheName);
+            consoleLog('[ServiceWorker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     }).then(function () {
       //使service worker立马生效，在单页面应用中，这样是合理的
-      console.log('[ServiceWorker] Claiming clients for version', version);
+      consoleLog('[ServiceWorker] Claiming clients for version', version);
       return self.clients.claim();
     }));
 });
@@ -142,7 +142,7 @@ var addToCache = function (dbName, req, response) {
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
-      console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
+      consoleLog('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
       return response;
     } else {
       return caches.open(dbName).then(function (cache) {
@@ -159,11 +159,11 @@ var addToCache = function (dbName, req, response) {
         });
       }).then(function (resp) {
         if (resp) {
-          console.log('[ServiceWorker] fetch failed ('+req.url+') and use old cache', error);
+          consoleLog('[ServiceWorker] fetch failed ('+req.url+') and use old cache', error);
           return resp;
         }
         // Respond with a 400 "Bad Request" status.
-        console.log('[ServiceWorker] fetch failed ('+req.url+')', error);
+        consoleLog('[ServiceWorker] fetch failed ('+req.url+')', error);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
@@ -187,7 +187,7 @@ var fetchCache = function (dbName, req) {
       return addToCache(dbName, req);
     }
   }).catch(function (e) {
-    console.log(e);
+    consoleLog(e);
     return addToCache(dbName, req);
   });
 }
@@ -375,16 +375,24 @@ function _processMessage(msgObj, option) {
       });
     default:
       return new Promise(function (resolve) {
-        resolve(console.log('msgObj.m=' + msgObj.m + ' match nothing!'));
+        resolve(consoleLog('msgObj.m=' + msgObj.m + ' match nothing!'));
       });
     }
   } catch (e) {
-    console.log('_processMessage', e.stack);
+    consoleLog('_processMessage', e.stack);
   }
 }
 
 var callbackDict = {};
-
+function consoleLog() {
+  callbackDict['log'] = [{
+    cbid: 'log'
+  }];
+  sendMessage({
+    m: 'log',
+    result: [].concat.apply(['[service]'], arguments)
+  })
+}
 
 function sendMessage(resp) {
   if (!(resp && resp.m)) {
