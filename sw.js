@@ -177,7 +177,6 @@ var addToCache = function (dbName, req, response) {
   });
 };
 
-i=0;
 var fetchCache = function (dbName, req) {
   return caches.open(dbName).then(function (cache) {
     return cache.match(req.clone());
@@ -211,8 +210,8 @@ self.addEventListener('fetch', function (event) {
   } else {
     req = event.request.clone();
   }
-i++;
-  if(i>6){
+
+  if( /console/.test(requestURL.pathname) ){
       return event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
             'status': 200
       }));
