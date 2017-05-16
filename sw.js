@@ -128,14 +128,14 @@ var addToCache = function (dbName, req, response) {
     caches.open(dbName).then(function (cache) {
       //删除旧文件
       cache.keys().then(function (oldReqList) {
-        // if (req.url.indexOf('?') > 0) {
-        //   var urlKey = getNoSearch(req.url) + '?';
-        //   oldReqList.filter(function(oldReq) {
-        //     return oldReq.url.indexOf(urlKey) > -1;
-        //   }).forEach(function(oldReq) {
-        //     cache.delete(oldReq);
-        //   });
-        // }
+        if (req.url.indexOf('?') > 0) {
+          var urlKey = getNoSearch(req.url) + '?';
+          oldReqList.filter(function(oldReq) {
+            return oldReq.url.indexOf(urlKey) > -1;
+          }).forEach(function(oldReq) {
+            cache.delete(oldReq);
+          });
+        }
         //添加新文件
         cache.put(req.clone(), cacheResp);
       });
