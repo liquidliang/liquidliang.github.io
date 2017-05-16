@@ -73,7 +73,7 @@
 	      console.log('[sw] ' + item);
 	    }
 	  });
-	}, 3E3);
+	}, 5E3);
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
