@@ -885,7 +885,7 @@
 	    // }
 	    resolve();
 	    return 1; //缓存数据到localStorage
-	  }, 0, 1E3, true);
+	  }, 0, 2E3, true);
 	});
 	
 	//获取包含相关tag文章列表
@@ -1437,7 +1437,7 @@
 	      return 1; //缓存数据到localStorage
 	    }
 	    resolve();
-	  }, 0, 1E3, true);
+	  }, 0, 2E3, true);
 	});
 	
 	window.CONFIG = module.exports = {
