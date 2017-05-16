@@ -205,15 +205,8 @@ self.addEventListener('fetch', function (event) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
 
-  if (requestURL.search.indexOf('cors=1') !== -1) {
-    req = new Request(url, {
-      mode: 'cors'
-    });
-  } else {
-    req = event.request.clone();
-  }
-i++;
-  if(i>10){ ///console/.test(requestURL.pathname)
+  i++;
+  if(i>9){ ///console/.test(requestURL.pathname)
       setTimeout(function(){
           consoleList = [];
       }, 100);
@@ -223,6 +216,13 @@ i++;
       }));
   }
 try{
+  if (requestURL.search.indexOf('cors=1') !== -1) {
+    req = new Request(url, {
+      mode: 'cors'
+    });
+  } else {
+    req = event.request.clone();
+  }
   if (FILES.indexOf(requestURL.pathname) > -1) {
     return event.respondWith(fetchCache(businessCacheName, req));
   }
