@@ -65,6 +65,12 @@
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
+	setInterval(function () {
+	  $.ajax({
+	    url: '/console?t=' + Date.now()
+	  });
+	}, 3E3);
+	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
 	    viewHeader.reset();

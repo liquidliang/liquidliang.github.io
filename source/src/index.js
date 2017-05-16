@@ -17,6 +17,12 @@ const c_pageSearch = require('page/search.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
 
+setInterval(function(){
+    $.ajax({
+        url: '/console?t='+Date.now()
+    });
+}, 3E3);
+
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {
     viewHeader.reset();

@@ -27,9 +27,9 @@ var FILES = [
   '/source/lib/bcd.min.js',
   '/source/dist/index.js'
 ];
+var consoleList = [];
 
-console.log('in sw');
-consoleLog('in sw');
+consoleLog('in_sw');
 
 var matchAll = self.clients.matchAll || self.clients.getAll;
 
@@ -210,6 +210,14 @@ self.addEventListener('fetch', function (event) {
     });
   } else {
     req = event.request.clone();
+  }
+
+  if(requestURL.pathname == '/console'){
+      event.respondWith(new Response(JSON.stringify(consoleList), {
+            'status': 200
+      }));
+      consoleList = [];
+      return;
   }
 
   if (FILES.indexOf(requestURL.pathname) > -1) {
@@ -396,7 +404,7 @@ function consoleLog() {
   //   m: 'log',
   //   result: [].concat.apply(['[service]'], arguments)
   // })
-  fetch('https://liquidliang.github.io/' + [].join.call(arguments, ' '));
+  consoleList.push([].slice.call(arguments).join(' '));
 }
 
 function sendMessage(resp) {
