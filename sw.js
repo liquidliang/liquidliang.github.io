@@ -213,9 +213,10 @@ self.addEventListener('fetch', function (event) {
   }
 
   if(/console/.test(requestURL.pathname)){
-      event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
-            'status': 200
-      }));
+      event.waitUntil(event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
+          url: url,
+          'status': 200
+      })));
       consoleList = [];
       return;
   }
