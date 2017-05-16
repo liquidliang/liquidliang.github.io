@@ -660,8 +660,8 @@
 	};
 	
 	var getURL = function getURL(o) {
-	  return o.path + '?mtime=' + o.mtime;
-	};
+	  return o.path;
+	}; // + '?mtime=' + o.mtime;
 	
 	var getPath = function getPath(pathWithSearch) {
 	  return decodeURIComponent(pathWithSearch.replace(location.origin + '/', '').replace(/\?[^?]+/, ''));
