@@ -222,7 +222,7 @@ self.addEventListener('fetch', function (event) {
           'status': 200
       }));
   }
-
+try{
   if (FILES.indexOf(requestURL.pathname) > -1) {
     return event.respondWith(fetchCache(businessCacheName, req));
   }
@@ -238,7 +238,9 @@ self.addEventListener('fetch', function (event) {
   }
 
   return event.respondWith(fetchCache(imageCacheName, req));
-
+}catch(e){
+    consoleLog(e.stack);
+}
 });
 
 
