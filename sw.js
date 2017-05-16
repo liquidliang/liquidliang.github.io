@@ -402,7 +402,7 @@ function sendMessage(resp) {
   }
   var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
-  return self.clients.matchAll()
+  return (self.clients.matchAll || self.clients.getAll)()
     .then(function (clientList) {
       var option = {};
       console.log('callbackList.length', callbackList.length);
