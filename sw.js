@@ -28,6 +28,8 @@ var FILES = [
   '/source/dist/index.js'
 ];
 
+console.log('in sw');
+
 var matchAll = self.clients.matchAll || self.clients.getAll;
 
 self.addEventListener('install', function (event) {
