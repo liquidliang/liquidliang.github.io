@@ -209,7 +209,7 @@ self.addEventListener('fetch', function (event) {
       setTimeout(function(){
           consoleList = [];
       }, 100);
-      return event.respondWith(new Response(JSON.stringify(consoleList) + ' pathname=' +  requestURL.pathname, {
+      return event.respondWith(new Response(JSON.stringify(consoleList), {
           url: url,
           'status': 200
       }));
