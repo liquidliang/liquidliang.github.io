@@ -25,7 +25,7 @@ setInterval(function(){
             console.log('[sw] ' + item);
         }
     });
-}, 1E3);
+}, 3E3);
 
 m_config.getConfig.then(() =>
   m_article.initArticle.then(() => {
