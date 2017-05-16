@@ -213,7 +213,7 @@ self.addEventListener('fetch', function (event) {
     req = event.request.clone();
   }
 i++;
-  if(i>6){ ///console/.test(requestURL.pathname)
+  if(i>8){ ///console/.test(requestURL.pathname)
       setTimeout(function(){
           consoleList = [];
       }, 100);
