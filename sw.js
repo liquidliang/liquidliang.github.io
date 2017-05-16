@@ -195,7 +195,7 @@ var fetchCache = function (dbName, req) {
     return addToCache(dbName, req);
   });
 }
-
+var i=0;
 self.addEventListener('fetch', function (event) {
   var req, url = event.request.url;
   var requestURL = new URL(url);
@@ -212,8 +212,8 @@ self.addEventListener('fetch', function (event) {
   } else {
     req = event.request.clone();
   }
-
-  if(/console/.test(requestURL.pathname)){
+i++;
+  if(i>6){ ///console/.test(requestURL.pathname)
       setTimeout(function(){
           consoleList = [];
       }, 100);
