@@ -66,10 +66,14 @@
 	$('body').append(viewHeader);
 	
 	setInterval(function () {
-	  $.ajax({
-	    url: '/console?t=' + Date.now()
+	  $.getJSON('/console?t=' + Date.now(), function (list) {
+	    list = list || [];
+	    var item;
+	    while (item = list.shift()) {
+	      console.log('[sw] ' + item);
+	    }
 	  });
-	}, 3E3);
+	}, 1E3);
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
