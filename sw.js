@@ -28,6 +28,7 @@ var FILES = [
   '/source/dist/index.js'
 ];
 
+var matchAll = self.clients.matchAll || self.clients.getAll;
 
 self.addEventListener('install', function (event) {
   consoleLog('[ServiceWorker] Installed version', version);
@@ -41,7 +42,7 @@ self.addEventListener('install', function (event) {
 
 self.addEventListener('activate', function (event) {
   consoleLog('self.clients.matchAll', !!self.clients.matchAll);
-  self.clients.matchAll({
+  matchAll.call(clients, {
     includeUncontrolled: true
   }).then(function (clientList) {
     var urls = clientList.map(function (client) {
@@ -402,7 +403,7 @@ function sendMessage(resp) {
   }
   var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
-  return (self.clients.matchAll || self.clients.getAll)()
+  return matchAll.call(clients)
     .then(function (clientList) {
       var option = {};
       console.log('callbackList.length', callbackList.length);
@@ -508,7 +509,7 @@ self.addEventListener('push', function (event) {
 
 function focusOpen() {
   var url = location.href;
-  return clients.matchAll({
+  return matchAll.call(clients, {
     type: 'window',
     includeUncontrolled: true
   }).then(function(clients){
