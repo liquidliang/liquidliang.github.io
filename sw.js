@@ -439,7 +439,7 @@ function sendMessage(resp) {
           }
           try {
               console.log('clientList.length = '+clientList.length);
-              consoe.log('postMessage = '+JSON.stringify({
+              console.log('postMessage = '+JSON.stringify({
                   cbid: option.cbid,
                   resp: resp.result
               }));
