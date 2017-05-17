@@ -36,7 +36,7 @@ var matchAll = self.clients.matchAll || function(){
 
 
 self.addEventListener('install', function (event) {
-  console.log('[ServiceWorker] Installed version', version);
+  console.log('[ServiceWorker] Installed version ='+ version);
   event.waitUntil(caches.open(businessCacheName).then(function (cache) {
     return cache.addAll(FILES);
   }).then(function () {
@@ -46,7 +46,7 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('activate', function (event) {
-  console.log('self.clients.matchAll', !!self.clients.matchAll);
+  console.log('self.clients.matchAll' + !!self.clients.matchAll);
   matchAll.call(clients, {
     includeUncontrolled: true
   }).then(function (clientList) {
@@ -63,7 +63,7 @@ self.addEventListener('activate', function (event) {
         cacheNames.map(function (cacheName) {
           // 删除掉当前定义前缀中不在expectedCaches中的缓存集
           if (nameReg.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
-            console.log('[ServiceWorker] Deleting old cache:', cacheName);
+            console.log('[ServiceWorker] Deleting old cache: '+ cacheName);
             return caches.delete(cacheName);
           }
         //   //删除掉测试缓存
@@ -75,7 +75,7 @@ self.addEventListener('activate', function (event) {
       );
     }).then(function () {
       //使service worker立马生效，在单页面应用中，这样是合理的
-      console.log('[ServiceWorker] Claiming clients for version', version);
+      console.log('[ServiceWorker] Claiming clients for version ' + version);
       return self.clients.claim();
     }));
 });
@@ -153,7 +153,7 @@ var addToCache = function (dbName, req, response) {
     return resp;
   }).catch(function (error) {
     if (response) { //请求失败用缓存保底
-      console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache', error);
+      console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache ' +  error.stack);
       return response;
     } else {
       return caches.open(dbName).then(function (cache) {
@@ -170,11 +170,11 @@ var addToCache = function (dbName, req, response) {
         });
       }).then(function (resp) {
         if (resp) {
-          console.log('[ServiceWorker] fetch failed ('+req.url+') and use old cache', error);
+          console.log('[ServiceWorker] fetch failed ('+req.url+') and use old cache ' + error.stack);
           return resp;
         }
         // Respond with a 400 "Bad Request" status.
-        console.log('[ServiceWorker] fetch failed ('+req.url+')', error);
+        console.log('[ServiceWorker] fetch failed ('+req.url+') ' + error.stack);
         return new Response(new Blob, {
           'status': 400,
           'statusText': 'Bad Request'
@@ -198,7 +198,7 @@ var fetchCache = function (dbName, req) {
       return addToCache(dbName, req);
     }
   }).catch(function (e) {
-    console.log(e);
+    console.log(e.stack);
     return addToCache(dbName, req);
   });
 }
@@ -400,7 +400,7 @@ function _processMessage(msgObj, option) {
       });
     }
   } catch (e) {
-    console.log('_processMessage', e.stack);
+    console.log('_processMessage' + e.stack);
   }
 }
 
@@ -427,7 +427,7 @@ function sendMessage(resp) {
   return matchAll.call(clients)
     .then(function (clientList) {
       var option = {};
-      console.log('callbackList.length', callbackList.length);
+      console.log('callbackList.length = ' + callbackList.length);
       while (option = callbackList.pop()) {
         if (!option.cbid) {
           continue;
@@ -445,7 +445,7 @@ function sendMessage(resp) {
               }));
             });
           } catch (e) {
-            console.log(e);
+            console.log(e.stack);
           }
         } else {
           clientList.some(function (client) {
@@ -555,7 +555,7 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close(); //Close the notification
   var messageId = event.notification.data;
   // Open the app and navigate to latest.html after clicking the notification
-  console.log('notificationclick action=', event.action);
+  console.log('notificationclick action='+ event.action);
   if (event.action === "open") {
     return event.waitUntil(clients.openWindow(location.origin + '/#!/index'));
   }
