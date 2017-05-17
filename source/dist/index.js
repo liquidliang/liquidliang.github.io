@@ -906,11 +906,11 @@
 	  var ajaxList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
 	  }).map(function (o) {
-	    return $.ajaxCache({
+	    return $.ajax({
 	      url: getURL(o),
 	      success: function success(str) {
 	        articleDict[o.path] = processItem(o, str);
-	        return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
+	        //return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
 	      }
 	    });
 	  });

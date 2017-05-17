@@ -312,11 +312,11 @@ const getTagArticles = (tag) => {
 };
 
 const fetchContent = (list) => {
-  let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajaxCache({
+  let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajax({
     url: getURL(o),
     success(str) {
       articleDict[o.path] = processItem(o, str);
-      return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
+      //return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
     }
   }));
   return new Promise(function (resolve) {
