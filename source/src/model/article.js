@@ -198,10 +198,10 @@ const preload = (obj) => {
     existDict[location.origin + '/' + o.path] = 1;
   });
 
-  swPostMessage({
-    m: 'delete_not_exist_article',
-    data: existDict
-  });
+  // swPostMessage({
+  //   m: 'delete_not_exist_article',
+  //   data: existDict
+  // });
 
 
   if (isPreload) {

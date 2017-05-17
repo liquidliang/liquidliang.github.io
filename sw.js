@@ -207,6 +207,14 @@ self.addEventListener('fetch', function (event) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
 
+    // if(consoleFetch){
+    //     return event.respondWith(new Response(JSON.stringify(consoleList), {
+    //         url: url,
+    //         'status': 200,
+    //         'statusText': 'ok'
+    //     }));
+    // }
+
 
   if (requestURL.search.indexOf('cors=1') !== -1) {
     req = new Request(url, {
