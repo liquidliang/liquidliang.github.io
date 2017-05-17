@@ -213,7 +213,7 @@ self.addEventListener('fetch', function (event) {
 
   var req, url = event.request.url;
   var requestURL = new URL(url);
-  console.log('[sw] addEventListener fetch' + url);
+  console.log('[sw] addEventListener fetch ' + url);
   // if (url.indexOf('http:') === 0) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
@@ -283,6 +283,7 @@ var getTexts = function (dict) {
 
 //静态资源预加载（不支持返回内容与search参数相关的接口预加载）
 var preloadList = function (urlList) {
+  console.log('[sw] preloadList in');
   var retDict = {};
   return new Promise(function (resolve) {
     if (urlList.length === 0) {
@@ -322,6 +323,7 @@ var preloadList = function (urlList) {
 };
 
 var preloadAtricle = function (urlList, callback, option) {
+    console.log('[sw] preloadAtricle in');
   var urlDict = {};
   var noSearchDict = {};
   var needReloadList = [];
@@ -342,14 +344,16 @@ var preloadAtricle = function (urlList, callback, option) {
       var oldReq;
       while (oldReq = reqList.pop()) {
         var noSearchURL = getNoSearch(oldReq.url);
-        if (urlDict[oldReq.url]) {
+        if (urlDict[oldReq.url]) { //完全匹配的情况
           delete noSearchDict[noSearchURL];
           retDict[oldReq.url] = cache.match(oldReq).then(function (resq) {
+            console.log('[sw] preloadAtricle cache.match '+ oldReq.url);
             return resq && resq.text();
           });
           delete urlDict[oldReq.url];
-        } else if (noSearchDict[getNoSearch(oldReq.url)]) {
+      } else if (noSearchDict[getNoSearch(oldReq.url)]) { //匹配旧缓存
           retDict[oldReq.url] = cache.match(oldReq).then(function (resq) {
+              console.log('[sw] preloadAtricle cache.match oldReq '+ oldReq.url);
             return resq && resq.text();
           });
         }
@@ -370,6 +374,7 @@ var preloadAtricle = function (urlList, callback, option) {
 
 //sw与页面通信,必须返回promise
 function _processMessage(msgObj, option) {
+  console.log('[sw] _processMessage in');
   var resolveFun = function (result) {
     return {
       m: msgObj.m,
@@ -425,11 +430,14 @@ function consoleLog() {
 }
 
 function sendMessage(resp) {
+
+  console.log('[sw] sendMessage in');
   if (!(resp && resp.m)) {
     return new Promise(function (r) {
       r();
     });
   }
+  console.log('[sw] sendMessage in m='+resp.m);
   var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
   return matchAll.call(self.clients)
@@ -499,6 +507,7 @@ function sendMessage(resp) {
 
 // Listen for messages from clients.
 self.addEventListener('message', function (event) {
+    console.log('[sw] addEventListener message in ');
   // Get all the connected clients and forward the message along.
   var msgObj = event.data || {};
   var senderID = event.source ? event.source.id : null; //在低版本中可能没有“source”属性
