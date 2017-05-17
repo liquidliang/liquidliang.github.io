@@ -30,7 +30,7 @@ var FILES = [
 var consoleList = [];
 
 var matchAll = self.clients.matchAll || function(){
-    return self.clients.getAll.call(this);
+    return self.clients.getAll.call(this);//低版本TBS，没有matchAll
 };
 
 
@@ -46,16 +46,45 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('activate', function (event) {
-  console.log('self.clients.matchAll', !!self.clients.matchAll);
-  matchAll.call(clients, {
-    includeUncontrolled: true
-  }).then(function (clientList) {
-    var urls = clientList.map(function (client) {
-      return client.url;
-    });
-    //如果新sw生效，对其他页面造成影响，这里可以查
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
-  });
+  // console.log('self.clients.matchAll', !!self.clients.matchAll);
+  // matchAll.call(clients, {
+  //   includeUncontrolled: true
+  // }).then(function (clientList) {
+  //   var urls = clientList.map(function (client) {
+  //     return client.url;
+  //   });
+  //   //如果新sw生效，对其他页面造成影响，这里可以查
+  //   console.log('[ServiceWorker] Matching clients:', urls.join(', '));
+  // });
+
+  try{
+      matchAll.call(clients).then(function (clientList) {
+          try{
+              consoleLog('activate clientList:', clientList);
+              consoleLog('activate clientList.length:', clientList.length);
+              consoleLog('activate clientList[0]:', clientList[0]);
+              consoleLog('activate Object.keys(clientList):', Object.keys(clientList));
+              clientList.forEach(function(client){
+                  consoleLog('activate client.url:', client.url);
+                  consoleLog('activate client.id:', client.id);
+                  consoleLog('activate client.postMessage:', client.postMessage);
+                  consoleLog('activate client.focus:', client.focus);
+                  consoleLog('activate client.frameType:', client.frameType);
+                  client.postMessage(JSON.stringify({
+                    cbid: 'hello',
+                    resp: {a:1}
+                  }));
+              });
+
+          }catch(e){
+              consoleLog('activate clientList error:', e.message, e.stack);
+          }
+
+        });
+  }catch(e){
+      consoleLog('activate matchAll.call error:', e.message, e.stack);
+  }
+
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
       return Promise.all(
@@ -196,6 +225,12 @@ var fetchCache = function (dbName, req) {
     return addToCache(dbName, req);
   });
 }
+
+var consoleFetch = false;
+setTimeout(function(){
+    consoleFetch = true;
+}, 5E3);
+
 self.addEventListener('fetch', function (event) {
 
   var req, url = event.request.url;
@@ -205,12 +240,14 @@ self.addEventListener('fetch', function (event) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
 
+    if(consoleFetch){
+        return event.respondWith(new Response(JSON.stringify(consoleList), {
+            url: url,
+            'status': 200,
+            'statusText': 'ok'
+        }));
+    }
 
-  // return event.respondWith(new Response(JSON.stringify(consoleList), {
-  //     url: url,
-  //     'status': 200,
-  //     'statusText': 'ok'
-  // }));
 
   if (requestURL.search.indexOf('cors=1') !== -1) {
     req = new Request(url, {
