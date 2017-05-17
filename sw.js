@@ -145,7 +145,7 @@ var addToCache = function (dbName, req, response) {
             cache.delete(oldReq);
           });
         }
-        console.log('[sw] cache.put:' + req.url);
+        console.log('[sw] caches.open '+ dbName +' cache.put:' + req.url);
         //添加新文件
         cache.put(req.clone(), cacheResp);
       });
