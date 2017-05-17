@@ -65,15 +65,15 @@
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
-	// setInterval(function(){
-	//     $.getJSON('/json/console.json', function(list){
-	//         list = list || [];
-	//         var item;
-	//         while(item = list.shift()){
-	//             console.log('[sw] ' + item);
-	//         }
-	//     });
-	// }, 5E3);
+	setInterval(function () {
+	  $.getJSON('/json/console.json', function (list) {
+	    list = list || [];
+	    var item;
+	    while (item = list.shift()) {
+	      console.log('[sw] ' + item);
+	    }
+	  });
+	}, 5E3);
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
