@@ -32,6 +32,7 @@ var consoleList = [];
 var matchAll = self.clients.matchAll || function(){
     return self.clients.getAll.call(this);//低版本TBS，没有matchAll
 };
+console.log('self.clients.matchAll ' + !!self.clients.matchAll);
 
 
 
@@ -46,7 +47,6 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('activate', function (event) {
-  console.log('self.clients.matchAll' + !!self.clients.matchAll);
   matchAll.call(clients, {
     includeUncontrolled: true
   }).then(function (clientList) {
@@ -91,7 +91,7 @@ function _fetch(url, timeout) {
   //这是一个可以被reject的promise
   var abort_promise = new Promise(function (resolve, reject) {
     abort_fn = function () {
-      reject(new Error('fetch timeout!'));
+      reject(new Error('[sw] fetch timeout!'));
     };
   });
 
@@ -109,7 +109,7 @@ function _fetch(url, timeout) {
 }
 //更新缓存
 var addToCache = function (dbName, req, response) {
-
+  console.log('[sw] fetch:' + req.url);
   return _fetch(req.clone()).then(function (resp) {
     if (resp.type !== 'basic' && resp.type !== 'cors') {
       return resp;
@@ -145,6 +145,7 @@ var addToCache = function (dbName, req, response) {
             cache.delete(oldReq);
           });
         }
+        console.log('[sw] cache.put:' + req.url);
         //添加新文件
         cache.put(req.clone(), cacheResp);
       });
@@ -156,6 +157,7 @@ var addToCache = function (dbName, req, response) {
       console.log('[ServiceWorker] fetch failed ('+req.url+') and use cache ' +  error.stack);
       return response;
     } else {
+      console.log('[sw] caches.open ' + dbName + ' get url = '+ req.url);
       return caches.open(dbName).then(function (cache) {
         //取旧缓存
         var urlKey = getNoSearch(req.url);
@@ -163,6 +165,7 @@ var addToCache = function (dbName, req, response) {
           var oldReq;
           while (oldReq = oldReqList.pop()) {
             if (oldReq.url.indexOf(urlKey) > -1) {
+              console.log('[sw] cache.match oldReq url = '+ req.url);
               return cache.match(oldReq)
             }
           }
