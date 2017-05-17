@@ -30,6 +30,24 @@ var FILES = [
 var consoleList = [];
 
 var matchAll = self.clients.matchAll || self.clients.getAll;
+try{
+    matchAll.call(clients).then(function (clientList) {
+        try{
+            consoleLog('clientList:', clientList);
+            consoleLog('clientList.length:', clientList.length);
+            consoleLog('clientList[0]:', clientList[0]);
+            consoleLog('Object.keys(clientList):', Object.keys(clientList));
+            consoleLog('Object.keys(clientList[0]):', Object.keys(clientList[0]));
+        }catch(e){
+            consoleLog('clientList error:', e.message, e.stack);
+        }
+
+      });
+}catch(e){
+    consoleLog('matchAll.call error:', e.message, e.stack);
+}
+
+
 
 self.addEventListener('install', function (event) {
   console.log('[ServiceWorker] Installed version', version);
@@ -52,6 +70,32 @@ self.addEventListener('activate', function (event) {
   //   //如果新sw生效，对其他页面造成影响，这里可以查
   //   console.log('[ServiceWorker] Matching clients:', urls.join(', '));
   // });
+
+  try{
+      matchAll.call(clients, {
+        includeUncontrolled: true
+      }).then(function (clientList) {
+          try{
+              consoleLog('activate clientList:', clientList);
+              consoleLog('activate clientList.length:', clientList.length);
+              consoleLog('activate clientList[0]:', clientList[0]);
+              consoleLog('activate Object.keys(clientList):', Object.keys(clientList));
+              clientList.forEach(function(client){
+                  consoleLog('activate client.url:', client.url);
+                  consoleLog('activate client.id:', client.id);
+                  consoleLog('activate client.postMessage:', client.postMessage);
+                  consoleLog('activate client.focus:', client.focus);
+                  consoleLog('activate client.frameType:', client.frameType);
+              });
+
+          }catch(e){
+              consoleLog('activate clientList error:', e.message, e.stack);
+          }
+
+        });
+  }catch(e){
+      consoleLog('activate matchAll.call error:', e.message, e.stack);
+  }
 
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
