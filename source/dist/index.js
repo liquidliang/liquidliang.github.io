@@ -1547,10 +1547,9 @@
 	
 	if (navigator.serviceWorker) {
 	  window.addEventListener('message', function (event) {
-	    var _JSON$parse = JSON.parse(event.data),
-	        cbid = _JSON$parse.cbid,
-	        resp = _JSON$parse.resp;
-	
+	    var data = JSON.parse(event.data);
+	    var cbid = data.cbid,
+	        resp = data.resp;
 	    if (cbid && callbackDict[cbid]) {
 	      console.log('[client] window message:' + cbid);
 	      if (!callbackDict[cbid](resp)) {
@@ -1559,10 +1558,9 @@
 	    }
 	  });
 	  navigator.serviceWorker.addEventListener('message', function (event) {
-	    var _JSON$parse2 = JSON.parse(event.data),
-	        cbid = _JSON$parse2.cbid,
-	        resp = _JSON$parse2.resp;
-	
+	    var data = JSON.parse(event.data);
+	    var cbid = data.cbid,
+	        resp = data.resp;
 	    if (cbid && callbackDict[cbid]) {
 	      console.log('[client] serviceWorker message:' + cbid);
 	      if (!callbackDict[cbid](resp)) {
