@@ -66,6 +66,11 @@ self.addEventListener('activate', function (event) {
             console.log('[ServiceWorker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
+        //   //删除掉测试缓存
+        //   if(!nameReg.test(cacheName)){
+        //     console.log('[ServiceWorker] Deleting old cache:', cacheName);
+        //     return caches.delete(cacheName);
+        //   }
         })
       );
     }).then(function () {
@@ -369,9 +374,9 @@ function _processMessage(msgObj, option) {
       return preloadList(msgObj.data).then(resolveFun);
     case 'showNotification': //arr
       return sendNote(msgObj.data);
-    case 'preloadAtricle': //arr
+    case 'preloadAtricle': //arr    文章预加载
       return preloadAtricle(msgObj.data, resolveFun, option).then(resolveFun);
-    case 'delete_not_exist_article': //dict
+    case 'delete_not_exist_article': //dict 删除过期文章
       var articleDict = msgObj.data;
       if (!articleDict) {
         return new Promise(function (r) {

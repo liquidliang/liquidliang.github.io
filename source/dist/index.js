@@ -65,15 +65,15 @@
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
-	setInterval(function () {
-	  $.getJSON('/json/console.json', function (list) {
-	    list = list || [];
-	    var item;
-	    while (item = list.shift()) {
-	      console.log('[sw] ' + item);
-	    }
-	  });
-	}, 5E3);
+	// setInterval(function(){
+	//     $.getJSON('/json/console.json', function(list){
+	//         list = list || [];
+	//         var item;
+	//         while(item = list.shift()){
+	//             console.log('[sw] ' + item);
+	//         }
+	//     });
+	// }, 5E3);
 	
 	m_config.getConfig.then(function () {
 	  return m_article.initArticle.then(function () {
@@ -783,11 +783,10 @@
 	    existDict[location.origin + '/' + o.path] = 1;
 	  });
 	
-	  // swPostMessage({
-	  //   m: 'delete_not_exist_article',
-	  //   data: existDict
-	  // });
-	
+	  swPostMessage({
+	    m: 'delete_not_exist_article',
+	    data: existDict
+	  });
 	
 	  if (isPreload) {
 	    if (count) {
@@ -877,13 +876,14 @@
 	  BCD.ajaxCache('./json/article.json', function (data) {
 	    init(data);
 	    processCount++;
-	    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
-	    //   let totalList = sidebarList.concat(articleList);
-	    //   swPostMessage({
-	    //     m: 'preloadAtricle',
-	    //     data: totalList.map(getURL)
-	    //   }, preload);
-	    // }
+	    if (processCount === 2) {
+	      //如果网络请求失败，这里不会被执行
+	      var totalList = sidebarList.concat(articleList);
+	      swPostMessage({
+	        m: 'preloadAtricle',
+	        data: totalList.map(getURL)
+	      }, preload);
+	    }
 	    resolve();
 	    return 1; //缓存数据到localStorage
 	  }, 0, 2E3, true);
@@ -906,10 +906,11 @@
 	  var ajaxList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
 	  }).map(function (o) {
-	    return $.ajax({
+	    return $.ajaxCache({
 	      url: getURL(o),
 	      success: function success(str) {
 	        articleDict[o.path] = processItem(o, str);
+	        return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
 	      }
 	    });
 	  });

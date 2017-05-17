@@ -32,7 +32,7 @@ BCD.addEvent('mkview', function (ele, option, data) {
 
   ele.attr('id', name);
   setTimeout(function () { //dom元素展示出来之后再绑定，不然流程图等会有样式问题
-    m_loadJS.then(function(){
+    m_loadJS.then(function () {
       editormd.markdownToHTML(name, {
         markdown: result, //+ "\r\n" + $("#append-test").text(),
         // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
@@ -51,7 +51,7 @@ BCD.addEvent('mkview', function (ele, option, data) {
       });
 
       let innerHtml = ele.html();
-      if(/(<br>|<p><\/p>){2,}/.test(innerHtml)){
+      if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
         ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
       }
 
@@ -135,8 +135,8 @@ const getSortContent = (content, paragraph = 10) => {
   return ret;
 }
 
-const processItem = (item, content)=>{
-  if(item.title==sidebarName){
+const processItem = (item, content) => {
+  if (item.title == sidebarName) {
     item.content = content;
     return item;
   }
@@ -166,17 +166,17 @@ const processItem = (item, content)=>{
   //     }
   //   }
   // }
-  if(isRaw){
+  if (isRaw) {
     let arr = content.match(/^[\s]*#[^\n\(]+[\n]/);
-    if(arr){
-     let title = arr[0];
-     item.title = title.replace(/[#\s]+/, '').trim();
-     content = content.replace(title, '');
-     isRaw = false;
+    if (arr) {
+      let title = arr[0];
+      item.title = title.replace(/[#\s]+/, '').trim();
+      content = content.replace(title, '');
+      isRaw = false;
     }
   }
 
-  item.content = content;// = (content || '').replace(/^[\s]*---[-]*/, '');
+  item.content = content; // = (content || '').replace(/^[\s]*---[-]*/, '');
   item.tfList = m_search.getTFs(content);
   item.summary = getSortContent(content);
   return item;
@@ -198,10 +198,10 @@ const preload = (obj) => {
     existDict[location.origin + '/' + o.path] = 1;
   });
 
-  // swPostMessage({
-  //   m: 'delete_not_exist_article',
-  //   data: existDict
-  // });
+  swPostMessage({
+    m: 'delete_not_exist_article',
+    data: existDict
+  });
 
 
   if (isPreload) {
@@ -287,16 +287,16 @@ const initArticle = new Promise((resolve) => {
   BCD.ajaxCache('./json/article.json', (data) => {
     init(data);
     processCount++;
-    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
-    //   let totalList = sidebarList.concat(articleList);
-    //   swPostMessage({
-    //     m: 'preloadAtricle',
-    //     data: totalList.map(getURL)
-    //   }, preload);
-    // }
+    if (processCount === 2) { //如果网络请求失败，这里不会被执行
+      let totalList = sidebarList.concat(articleList);
+      swPostMessage({
+        m: 'preloadAtricle',
+        data: totalList.map(getURL)
+      }, preload);
+    }
     resolve();
     return 1; //缓存数据到localStorage
-}, 0, 2E3, true);
+  }, 0, 2E3, true);
 });
 
 //获取包含相关tag文章列表
@@ -306,16 +306,17 @@ const getTagArticles = (tag) => {
     retList = articleList.filter(o => o.tagList &&
       o.tagList.indexOf(tag) > -1);
   }
-  return retList.sort(function(a, b){
+  return retList.sort(function (a, b) {
     return (b.mtime - (m_readHistory.getReadTime(b.path) || 0)) - (a.mtime - (m_readHistory.getReadTime(a.path) || 0));
   });;
 };
 
 const fetchContent = (list) => {
-  let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajax({
+  let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajaxCache({
     url: getURL(o),
     success(str) {
       articleDict[o.path] = processItem(o, str);
+      return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
     }
   }));
   return new Promise(function (resolve) {
@@ -373,8 +374,8 @@ const testItem = (reg, item) => {
   if (reg.test(item.title)) {
     obj.title = item.title.replace(reg, function ($0) {
       if (titleMatchDict[$0]) {
-        titleMatchDict[$0] ++;
-      }else{
+        titleMatchDict[$0]++;
+      } else {
         titleMatchDict[$0] = 1;
       }
       return '<span class="text-danger">' + $0 + '</span>';
@@ -382,7 +383,7 @@ const testItem = (reg, item) => {
     testType += 1;
     let titleMathLength = 0;
     for (var key in titleMatchDict) {
-      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : Math.pow(1.6, key.length-1) * titleMatchDict[key];
+      titleMathLength += /\w/.test(key) ? titleMatchDict[key] : Math.pow(1.6, key.length - 1) * titleMatchDict[key];
     }
     searchWeight += titleMathLength / item.title.length;
   }
@@ -391,7 +392,7 @@ const testItem = (reg, item) => {
     obj.content = item.content.replace(reg, function ($0, point) {
       if (contentMatchDict[$0]) {
         contentMatchDict[$0]++;
-      } else{
+      } else {
         contentMatchDict[$0] = 1;
       }
       let weight = /\w/.test($0) ? 2 : $0.length;
@@ -418,12 +419,12 @@ const testItem = (reg, item) => {
     let contentMathLength = 0;
 
     for (var key in contentMatchDict) {
-      contentMathLength += /\w/.test(key) ? contentMatchDict[key] : Math.pow(1.6, key.length-1) * contentMatchDict[key];
+      contentMathLength += /\w/.test(key) ? contentMatchDict[key] : Math.pow(1.6, key.length - 1) * contentMatchDict[key];
     }
     searchWeight += contentMathLength / Math.pow(item.content.length, 0.6);
   }
   obj.testType = testType;
-/*******calculate search weight**********/
+  /*******calculate search weight**********/
 
   obj.searchWeight = searchWeight;
   return Object.assign({}, item, obj);
@@ -440,7 +441,7 @@ const searchList = (word, callback, isCommend = false) => {
   const searchCallback = (list) => {
     let resultList = list.filter(o => o.testType > 0).sort((a, b) => {
       let ret = b.searchWeight - a.searchWeight;
-      if(ret===0){
+      if (ret === 0) {
         return b.content.length - a.content.length + (b.mtime - a.mtime) / 1E5;
       }
       return ret;
@@ -510,7 +511,7 @@ const searchDirect = (word) => {
     };
     item.weight = weight
     return item;
-  }).sort((a, b)=>b.weight - a.weight);
+  }).sort((a, b) => b.weight - a.weight);
 };
 
 
