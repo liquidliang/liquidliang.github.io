@@ -189,10 +189,12 @@ var addToCache = function (dbName, req, response) {
 
 
 var fetchCache = function (dbName, req) {
+  console.log('[sw] fetchCache:' + req.url);
   return caches.open(dbName).then(function (cache) {
     return cache.match(req.clone());
   }).then(function (response) {
     if (response) {
+       console.log('[sw] fetchCache dbName='+dbName+' cache.match:' + req.url);
       if (dbName == businessCacheName) {
         addToCache(dbName, req, response); //更新缓存，下次使用
       }
@@ -201,7 +203,7 @@ var fetchCache = function (dbName, req) {
       return addToCache(dbName, req);
     }
   }).catch(function (e) {
-    console.log(e.stack);
+    console.log('[sw]'+ e.stack);
     return addToCache(dbName, req);
   });
 }
@@ -210,7 +212,7 @@ self.addEventListener('fetch', function (event) {
 
   var req, url = event.request.url;
   var requestURL = new URL(url);
-
+  console.log('[sw] addEventListener fetch' + url);
   // if (url.indexOf('http:') === 0) {
   //   return event.respondWith(fetch(event.request.clone()));
   // }
