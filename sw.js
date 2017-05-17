@@ -108,27 +108,28 @@ var getNoSearch = function (url) {
 }
 
 function _fetch(url, timeout) {
-  var abort_fn = null;
-  var fetch_promise = fetch(url);
-
-  //这是一个可以被reject的promise
-  var abort_promise = new Promise(function (resolve, reject) {
-    abort_fn = function () {
-      reject(new Error('fetch timeout!'));
-    };
-  });
-
-  //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
-  var abortable_promise = Promise.race([
-    fetch_promise,
-    abort_promise
-  ]);
-
-  setTimeout(function () {
-    abort_fn();
-  }, timeout || 2E3);
-
-  return abortable_promise;
+  return fetch(url);
+  // var abort_fn = null;
+  // var fetch_promise = fetch(url);
+  //
+  // //这是一个可以被reject的promise
+  // var abort_promise = new Promise(function (resolve, reject) {
+  //   abort_fn = function () {
+  //     reject(new Error('fetch timeout!'));
+  //   };
+  // });
+  //
+  // //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
+  // var abortable_promise = Promise.race([
+  //   fetch_promise,
+  //   abort_promise
+  // ]);
+  //
+  // setTimeout(function () {
+  //   abort_fn();
+  // }, timeout || 2E3);
+  //
+  // return abortable_promise;
 }
 //更新缓存
 var addToCache = function (dbName, req, response) {
