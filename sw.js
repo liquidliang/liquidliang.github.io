@@ -30,23 +30,6 @@ var FILES = [
 var consoleList = [];
 
 var matchAll = self.clients.matchAll || self.clients.getAll;
-try{
-    matchAll.call(clients).then(function (clientList) {
-        try{
-            consoleLog('clientList:', clientList);
-            consoleLog('clientList.length:', clientList.length);
-            consoleLog('clientList[0]:', clientList[0]);
-            consoleLog('Object.keys(clientList):', Object.keys(clientList));
-            consoleLog('Object.keys(clientList[0]):', Object.keys(clientList[0]));
-        }catch(e){
-            consoleLog('clientList error:', e.message, e.stack);
-        }
-
-      });
-}catch(e){
-    consoleLog('matchAll.call error:', e.message, e.stack);
-}
-
 
 
 self.addEventListener('install', function (event) {
@@ -72,9 +55,7 @@ self.addEventListener('activate', function (event) {
   // });
 
   try{
-      matchAll.call(clients, {
-        includeUncontrolled: true
-      }).then(function (clientList) {
+      matchAll.call(clients).then(function (clientList) {
           try{
               consoleLog('activate clientList:', clientList);
               consoleLog('activate clientList.length:', clientList.length);
