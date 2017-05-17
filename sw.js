@@ -30,8 +30,9 @@ var FILES = [
 var consoleList = [];
 
 var matchAll = self.clients.matchAll || function(){
-    return self.clients.getAll.call(this);//低版本TBS，没有matchAll
+    return self.clients.getAll.call(self.clients);//低版本TBS，没有matchAll
 };
+
 console.log('self.clients.matchAll ' + !!self.clients.matchAll);
 
 
@@ -429,7 +430,7 @@ function sendMessage(resp) {
   }
   var callbackList = callbackDict[resp.m] || [];
   callbackDict[resp.m] = [];
-  return matchAll.call(clients)
+  return matchAll.call(self.clients)
     .then(function (clientList) {
       var option = {};
       console.log('callbackList.length = ' + callbackList.length);
