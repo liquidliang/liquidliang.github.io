@@ -29,7 +29,10 @@ var FILES = [
 ];
 var consoleList = [];
 
-var matchAll = self.clients.matchAll || self.clients.getAll;
+var matchAll = self.clients.matchAll || function(){
+    return self.clients.getAll.call(this);
+};
+
 
 
 self.addEventListener('install', function (event) {
@@ -55,7 +58,9 @@ self.addEventListener('activate', function (event) {
   // });
 
   try{
-      matchAll.call(clients).then(function (clientList) {
+      matchAll.call(clients, {
+        includeUncontrolled: true
+      }).then(function (clientList) {
           try{
               consoleLog('activate clientList:', clientList);
               consoleLog('activate clientList.length:', clientList.length);
@@ -463,6 +468,13 @@ function sendMessage(resp) {
         } else {
           clientList.some(function (client) {
             // Skip sending the message to the client that sent it.
+            if(!client.id){
+                client.postMessage(JSON.stringify({
+                  cbid: option.cbid,
+                  resp: resp.result
+                }));
+                return false;
+            }
             if (client.id === option.senderID) {
               client.postMessage(JSON.stringify({
                 cbid: option.cbid,
