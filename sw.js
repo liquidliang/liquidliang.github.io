@@ -110,7 +110,7 @@ function _fetch(url, timeout) {
 }
 //更新缓存
 var addToCache = function (dbName, req, response) {
-  console.log('[sw] fetch:' + req.url);
+  console.log('[sw] addToCache fetch:' + req.url);
   return _fetch(req.clone()).then(function (resp) {
     if (resp.type !== 'basic' && resp.type !== 'cors') {
       return resp;
@@ -234,7 +234,7 @@ self.addEventListener('fetch', function (event) {
   } else {
     req = event.request.clone();
   }
-
+  console.log('[sw] requestURL.pathname='+requestURL.pathname);
   if (FILES.indexOf(requestURL.pathname) > -1) {
     return event.respondWith(fetchCache(businessCacheName, req));
   }
@@ -298,8 +298,10 @@ var preloadList = function (urlList) {
             return cache.match(myRequest.clone());
           }).then(function (response) {
             if (response) {
+               console.log('[sw] preloadList match old cache dbName='+dbName + ' url='+myRequest.url);
               return response;
             } else {
+              console.log('[sw] preloadList addToCache dbName='+dbName + ' url='+myRequest.url);
               return addToCache(dbName, myRequest);
             }
           }).then(function (resp) {
