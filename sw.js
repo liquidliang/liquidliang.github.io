@@ -108,28 +108,27 @@ var getNoSearch = function (url) {
 }
 
 function _fetch(url, timeout) {
-  return fetch(url);
-  // var abort_fn = null;
-  // var fetch_promise = fetch(url);
-  //
-  // //这是一个可以被reject的promise
-  // var abort_promise = new Promise(function (resolve, reject) {
-  //   abort_fn = function () {
-  //     reject(new Error('fetch timeout!'));
-  //   };
-  // });
-  //
-  // //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
-  // var abortable_promise = Promise.race([
-  //   fetch_promise,
-  //   abort_promise
-  // ]);
-  //
-  // setTimeout(function () {
-  //   abort_fn();
-  // }, timeout || 2E3);
-  //
-  // return abortable_promise;
+  var abort_fn = null;
+  var fetch_promise = fetch(url);
+
+  //这是一个可以被reject的promise
+  var abort_promise = new Promise(function (resolve, reject) {
+    abort_fn = function () {
+      reject(new Error('fetch timeout!'));
+    };
+  });
+
+  //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
+  var abortable_promise = Promise.race([
+    fetch_promise,
+    abort_promise
+  ]);
+
+  setTimeout(function () {
+    abort_fn();
+  }, timeout || 2E3);
+
+  return abortable_promise;
 }
 //更新缓存
 var addToCache = function (dbName, req, response) {
@@ -210,21 +209,22 @@ var addToCache = function (dbName, req, response) {
 
 
 var fetchCache = function (dbName, req) {
-  return caches.open(dbName).then(function (cache) {
-    return cache.match(req.clone());
-  }).then(function (response) {
-    if (response) {
-      if (dbName == businessCacheName) {
-        addToCache(dbName, req, response); //更新缓存，下次使用
-      }
-      return response; //如果命中缓存，直接使用缓存.
-    } else {
-      return addToCache(dbName, req);
-    }
-  }).catch(function (e) {
-    console.log(e);
-    return addToCache(dbName, req);
-  });
+    return fetch(req);
+  // return caches.open(dbName).then(function (cache) {
+  //   return cache.match(req.clone());
+  // }).then(function (response) {
+  //   if (response) {
+  //     if (dbName == businessCacheName) {
+  //       addToCache(dbName, req, response); //更新缓存，下次使用
+  //     }
+  //     return response; //如果命中缓存，直接使用缓存.
+  //   } else {
+  //     return addToCache(dbName, req);
+  //   }
+  // }).catch(function (e) {
+  //   console.log(e);
+  //   return addToCache(dbName, req);
+  // });
 }
 
 var consoleFetch = false;
