@@ -438,7 +438,14 @@ function sendMessage(resp) {
               'message');
           }
           try {
+              console.log('clientList.length = '+clientList.length);
+              consoe.log('postMessage = '+JSON.stringify({
+                  cbid: option.cbid,
+                  resp: resp.result
+              }));
             clientList.forEach(function (client) {
+                console.log('client.url = ' + client.url);
+                console.log('client.postMessage = ' + client.postMessage);
               client.postMessage(JSON.stringify({
                 cbid: option.cbid,
                 resp: resp.result
