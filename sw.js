@@ -433,22 +433,34 @@ function sendMessage(resp) {
   return matchAll.call(self.clients)
     .then(function (clientList) {
       var option = {};
-      console.log('callbackList.length = ' + callbackList.length);
+      console.log('[sw] callbackList.length = ' + callbackList.length);
       while (option = callbackList.pop()) {
         if (!option.cbid) {
           continue;
         }
         if (!option.senderID) {
           if (option.cbid != 'log') {
-            console.log('event.source is null; we don\'t know the sender of the ' +
+            console.log('[sw] event.source is null; we don\'t know the sender of the ' +
               'message');
           }
           try {
-              console.log('clientList.length = '+clientList.length);
-              console.log('postMessage = '+JSON.stringify({
+              console.log('[sw] clientList.length = '+clientList.length);
+              console.log('[sw] postMessage = '+JSON.stringify({
                   cbid: option.cbid,
                   resp: resp.result
               }));
+            if (clientList.length == 0) {
+              self.clients.getAll().then(function (clients) {
+                console.log('[sw] clients.getAll() clients:' + clients.length);
+                clients.forEach(function (client) {
+                  console.log('[sw] postMessage');
+                  client.postMessage(JSON.stringify({
+                    cbid: option.cbid,
+                    resp: resp.result
+                  }));
+                });
+              });
+            }
             clientList.forEach(function (client) {
                 console.log('client.url = ' + client.url);
                 console.log('client.postMessage = ' + client.postMessage);

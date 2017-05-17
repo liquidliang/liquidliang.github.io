@@ -1546,10 +1546,22 @@
 	};
 	
 	if (navigator.serviceWorker) {
-	  navigator.serviceWorker.addEventListener('message', function (event) {
+	  window.addEventListener('message', function (event) {
 	    var _JSON$parse = JSON.parse(event.data),
 	        cbid = _JSON$parse.cbid,
 	        resp = _JSON$parse.resp;
+	
+	    if (cbid && callbackDict[cbid]) {
+	      console.log('[client] window message:' + cbid);
+	      if (!callbackDict[cbid](resp)) {
+	        delete callbackDict[cbid];
+	      }
+	    }
+	  });
+	  navigator.serviceWorker.addEventListener('message', function (event) {
+	    var _JSON$parse2 = JSON.parse(event.data),
+	        cbid = _JSON$parse2.cbid,
+	        resp = _JSON$parse2.resp;
 	
 	    if (cbid && callbackDict[cbid]) {
 	      console.log('[client] serviceWorker message:' + cbid);
@@ -1557,6 +1569,7 @@
 	        delete callbackDict[cbid];
 	      }
 	    }
+	    m_util.stopBubble(event);
 	  }); //页面通过监听service worker的message事件接收service worker的信息
 	  postMessage = function postMessage(req, callback) {
 	    if (navigator.serviceWorker.controller && navigator.serviceWorker.controller.state == 'activated') {
