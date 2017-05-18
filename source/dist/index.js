@@ -907,7 +907,7 @@
 	  var urlList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
 	  }).map(function (o) {
-	    return getURL(o);
+	    return !!window.Notification ? getURL(o) : o.path + '?t=' + o.mtime;
 	  });
 	  return m_promiseAjax.batchFetch(urlList, {
 	    dataType: 'text',
