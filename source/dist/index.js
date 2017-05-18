@@ -56,12 +56,12 @@
 	__webpack_require__(9);
 	var m_article = __webpack_require__(10);
 	var m_config = __webpack_require__(13);
-	var c_header = __webpack_require__(17);
-	var c_pageList = __webpack_require__(18);
-	var c_pageBook = __webpack_require__(26);
-	var c_pageContent = __webpack_require__(28);
-	var c_pageBlog = __webpack_require__(30);
-	var c_pageSearch = __webpack_require__(31);
+	var c_header = __webpack_require__(18);
+	var c_pageList = __webpack_require__(19);
+	var c_pageBook = __webpack_require__(27);
+	var c_pageContent = __webpack_require__(29);
+	var c_pageBlog = __webpack_require__(31);
+	var c_pageSearch = __webpack_require__(32);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -576,7 +576,8 @@
 	var m_readHistory = __webpack_require__(12);
 	var m_readFavor = __webpack_require__(14);
 	var swPostMessage = __webpack_require__(15);
-	var m_loadJS = __webpack_require__(16);
+	var m_promiseAjax = __webpack_require__(16);
+	var m_loadJS = __webpack_require__(17);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -903,19 +904,22 @@
 	};
 	
 	var fetchContent = function fetchContent(list) {
-	  var ajaxList = list.filter(function (o) {
+	  var urlList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
 	  }).map(function (o) {
-	    return $.ajax({
-	      url: getURL(o),
-	      success: function success(str) {
-	        articleDict[o.path] = processItem(o, str);
-	        //return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
-	      }
-	    });
+	    return getURL(o);
 	  });
-	  return new Promise(function (resolve) {
-	    $.when.apply(this, ajaxList).then(resolve, resolve);
+	  return m_promiseAjax.batchFetch(urlList, {
+	    dataType: 'text',
+	    cache: !!window.Notification ? '' : 'normal_local',
+	    success: function success(str) {
+	      return !!str;
+	    }
+	  }).then(function (resList) {
+	    for (var i = 0; i < (resList || []).length; i++) {
+	      var o = list[i];
+	      articleDict[o.path] = processItem(o, resList[i]);
+	    }
 	  });
 	};
 	
@@ -1590,6 +1594,95 @@
 
 /***/ },
 /* 16 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * 带缓存的ajax请求，约定ret=0为正确数据，可以缓存
+	 * @access public
+	 * @param {String | Object} url 请求地址，url中必须带有t参数作为缓存过期的判断标准。
+	 * @param {Function} [success] 成功回调, 返回值Boolean值，true，把数据存在localStorage中，false,不缓存，
+	 *                         其它值或不返回，根据cache策略缓存
+	 * @param {Function} [error] 不成功回调
+	 * @param {Function} [timeOut] 超时时间
+	 * @param {string} [options.cache=""]     缓存使用方式：
+	 * <p>""             默认不使用缓存；</p>
+	 * <p>"normal_local" 表示如果数据有效则直接使用，超过有效期则拉取失败时使用缓存， 缓存在localStorage中；</p>
+	 * <p>"next_local    表示如果有缓存，则用缓存，但会拉取新数据不render，下次再用， 缓存在localStorage中；</p>
+	 * <p>"normal_session 表示如果数据有效则直接使用，超过有效期则拉取失败时使用缓存， 缓存在sessionStorage中；</p>
+	 * <p>"next_session    表示如果有缓存，则用缓存，但会拉取新数据不render，下次再用， 缓存在sessionStorage中；</p>
+	 * @return {Function}  类似Promise的对象
+	 */
+	
+	//对于不能缓存的的情况，不要传入cache参数即可
+	var _fetch = function _fetch(options) {
+	    var cache = options.cache || "";
+	    var defer = $.Deferred();
+	
+	    if (BCD.is.s(options)) {
+	        options = {
+	            url: options
+	        };
+	    }
+	    BCD.ajaxCache($.extend({
+	        timeout: 6e3,
+	        xhrFields: {
+	            withCredentials: true
+	        },
+	        useCache: cache.indexOf('next') === 0
+	    }, options, {
+	        success: function success(data) {
+	            try {
+	                defer.resolve(data);
+	                var isRight;
+	                var storage = cache && (cache.indexOf('local') > 0 ? 1 : 2);
+	                if (options.success) {
+	                    isRight = options.success(data);
+	                    if (isRight) {
+	                        return storage;
+	                    }
+	                } else {
+	                    isRight = data && data.ret === 0;
+	                }
+	                return isRight !== false && storage;
+	            } catch (e) {
+	                console.log(e, 'promise_ajax fetch url "' + options.url + '", has wrong in success');
+	            }
+	        },
+	        error: function error() {
+	            try {
+	                console.log(options.url + ' promise_ajax error');
+	                defer.resolve(false);
+	                if (options.errors) {
+	                    options.errors.apply(this, arguments);
+	                }
+	            } catch (e) {
+	                console.log(e, 'promise_ajax fetch url "' + options.url + '", has wrong in error');
+	            }
+	        }
+	    }));
+	    return defer.promise();
+	};
+	
+	function batchFetch(urls, option) {
+	    var promiseList = (urls || []).map(function (url) {
+	        return _fetch($.extend({
+	            url: url
+	        }, option));
+	    });
+	    return $.when.apply(promiseList, promiseList).then(function () {
+	        return arguments;
+	    });
+	}
+	//事件绑定
+	module.exports = {
+	    fetch: _fetch,
+	    batchFetch: batchFetch
+	};
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1599,7 +1692,7 @@
 	module.exports = m_util.load(["./source/lib/editor.md/editormd.preview.min.css", "./source/lib/blog.css", "./source/lib/editor.md/lib/marked.min.js", "./source/lib/editor.md/lib/prettify.min.js", "./source/lib/editor.md/lib/raphael.min.js", "./source/lib/editor.md/lib/underscore.min.js", "./source/lib/editor.md/lib/sequence-diagram.min.js", "./source/lib/editor.md/lib/flowchart.min.js", "./source/lib/editor.md/lib/jquery.flowchart.min.js", "./source/lib/editor.md/editormd.min.js"]);
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1732,18 +1825,18 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(19);
-	var c_mainContainer = __webpack_require__(20);
+	var c_footer = __webpack_require__(20);
+	var c_mainContainer = __webpack_require__(21);
 	var m_article = __webpack_require__(10);
-	var m_initOption = __webpack_require__(21);
-	var c_pannel = __webpack_require__(22);
-	var c_pannelList = __webpack_require__(23);
-	var c_articleList = __webpack_require__(25);
+	var m_initOption = __webpack_require__(22);
+	var c_pannel = __webpack_require__(23);
+	var c_pannelList = __webpack_require__(24);
+	var c_articleList = __webpack_require__(26);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1818,7 +1911,7 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1838,7 +1931,7 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1848,7 +1941,7 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1879,7 +1972,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1901,14 +1994,14 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var m_article = __webpack_require__(10);
-	var m_recommend = __webpack_require__(24);
-	var c_pannel = __webpack_require__(22);
+	var m_recommend = __webpack_require__(25);
+	var c_pannel = __webpack_require__(23);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -1965,7 +2058,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2118,7 +2211,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2132,15 +2225,15 @@
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(27);
+	var s_mainContainer = __webpack_require__(28);
 	var m_article = __webpack_require__(10);
 	var m_readHistory = __webpack_require__(12);
-	var c_articleList = __webpack_require__(25);
+	var c_articleList = __webpack_require__(26);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -2224,7 +2317,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2232,20 +2325,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(20);
-	var c_footer = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(21);
+	var c_footer = __webpack_require__(20);
 	var m_article = __webpack_require__(10);
 	var m_readHistory = __webpack_require__(12);
-	var c_pannelList = __webpack_require__(23);
-	var c_content = __webpack_require__(29);
-	var m_initOption = __webpack_require__(21);
+	var c_pannelList = __webpack_require__(24);
+	var c_content = __webpack_require__(30);
+	var m_initOption = __webpack_require__(22);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2277,7 +2370,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2293,18 +2386,18 @@
 	};
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(20);
-	var c_footer = __webpack_require__(19);
+	var c_mainContainer = __webpack_require__(21);
+	var c_footer = __webpack_require__(20);
 	var m_config = __webpack_require__(13);
 	var m_article = __webpack_require__(10);
-	var m_initOption = __webpack_require__(21);
+	var m_initOption = __webpack_require__(22);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -2335,16 +2428,16 @@
 	};
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(19);
-	var c_mainContainer = __webpack_require__(20);
-	var m_initOption = __webpack_require__(21);
-	var c_pannelList = __webpack_require__(23);
-	var m_pullArticle = __webpack_require__(32);
+	var c_footer = __webpack_require__(20);
+	var c_mainContainer = __webpack_require__(21);
+	var m_initOption = __webpack_require__(22);
+	var c_pannelList = __webpack_require__(24);
+	var m_pullArticle = __webpack_require__(33);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2374,7 +2467,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

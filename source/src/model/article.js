@@ -3,6 +3,7 @@ const m_search = require('helper/search');
 const m_readHistory = require('model/read_history');
 const m_readFavor = require('model/read_favor');
 const swPostMessage = require('helper/sw_post_message.js');
+const m_promiseAjax = require('helper/promise_ajax.js');
 const m_loadJS = require('helper/load_lib');
 let catalogList = []; //目录列表
 let catalogDict = {};
@@ -312,15 +313,18 @@ const getTagArticles = (tag) => {
 };
 
 const fetchContent = (list) => {
-  let ajaxList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => $.ajax({
-    url: getURL(o),
-    success(str) {
-      articleDict[o.path] = processItem(o, str);
-      //return !window.Notification && 1; //不支持Notification，的需要localStorage缓存
-    }
-  }));
-  return new Promise(function (resolve) {
-    $.when.apply(this, ajaxList).then(resolve, resolve);
+  let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => getURL(o));
+  return m_promiseAjax.batchFetch(urlList, {
+      dataType: 'text',
+      cache: !!window.Notification ? '' : 'normal_local',
+      success: function(str){
+          return !!str;
+      }
+  }).then(function(resList){
+      for(var i=0; i<(resList || []).length; i++){
+          var o = list[i];
+          articleDict[o.path] = processItem(o, resList[i]);
+      }
   });
 };
 
