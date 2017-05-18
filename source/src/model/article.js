@@ -314,11 +314,11 @@ const getTagArticles = (tag) => {
 
 const fetchContent = (list) => {
   let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => {
-      return !!window.Notification ? getURL(o) : (o.path + '?t=' + o.mtime);
+      return !!window.caches ? getURL(o) : (o.path + '?t=' + o.mtime);
   });
   return m_promiseAjax.batchFetch(urlList, {
       dataType: 'text',
-      cache: !!window.Notification ? '' : 'normal_local',
+      cache: !!window.caches ? '' : 'normal_local',
       success: function(str){
           return !!str;
       }
