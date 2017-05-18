@@ -245,7 +245,11 @@ self.addEventListener('fetch', function (event) {
     }
   }
 
-  if (requestURL.protocol != 'https:' || /\.json$/.test(url)) {
+  if(/\.json$/.test(url)){
+      return event.respondWith(fetch(req));
+  }
+
+  if (requestURL.protocol != 'https:') {
     return;
   }
 
