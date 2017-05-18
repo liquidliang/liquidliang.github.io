@@ -508,7 +508,7 @@ function sendMessage(resp) {
       }
     });
 }
-/*
+
 // Listen for messages from clients.
 self.addEventListener('message', function (event) {
     console.log('[sw] addEventListener message in ');
@@ -534,7 +534,6 @@ self.addEventListener('message', function (event) {
     event.waitUntil(promise);
   }
 });
-*/
 
 function sendNote(message) {
   console.log('send Note');

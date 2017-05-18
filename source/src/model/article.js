@@ -3,6 +3,7 @@ const m_search = require('helper/search');
 const m_readHistory = require('model/read_history');
 const m_readFavor = require('model/read_favor');
 const swPostMessage = require('helper/sw_post_message.js');
+const m_ability = require('helper/ability.js');
 const m_promiseAjax = require('helper/promise_ajax.js');
 const m_loadJS = require('helper/load_lib');
 let catalogList = []; //目录列表
@@ -251,11 +252,22 @@ const init = (list) => {
         time: m_util.getTime(mtime),
         tagList: tags
       };
+
+
+
+
+      if(!m_ability.isSupportCache()){
+          let content = BCD.cache.getLocal(o.path);
+          if(content){
+              item = processItem(item, content);
+          }
+      }      
       if (articleDict[path]) {
         item = $.extend(articleDict[path], item);
       } else {
         articleDict[path] = item;
       }
+
       articleList.push(item);
     }
   };
@@ -314,18 +326,21 @@ const getTagArticles = (tag) => {
 
 const fetchContent = (list) => {
   let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => {
-      return !!window.caches ? getURL(o) : (o.path + '?t=' + o.mtime);
+      return m_ability.isSupportCache() ? getURL(o) : (o.path + '?t=' + o.mtime);
   });
   return m_promiseAjax.batchFetch(urlList, {
       dataType: 'text',
-      cache: !!window.caches ? '' : 'normal_local',
+      cache: m_ability.isSupportCache() ? '' : 'normal_local',
+      timeout: 5E3,
       success: function(str){
           return !!str;
       }
   }).then(function(resList){
       for(var i=0; i<(resList || []).length; i++){
           var o = list[i];
-          articleDict[o.path] = processItem(o, resList[i]);
+          if(o){
+              articleDict[o.path] = processItem(o, resList[i]);
+          }
       }
   });
 };
