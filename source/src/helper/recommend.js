@@ -27,7 +27,9 @@ const getCorrelation = (a_tfList) => {
   return (b_tfList) => {
     let total = b_tfList.reduce((sum, item) => sum += item.frequency, 0);
     return b_tfList.reduce((weight, item) => {
-      weight += (tfDict[item.token] || 0) * item.frequency / total;
+      if((typeof tfDict[item.token] == 'number') && (typeof item.frequency == 'number')) {
+         weight += (tfDict[item.token] || 0) * item.frequency / total;
+      }
       return weight;
     }, 0);
   };
@@ -95,21 +97,20 @@ const getRecommend = (callback) => {
   delayTime = m_article.isPreload ? 0 : (delayTime < 0 ? 0 : delayTime);
   setTimeout(function () {
     let key = decodeURIComponent(BCD.getHash(0));
-    let articleList = getMutiSamples();
 
     switch (true) {
     case key == 'tag':
       let word = decodeURIComponent(BCD.getHash(1));
       m_article.searchList(word, (list) => {
-        callback(filter(list.concat(articleList)));
+        callback(filter(list.concat(getMutiSamples())));
       }, true);
       break;
     case m_article.hasArticle(key):
       m_article.getArticleContent(key).then((data) => {
         let tagList = data.tagList;
-        let keyWords = (data.tfList || []).slice(0, 10).map(o => o.token);
+        let keyWords = (data.tfList || []).slice(0, 10).map(o => o.token + '(' + o.frequency + ')');
         console.log('本文关键词为：', keyWords.join(','));
-        callback(filter(getSimilarArticles(data.tfList).concat(articleList)));
+        callback(filter(getSimilarArticles(data.tfList).concat(getMutiSamples())));
       });
       break;
     case m_article.hasCatalog(key):
@@ -118,13 +119,13 @@ const getRecommend = (callback) => {
         let catalog = m_article.getCatalogMessage(key);
         let alist = data.list || [];
         m_article.searchList(catalog.tagList.join(' '), (list) => {
-          callback(filter(list.concat(alist.concat(articleList))));
+          callback(filter(list.concat(alist.concat(getMutiSamples()))));
         }, true);
       });
       break;
 
     default:
-      callback(articleList);
+      callback(getMutiSamples());
       break;
     }
   }, delayTime);

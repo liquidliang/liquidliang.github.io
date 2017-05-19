@@ -53,15 +53,15 @@
 	//require("babel-polyfill");  //太大了
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(9);
-	var m_article = __webpack_require__(10);
-	var m_config = __webpack_require__(13);
-	var c_header = __webpack_require__(19);
-	var c_pageList = __webpack_require__(20);
-	var c_pageBook = __webpack_require__(28);
-	var c_pageContent = __webpack_require__(30);
-	var c_pageBlog = __webpack_require__(32);
-	var c_pageSearch = __webpack_require__(33);
+	__webpack_require__(10);
+	var m_article = __webpack_require__(11);
+	var m_config = __webpack_require__(14);
+	var c_header = __webpack_require__(20);
+	var c_pageList = __webpack_require__(21);
+	var c_pageBook = __webpack_require__(29);
+	var c_pageContent = __webpack_require__(31);
+	var c_pageBlog = __webpack_require__(33);
+	var c_pageSearch = __webpack_require__(34);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -308,7 +308,8 @@
 	  now: function now() {
 	    return _date.now();
 	  },
-	  load: __webpack_require__(8)
+	  load: __webpack_require__(8),
+	  dom: __webpack_require__(9)
 	};
 
 /***/ },
@@ -416,6 +417,24 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  getWindowHeight: function getWindowHeight() {
+	    return window.innerHeight || window.clientHeight;
+	  },
+	  getWindowWidth: function getWindowWidth() {
+	    return window.innerWidth;
+	  },
+	  getPageHeight: function getPageHeight() {
+	    return document.body.scrollHeight || document.documentElement.scrollHeight;
+	  }
+	};
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -562,7 +581,7 @@
 	});
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -572,13 +591,13 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(6);
-	var m_search = __webpack_require__(11);
-	var m_readHistory = __webpack_require__(12);
-	var m_readFavor = __webpack_require__(14);
-	var swPostMessage = __webpack_require__(15);
-	var m_ability = __webpack_require__(16);
-	var m_promiseAjax = __webpack_require__(17);
-	var m_loadJS = __webpack_require__(18);
+	var m_search = __webpack_require__(12);
+	var m_readHistory = __webpack_require__(13);
+	var m_readFavor = __webpack_require__(15);
+	var swPostMessage = __webpack_require__(16);
+	var m_ability = __webpack_require__(17);
+	var m_promiseAjax = __webpack_require__(18);
+	var m_loadJS = __webpack_require__(19);
 	var catalogList = []; //目录列表
 	var catalogDict = {};
 	var articleList = []; //文件列表
@@ -1239,9 +1258,10 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
+	
 	'use strict';
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -1319,7 +1339,7 @@
 	  var tfList = [];
 	
 	  wordList.forEach(function (o) {
-	    if (o.length < 2) {
+	    if (o.length < 2 || Object.hasOwnProperty(o) || tfDict[o] !== undefined && typeof tfDict[o] !== 'number') {
 	      return;
 	    }
 	    if (tfDict[o]) {
@@ -1391,12 +1411,12 @@
 	};
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(13);
+	var m_config = __webpack_require__(14);
 	var storageKey = 'read_history';
 	var readHistory = {};
 	var init = function init() {
@@ -1433,7 +1453,7 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1491,12 +1511,12 @@
 	};
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_config = __webpack_require__(13);
+	var m_config = __webpack_require__(14);
 	var storageKey = 'read_favor';
 	var readFavor = {};
 	var init = function init() {
@@ -1559,7 +1579,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1619,7 +1639,7 @@
 	module.exports = postMessage; //postMessage(message, callback)
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1629,7 +1649,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1718,7 +1738,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1728,14 +1748,14 @@
 	module.exports = m_util.load(["./source/lib/editor.md/editormd.preview.min.css", "./source/lib/blog.css", "./source/lib/editor.md/lib/marked.min.js", "./source/lib/editor.md/lib/prettify.min.js", "./source/lib/editor.md/lib/raphael.min.js", "./source/lib/editor.md/lib/underscore.min.js", "./source/lib/editor.md/lib/sequence-diagram.min.js", "./source/lib/editor.md/lib/flowchart.min.js", "./source/lib/editor.md/lib/jquery.flowchart.min.js", "./source/lib/editor.md/editormd.min.js"]);
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var m_util = __webpack_require__(6);
-	var m_article = __webpack_require__(10);
-	var m_config = __webpack_require__(13);
+	var m_article = __webpack_require__(11);
+	var m_config = __webpack_require__(14);
 	var m_commonEvent = __webpack_require__(5);
 	var viewHeader = $('<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner"></header>');
 	
@@ -1861,18 +1881,18 @@
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(21);
-	var c_mainContainer = __webpack_require__(22);
-	var m_article = __webpack_require__(10);
-	var m_initOption = __webpack_require__(23);
-	var c_pannel = __webpack_require__(24);
-	var c_pannelList = __webpack_require__(25);
-	var c_articleList = __webpack_require__(27);
+	var c_footer = __webpack_require__(22);
+	var c_mainContainer = __webpack_require__(23);
+	var m_article = __webpack_require__(11);
+	var m_initOption = __webpack_require__(24);
+	var c_pannel = __webpack_require__(25);
+	var c_pannelList = __webpack_require__(26);
+	var c_articleList = __webpack_require__(28);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -1947,13 +1967,13 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//页脚
-	var m_config = __webpack_require__(13);
+	var m_config = __webpack_require__(14);
 	module.exports = function (option) {
 	  var viewHeader = $('<footer></footer>');
 	  option = $.extend({
@@ -1967,7 +1987,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1977,7 +1997,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2008,7 +2028,7 @@
 	};
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2030,14 +2050,15 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var m_article = __webpack_require__(10);
-	var m_recommend = __webpack_require__(26);
-	var c_pannel = __webpack_require__(24);
+	var m_article = __webpack_require__(11);
+	var m_recommend = __webpack_require__(27);
+	var c_pannel = __webpack_require__(25);
+	var m_util = __webpack_require__(6);
 	module.exports = function (view) {
 	  var viewPannelBook = c_pannel({
 	    data: {
@@ -2088,13 +2109,23 @@
 	    });
 	  });
 	
+	  if (m_util.dom.getWindowWidth() < 766) {
+	    return view.setView({
+	      source: function source() {
+	        return new Promise(function (resolve) {
+	          setTimeout(resolve, 1E3);
+	        });
+	      },
+	      viewList: [viewPannelRecommendPost, viewPannelBook, viewPannelCatalog, viewPannelTag]
+	    });
+	  }
 	  return view.setView({
 	    viewList: [viewPannelBook, viewPannelCatalog, viewPannelTag, viewPannelRecommendPost]
 	  });
 	};
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2102,9 +2133,9 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var m_util = __webpack_require__(6);
-	var m_article = __webpack_require__(10);
-	var m_search = __webpack_require__(11);
-	var m_readHistory = __webpack_require__(12);
+	var m_article = __webpack_require__(11);
+	var m_search = __webpack_require__(12);
+	var m_readHistory = __webpack_require__(13);
 	
 	var filter = function filter(list) {
 	  var arr = [];
@@ -2132,7 +2163,9 @@
 	      return sum += item.frequency;
 	    }, 0);
 	    return b_tfList.reduce(function (weight, item) {
-	      weight += (tfDict[item.token] || 0) * item.frequency / total;
+	      if (typeof tfDict[item.token] == 'number' && typeof item.frequency == 'number') {
+	        weight += (tfDict[item.token] || 0) * item.frequency / total;
+	      }
 	      return weight;
 	    }, 0);
 	  };
@@ -2206,23 +2239,22 @@
 	  delayTime = m_article.isPreload ? 0 : delayTime < 0 ? 0 : delayTime;
 	  setTimeout(function () {
 	    var key = decodeURIComponent(BCD.getHash(0));
-	    var articleList = getMutiSamples();
 	
 	    switch (true) {
 	      case key == 'tag':
 	        var word = decodeURIComponent(BCD.getHash(1));
 	        m_article.searchList(word, function (list) {
-	          callback(filter(list.concat(articleList)));
+	          callback(filter(list.concat(getMutiSamples())));
 	        }, true);
 	        break;
 	      case m_article.hasArticle(key):
 	        m_article.getArticleContent(key).then(function (data) {
 	          var tagList = data.tagList;
 	          var keyWords = (data.tfList || []).slice(0, 10).map(function (o) {
-	            return o.token;
+	            return o.token + '(' + o.frequency + ')';
 	          });
 	          console.log('本文关键词为：', keyWords.join(','));
-	          callback(filter(getSimilarArticles(data.tfList).concat(articleList)));
+	          callback(filter(getSimilarArticles(data.tfList).concat(getMutiSamples())));
 	        });
 	        break;
 	      case m_article.hasCatalog(key):
@@ -2231,13 +2263,13 @@
 	          var catalog = m_article.getCatalogMessage(key);
 	          var alist = data.list || [];
 	          m_article.searchList(catalog.tagList.join(' '), function (list) {
-	            callback(filter(list.concat(alist.concat(articleList))));
+	            callback(filter(list.concat(alist.concat(getMutiSamples()))));
 	          }, true);
 	        });
 	        break;
 	
 	      default:
-	        callback(articleList);
+	        callback(getMutiSamples());
 	        break;
 	    }
 	  }, delayTime);
@@ -2247,7 +2279,7 @@
 	};
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2261,15 +2293,15 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var s_mainContainer = __webpack_require__(29);
-	var m_article = __webpack_require__(10);
-	var m_readHistory = __webpack_require__(12);
-	var c_articleList = __webpack_require__(27);
+	var s_mainContainer = __webpack_require__(30);
+	var m_article = __webpack_require__(11);
+	var m_readHistory = __webpack_require__(13);
+	var c_articleList = __webpack_require__(28);
 	
 	module.exports = function (page, key) {
 	  page.html(s_mainContainer);
@@ -2353,7 +2385,7 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2361,20 +2393,20 @@
 	module.exports = '  <div class="row">' + '    <div class="slidebar col-sm-5 col-md-4 col-lg-3" data-selector="slidebar"></div>' + '    <div class="col-sm-offset-5 col-md-offset-4 col-lg-offset-3 col-sm-7 col-md-8 col-lg-9" data-selector="main"></div>' + '  </div>';
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(22);
-	var c_footer = __webpack_require__(21);
-	var m_article = __webpack_require__(10);
-	var m_readHistory = __webpack_require__(12);
-	var c_pannelList = __webpack_require__(25);
-	var c_content = __webpack_require__(31);
-	var m_initOption = __webpack_require__(23);
+	var c_mainContainer = __webpack_require__(23);
+	var c_footer = __webpack_require__(22);
+	var m_article = __webpack_require__(11);
+	var m_readHistory = __webpack_require__(13);
+	var c_pannelList = __webpack_require__(26);
+	var c_content = __webpack_require__(32);
+	var m_initOption = __webpack_require__(24);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2406,12 +2438,12 @@
 	};
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	window.CONFIG = __webpack_require__(13);
+	window.CONFIG = __webpack_require__(14);
 	
 	//单个文章
 	module.exports = function (option) {
@@ -2422,18 +2454,18 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	//针对导航的，没有侧边栏的内容展示
 	
-	var c_mainContainer = __webpack_require__(22);
-	var c_footer = __webpack_require__(21);
-	var m_config = __webpack_require__(13);
-	var m_article = __webpack_require__(10);
-	var m_initOption = __webpack_require__(23);
+	var c_mainContainer = __webpack_require__(23);
+	var c_footer = __webpack_require__(22);
+	var m_config = __webpack_require__(14);
+	var m_article = __webpack_require__(11);
+	var m_initOption = __webpack_require__(24);
 	
 	module.exports = function (page) {
 	  var viewBody = $('<div class="container" style="min-height:' + ((window.innerHeight || 640) - 200) + 'px"/>').setView({
@@ -2464,16 +2496,16 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var c_footer = __webpack_require__(21);
-	var c_mainContainer = __webpack_require__(22);
-	var m_initOption = __webpack_require__(23);
-	var c_pannelList = __webpack_require__(25);
-	var m_pullArticle = __webpack_require__(34);
+	var c_footer = __webpack_require__(22);
+	var c_mainContainer = __webpack_require__(23);
+	var m_initOption = __webpack_require__(24);
+	var c_pannelList = __webpack_require__(26);
+	var m_pullArticle = __webpack_require__(35);
 	
 	module.exports = function (page, key) {
 	  var viewBody = c_mainContainer();
@@ -2503,7 +2535,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2511,7 +2543,7 @@
 	/**
 	 * 不断增加的列表
 	 */
-	var m_article = __webpack_require__(10);
+	var m_article = __webpack_require__(11);
 	var container = $('<div style="display:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
 	
 	var viewRank = $(container.find('[data-selector="pull_list"]'));

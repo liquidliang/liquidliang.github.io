@@ -1,3 +1,6 @@
+
+'use strict';
+
 const createNGram = (n) => (str) => {
   let arr = [];
   let end = str.length - n + 1;
@@ -59,7 +62,7 @@ const getTFs = (str = '') => {
   let tfList = [];
 
   wordList.forEach(o => {
-    if (o.length < 2) {
+    if (o.length < 2 || Object.hasOwnProperty(o) || (tfDict[o]!==undefined && typeof tfDict[o] !=='number')) {
       return;
     }
     if (tfDict[o]) {

@@ -37,5 +37,6 @@ module.exports = {
   now: function(){
       return _date.now();
   },
-  load: require('./load.js')
+  load: require('./load.js'),
+  dom: require('./dom')
 };

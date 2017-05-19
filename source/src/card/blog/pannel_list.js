@@ -1,6 +1,7 @@
 const m_article = require('model/article');
 const m_recommend = require('helper/recommend');
 const c_pannel = require('card/blog/pannel');
+const m_util = require('common/util');
 module.exports = (view) => {
   let viewPannelBook = c_pannel({
     data: {
@@ -49,6 +50,16 @@ module.exports = (view) => {
     });
   });
 
+  if(m_util.dom.getWindowWidth() < 766){
+      return view.setView({
+        source: function(){
+            return new Promise(function(resolve){
+                setTimeout(resolve, 1E3);
+            });
+        },
+        viewList: [viewPannelRecommendPost, viewPannelBook, viewPannelCatalog, viewPannelTag]
+      });
+  }
   return view.setView({
     viewList: [viewPannelBook, viewPannelCatalog, viewPannelTag, viewPannelRecommendPost]
   });
