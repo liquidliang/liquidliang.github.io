@@ -16,8 +16,10 @@ let bookDict = {};
 let tagList = [];
 let startTime = m_util.now();
 let isPreload = false;
+const markdownCacheName = 'swblog-markdown';
 const sidebarName = '$sidebar$';
 const getSidebarPath = (path) => path + '/' + sidebarName + '.md';
+
 
 BCD.addEvent('mkview', function (ele, option, data) {
   let name = m_util.getRandomName();
@@ -83,10 +85,11 @@ const getName = (path) => {
   return arr ? arr[1] : '';
 }
 
-const getURL = (o) => o.path + '?mtime=' + o.mtime;
-
+const getURL = (o) => encodeURI(location.origin + '/' + o.path + '?mtime=' + o.mtime);
 const getPath = (pathWithSearch) => decodeURIComponent(pathWithSearch.replace(location.origin + '/', '').replace(/\?[^?]+/, ''));
-
+const getNoSearch = function (url) {
+  return url.replace(/\?[^?]+/, '');
+}
 
 const getSortContent = (content, paragraph = 10) => {
   let len = 500;
@@ -256,12 +259,24 @@ const init = (list) => {
 
 
 
-      if(!m_ability.isSupportCache()){
-          let content = BCD.cache.getLocal(o.path);
-          if(content){
-              item = processItem(item, content);
-          }
-      }      
+      if (m_ability.supportCache) {
+        caches.open(markdownCacheName).then(function (cache) {
+          //取旧缓存
+          return cache.match(getURL(item)).then(function (resp) {
+            return resp && resp.text();
+          }).then(function (text) {
+            if (text) {
+              item = processItem(item, text);
+            }
+          });
+        });
+      } else {
+        let content = BCD.cache.getLocal(o.path);
+        if (content) {
+          item = processItem(item, content);
+        }
+      }
+
       if (articleDict[path]) {
         item = $.extend(articleDict[path], item);
       } else {
@@ -300,13 +315,13 @@ const initArticle = new Promise((resolve) => {
   BCD.ajaxCache('./json/article.json', (data) => {
     init(data);
     processCount++;
-    if (processCount === 2) { //如果网络请求失败，这里不会被执行
-      let totalList = sidebarList.concat(articleList);
-      swPostMessage({
-        m: 'preloadAtricle',
-        data: totalList.map(getURL)
-      }, preload);
-    }
+    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
+    //   let totalList = sidebarList.concat(articleList);
+    //   swPostMessage({
+    //     m: 'preloadAtricle',
+    //     data: totalList.map(getURL)
+    //   }, preload);
+    // }
     resolve();
     return 1; //缓存数据到localStorage
   }, 0, 2E3, true);
@@ -326,22 +341,22 @@ const getTagArticles = (tag) => {
 
 const fetchContent = (list) => {
   let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => {
-      return m_ability.isSupportCache() ? getURL(o) : (o.path + '?t=' + o.mtime);
+    return m_ability.supportCache ? getURL(o) : ('/'+o.path + '?t=' + o.mtime);
   });
   return m_promiseAjax.batchFetch(urlList, {
-      dataType: 'text',
-      cache: m_ability.isSupportCache() ? '' : 'normal_local',
-      timeout: 5E3,
-      success: function(str){
-          return !!str;
+    dataType: 'text',
+    cache: m_ability.supportCache ? '' : 'normal_local',
+    timeout: 5E3,
+    success: function (str) {
+      return !!str;
+    }
+  }).then(function (resList) {
+    for (var i = 0; i < (resList || []).length; i++) {
+      var o = list[i];
+      if (o) {
+        articleDict[o.path] = processItem(o, resList[i]);
       }
-  }).then(function(resList){
-      for(var i=0; i<(resList || []).length; i++){
-          var o = list[i];
-          if(o){
-              articleDict[o.path] = processItem(o, resList[i]);
-          }
-      }
+    }
   });
 };
 

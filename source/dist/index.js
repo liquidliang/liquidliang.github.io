@@ -589,6 +589,7 @@
 	var tagList = [];
 	var startTime = m_util.now();
 	var isPreload = false;
+	var markdownCacheName = 'swblog-markdown';
 	var sidebarName = '$sidebar$';
 	var getSidebarPath = function getSidebarPath(path) {
 	  return path + '/' + sidebarName + '.md';
@@ -662,11 +663,13 @@
 	};
 	
 	var getURL = function getURL(o) {
-	  return o.path + '?mtime=' + o.mtime;
+	  return encodeURI(location.origin + '/' + o.path + '?mtime=' + o.mtime);
 	};
-	
 	var getPath = function getPath(pathWithSearch) {
 	  return decodeURIComponent(pathWithSearch.replace(location.origin + '/', '').replace(/\?[^?]+/, ''));
+	};
+	var getNoSearch = function getNoSearch(url) {
+	  return url.replace(/\?[^?]+/, '');
 	};
 	
 	var getSortContent = function getSortContent(content) {
@@ -829,32 +832,46 @@
 	      };
 	      catalogList.push(item);
 	    } else {
-	      var _tags = path.split('/').slice(1, -1);
-	      _tags.forEach(function (o) {
-	        return tagSet.add(o);
-	      });
-	      var _item = {
-	        path: path,
-	        mtime: mtime,
-	        href: '#!/' + encodeURIComponent(o.path),
-	        title: getName(path),
-	        time: m_util.getTime(mtime),
-	        tagList: _tags
-	      };
+	      (function () {
+	        var tags = path.split('/').slice(1, -1);
+	        tags.forEach(function (o) {
+	          return tagSet.add(o);
+	        });
+	        var item = {
+	          path: path,
+	          mtime: mtime,
+	          href: '#!/' + encodeURIComponent(o.path),
+	          title: getName(path),
+	          time: m_util.getTime(mtime),
+	          tagList: tags
+	        };
 	
-	      if (!m_ability.isSupportCache()) {
-	        var content = BCD.cache.getLocal(o.path);
-	        if (content) {
-	          _item = processItem(_item, content);
+	        if (m_ability.supportCache) {
+	          caches.open(markdownCacheName).then(function (cache) {
+	            //取旧缓存
+	            return cache.match(getURL(item)).then(function (resp) {
+	              return resp && resp.text();
+	            }).then(function (text) {
+	              if (text) {
+	                item = processItem(item, text);
+	              }
+	            });
+	          });
+	        } else {
+	          var content = BCD.cache.getLocal(o.path);
+	          if (content) {
+	            item = processItem(item, content);
+	          }
 	        }
-	      }
-	      if (articleDict[path]) {
-	        _item = $.extend(articleDict[path], _item);
-	      } else {
-	        articleDict[path] = _item;
-	      }
 	
-	      articleList.push(_item);
+	        if (articleDict[path]) {
+	          item = $.extend(articleDict[path], item);
+	        } else {
+	          articleDict[path] = item;
+	        }
+	
+	        articleList.push(item);
+	      })();
 	    }
 	  };
 	  list.forEach(processArticle);
@@ -886,14 +903,13 @@
 	  BCD.ajaxCache('./json/article.json', function (data) {
 	    init(data);
 	    processCount++;
-	    if (processCount === 2) {
-	      //如果网络请求失败，这里不会被执行
-	      var totalList = sidebarList.concat(articleList);
-	      swPostMessage({
-	        m: 'preloadAtricle',
-	        data: totalList.map(getURL)
-	      }, preload);
-	    }
+	    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
+	    //   let totalList = sidebarList.concat(articleList);
+	    //   swPostMessage({
+	    //     m: 'preloadAtricle',
+	    //     data: totalList.map(getURL)
+	    //   }, preload);
+	    // }
 	    resolve();
 	    return 1; //缓存数据到localStorage
 	  }, 0, 2E3, true);
@@ -916,11 +932,11 @@
 	  var urlList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
 	  }).map(function (o) {
-	    return m_ability.isSupportCache() ? getURL(o) : o.path + '?t=' + o.mtime;
+	    return m_ability.supportCache ? getURL(o) : '/' + o.path + '?t=' + o.mtime;
 	  });
 	  return m_promiseAjax.batchFetch(urlList, {
 	    dataType: 'text',
-	    cache: m_ability.isSupportCache() ? '' : 'normal_local',
+	    cache: m_ability.supportCache ? '' : 'normal_local',
 	    timeout: 5E3,
 	    success: function success(str) {
 	      return !!str;
@@ -963,7 +979,7 @@
 	var getChildCatalog = function getChildCatalog(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret2 = function () {
+	    var _ret3 = function () {
 	      var tagList = catalog.tagList;
 	      var tagLength = tagList.length + 1;
 	      return {
@@ -975,7 +991,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 	  }
 	  return [];
 	};
@@ -983,7 +999,7 @@
 	var getCatalogArticles = function getCatalogArticles(path) {
 	  var catalog = catalogDict[path];
 	  if (catalog) {
-	    var _ret3 = function () {
+	    var _ret4 = function () {
 	      var tagList = catalog.tagList;
 	      return {
 	        v: articleList.filter(function (o) {
@@ -996,7 +1012,7 @@
 	      };
 	    }();
 	
-	    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+	    if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
 	  }
 	  return [];
 	};
@@ -1611,9 +1627,7 @@
 	"use strict";
 	
 	module.exports = {
-	    isSupportCache: function isSupportCache() {
-	        return !!window.caches;
-	    }
+	    supportCache: !!(window.caches && caches.open)
 	};
 
 /***/ },

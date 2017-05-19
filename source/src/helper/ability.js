@@ -1,5 +1,3 @@
 module.exports = {
-    isSupportCache: function(){
-        return !!window.caches;
-    }
+    supportCache: !!(window.caches && caches.open)
 };
