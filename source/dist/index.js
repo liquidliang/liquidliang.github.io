@@ -663,7 +663,7 @@
 	};
 	
 	var getURL = function getURL(o) {
-	  return encodeURI(location.origin + '/' + o.path + '?mtime=' + o.mtime);
+	  return encodeURI(location.origin + '/' + o.path + '?t=' + o.mtime);
 	};
 	var getPath = function getPath(pathWithSearch) {
 	  return decodeURIComponent(pathWithSearch.replace(location.origin + '/', '').replace(/\?[^?]+/, ''));
@@ -931,9 +931,7 @@
 	var fetchContent = function fetchContent(list) {
 	  var urlList = list.filter(function (o) {
 	    return articleDict[o.path] && !articleDict[o.path].content;
-	  }).map(function (o) {
-	    return m_ability.supportCache ? getURL(o) : '/' + o.path + '?t=' + o.mtime;
-	  });
+	  }).map(getURL);
 	  return m_promiseAjax.batchFetch(urlList, {
 	    dataType: 'text',
 	    cache: m_ability.supportCache ? '' : 'normal_local',

@@ -85,7 +85,7 @@ const getName = (path) => {
   return arr ? arr[1] : '';
 }
 
-const getURL = (o) => encodeURI(location.origin + '/' + o.path + '?mtime=' + o.mtime);
+const getURL = (o) => encodeURI(location.origin + '/' + o.path + '?t=' + o.mtime);
 const getPath = (pathWithSearch) => decodeURIComponent(pathWithSearch.replace(location.origin + '/', '').replace(/\?[^?]+/, ''));
 const getNoSearch = function (url) {
   return url.replace(/\?[^?]+/, '');
@@ -340,9 +340,7 @@ const getTagArticles = (tag) => {
 };
 
 const fetchContent = (list) => {
-  let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(o => {
-    return m_ability.supportCache ? getURL(o) : ('/'+o.path + '?t=' + o.mtime);
-  });
+  let urlList = list.filter(o => articleDict[o.path] && !articleDict[o.path].content).map(getURL);
   return m_promiseAjax.batchFetch(urlList, {
     dataType: 'text',
     cache: m_ability.supportCache ? '' : 'normal_local',
