@@ -1,3 +1,5 @@
+var isSubscribed = false;
+
 BCD.addEvent('subscribePush', function (fabPushElement) {
   //Push notification button
   var tipsElement = fabPushElement.prev();
@@ -17,7 +19,6 @@ BCD.addEvent('subscribePush', function (fabPushElement) {
     }
     //Click event for subscribe push
     fabPushElement.on('click', function () {
-      var isSubscribed = (fabPushElement.val() === 'true');
       if (isSubscribed) {
         unsubscribePush();
       } else {
@@ -103,7 +104,7 @@ BCD.addEvent('subscribePush', function (fabPushElement) {
 
   //To change status
   function changePushStatus(status) {
-    fabPushElement.val(status);
+    isSubscribed = status;
     if (status) {
       tipsElement.html('您已订阅，取消订阅后您将收不到更新提示！');
       fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');

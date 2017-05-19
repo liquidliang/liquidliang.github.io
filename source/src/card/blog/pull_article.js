@@ -2,7 +2,7 @@
  * 不断增加的列表
  */
 const m_article = require('model/article');
-var container = $('<div style="display:none;">' +
+var container = $('<div style="min-height:none;">' +
   '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' +
   '<div data-selector="pull_list"></div>' +
   '</div>');

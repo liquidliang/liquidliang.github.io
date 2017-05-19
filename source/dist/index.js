@@ -53,7 +53,7 @@
 	//require("babel-polyfill");  //太大了
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(10);
+	
 	var m_article = __webpack_require__(11);
 	var m_config = __webpack_require__(14);
 	var c_header = __webpack_require__(20);
@@ -62,6 +62,7 @@
 	var c_pageContent = __webpack_require__(31);
 	var c_pageBlog = __webpack_require__(33);
 	var c_pageSearch = __webpack_require__(34);
+	var c_setting = __webpack_require__(36);
 	var viewHeader = c_header();
 	$('body').append(viewHeader);
 	
@@ -96,8 +97,8 @@
 	        if (['index', 'favor', 'tag'].indexOf(key) > -1) {
 	          c_pageList(page, key);
 	          next();
-	        } else if (key == 'subscribe') {
-	          page.addClass('text-center').html('<p style="margin-top: 100px;">' + (window.Notification ? '您已禁止了通知，请重新设置' : '您的浏览器不支持该特性，请使用最新的Chrome浏览器') + '</p>' + '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-warning btn-lg">订阅</button>');
+	        } else if (key == 'setting') {
+	          c_setting(page);
 	          next();
 	        } else if (key == 'blog') {
 	          c_pageBlog(page);
@@ -309,7 +310,8 @@
 	    return _date.now();
 	  },
 	  load: __webpack_require__(8),
-	  dom: __webpack_require__(9)
+	  dom: __webpack_require__(9),
+	  iterator: __webpack_require__(10)
 	};
 
 /***/ },
@@ -437,148 +439,18 @@
 /* 10 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
-	BCD.addEvent('subscribePush', function (fabPushElement) {
-	  //Push notification button
-	  var tipsElement = fabPushElement.prev();
-	  //To check `push notification` is supported or not
-	  var isPushSupported = function isPushSupported() {
-	    console.log('check support');
-	    //To check `push notification` permission is denied by user
-	    if (!window.Notification || Notification.permission === 'denied') {
-	      console.log('User has blocked push notification.');
-	      return;
-	    }
-	
-	    //Check `push notification` is supported or not
-	    if (!('PushManager' in window)) {
-	      console.log('Sorry, Push notification isn\'t supported in your browser.');
-	      return;
-	    }
-	    //Click event for subscribe push
-	    fabPushElement.on('click', function () {
-	      var isSubscribed = fabPushElement.val() === 'true';
-	      if (isSubscribed) {
-	        unsubscribePush();
-	      } else {
-	        subscribePush();
-	      }
-	    });
-	    //Get `push notification` subscription
-	    //If `serviceWorker` is registered and ready
-	    navigator.serviceWorker.ready.then(function (registration) {
-	      registration.pushManager.getSubscription().then(function (subscription) {
-	        //If already access granted, enable push button status
-	        //Tell application server to delete subscription
-	        if (subscription) {
-	          changePushStatus(true);
-	        } else {
-	          changePushStatus(false);
-	        }
-	      }).catch(function (error) {
-	        console.error('Error occurred while enabling push ', error);
-	      });
-	    });
-	  };
-	
-	  // Ask User if he/she wants to subscribe to push notifications and then
-	  // ..subscribe and send push notification
-	  function subscribePush() {
-	    navigator.serviceWorker.ready.then(function (registration) {
-	      if (!registration.pushManager) {
-	        console.log('Your browser doesn\'t support push notification.');
-	        return false;
-	      }
-	
-	      //To subscribe `push notification` from push manager
-	      registration.pushManager.subscribe({
-	        userVisibleOnly: true //Always show notification when received
-	      }).then(function (subscription) {
-	        console.info('Push notification subscribed.');
-	        console.log(subscription);
-	        saveSubscriptionID(subscription);
-	        changePushStatus(true);
-	      }).catch(function (error) {
-	        changePushStatus(false);
-	        console.error('Push notification subscription error: ', error);
-	      });
-	    });
+	module.exports = function iterator(originList, callback) {
+	  if (originList && originList.length) {
+	    var list = originList.slice();
+	    var item = list.shift();
+	    var next = function next() {
+	      iterator(list, callback);
+	    };
+	    callback(item, next, list);
 	  }
-	
-	  // Unsubscribe the user from push notifications
-	  function unsubscribePush() {
-	    navigator.serviceWorker.ready.then(function (registration) {
-	      //Get `push subscription`
-	      registration.pushManager.getSubscription().then(function (subscription) {
-	        //If no `push subscription`, then return
-	        if (!subscription) {
-	          console.log('Unable to unregister push notification.');
-	          return;
-	        }
-	
-	        //Unsubscribe `push notification`
-	        subscription.unsubscribe().then(function () {
-	          console.info('Push notification unsubscribed.');
-	          console.log(subscription);
-	          deleteSubscriptionID(subscription);
-	          changePushStatus(false);
-	        }).catch(function (error) {
-	          console.error(error);
-	        });
-	      }).catch(function (error) {
-	        console.error('Failed to unsubscribe push notification.');
-	      });
-	    });
-	  }
-	
-	  //To change status
-	  function changePushStatus(status) {
-	    fabPushElement.val(status);
-	    if (status) {
-	      tipsElement.html('您已订阅，取消订阅后您将收不到更新提示！');
-	      fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');
-	    } else {
-	      tipsElement.html('您未订阅，订阅后您将可以收到更新提示');
-	      fabPushElement.removeClass('btn-warning').addClass('btn-success').html('订阅');
-	    }
-	  }
-	
-	  function saveSubscriptionID(subscription) {
-	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
-	
-	    console.log("Subscription ID", subscription_id);
-	    new Image().src = 'http://119.29.150.243:3333/api/subscript/' + subscription_id;
-	
-	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/users'
-	    // : 'https://119.29.150.243:3011/api/users'), {
-	    //   method: 'post',
-	    //   headers: {
-	    //     'Accept': 'application/json',
-	    //     'Content-Type': 'application/json'
-	    //   },
-	    //   body: JSON.stringify({
-	    //     user_id: subscription_id
-	    //   })
-	    // });
-	  }
-	
-	  function deleteSubscriptionID(subscription) {
-	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
-	
-	    new Image().src = 'http://119.29.150.243:3333/api/unsubscript/' + subscription_id;
-	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/user/'
-	    // : 'https://119.29.150.243:3011/api/user/') + subscription_id, {
-	    //   method: 'get',
-	    //   headers: {
-	    //     'Accept': 'application/json',
-	    //     'Content-Type': 'application/json'
-	    //   }
-	    // });
-	  }
-	
-	  isPushSupported(); //Check for push notification support
-	});
+	};
 
 /***/ },
 /* 11 */
@@ -613,6 +485,7 @@
 	var getSidebarPath = function getSidebarPath(path) {
 	  return path + '/' + sidebarName + '.md';
 	};
+	var articleModel = new BCD.Model(articleDict);
 	
 	BCD.addEvent('mkview', function (ele, option, data) {
 	  var name = m_util.getRandomName();
@@ -745,6 +618,9 @@
 	};
 	
 	var processItem = function processItem(item, content) {
+	  if (!content) {
+	    return;
+	  }
 	  if (item.title == sidebarName) {
 	    item.content = content;
 	    return item;
@@ -784,7 +660,7 @@
 	      isRaw = false;
 	    }
 	  }
-	
+	  articleModel.trigger('update_content');
 	  item.content = content; // = (content || '').replace(/^[\s]*---[-]*/, '');
 	  item.tfList = m_search.getTFs(content);
 	  item.summary = getSortContent(content);
@@ -916,6 +792,16 @@
 	  tagList = [].concat(_toConsumableArray(tagSet));
 	};
 	
+	var autoLoad = function autoLoad() {
+	  var totalList = sidebarList.concat(articleList);
+	  var noContents = totalList.filter(function (o) {
+	    return !o.content;
+	  });
+	  m_util.iterator(noContents, function (item, next, list) {
+	    fetchContent([item]).then(next);
+	  });
+	};
+	
 	var processCount = 0;
 	//先用缓存，请求回来再更新
 	var initArticle = new Promise(function (resolve) {
@@ -929,8 +815,8 @@
 	    //     data: totalList.map(getURL)
 	    //   }, preload);
 	    // }
-	    resolve();
-	    return 1; //缓存数据到localStorage
+	    resolve(articleList);
+	    return data && 1; //缓存数据到localStorage
 	  }, 0, 2E3, true);
 	});
 	
@@ -1254,7 +1140,15 @@
 	    });
 	  },
 	  searchDirect: searchDirect,
-	  searchList: searchList
+	  searchList: searchList,
+	  autoLoad: autoLoad,
+	  onUpdate: function onUpdate(callback) {
+	    var timer;
+	    articleModel.on('update_content', function () {
+	      clearTimeout(timer);
+	      timer = setTimeout(callback, 100);
+	    });
+	  }
 	};
 
 /***/ },
@@ -1993,7 +1887,7 @@
 	'use strict';
 	
 	module.exports = function () {
-	  return $('<div class="container">' + '  <div class="row">' + '    <div class="col-sm-7 col-md-8 col-lg-8">' + '     <div data-selector="main"></div></div>' + '    <div class="col-sm-5 col-md-4 col-lg-4" data-selector="panel"></div>' + '  </div>' + '</div>');
+	  return $('<div class="container" style="min-height:500px">' + '  <div class="row">' + '    <div class="col-sm-7 col-md-8 col-lg-8">' + '     <div data-selector="main"></div></div>' + '    <div class="col-sm-5 col-md-4 col-lg-4" data-selector="panel"></div>' + '  </div>' + '</div>');
 	};
 
 /***/ },
@@ -2544,7 +2438,7 @@
 	 * 不断增加的列表
 	 */
 	var m_article = __webpack_require__(11);
-	var container = $('<div style="display:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
+	var container = $('<div style="min-height:none;">' + '<div data-selector="tips" style="margin: 20px;font-size: 20px;"></div>' + '<div data-selector="pull_list"></div>' + '</div>');
 	
 	var viewRank = $(container.find('[data-selector="pull_list"]'));
 	var viewTips = $(container.find('[data-selector="tips"]'));
@@ -2576,6 +2470,223 @@
 	    });
 	  }
 	};
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	__webpack_require__(37);
+	__webpack_require__(38);
+	
+	module.exports = function (page) {
+	  page.addClass('text-center').html('<p style="margin-top: 200px;with:600px"><label>' + (window.Notification ? '您已禁止了通知，请重新设置' : '您的浏览器不支持该特性，请使用最新的Chrome浏览器') + '</label>' + '<button style="margin-left: 20px;min-width: 150px;"' + ' data-on="?m=subscribePush"' + ' class="btn btn-warning btn-sm">订阅</button></p>' + '<p style="margin-top: 50px;with:600px"><label></label><button style="margin-left: 20px;min-width: 150px;"' + ' data-on="?m=autoCache"' + ' class="btn btn-warning btn-sm">自动缓存全站</button></p>');
+	};
+
+/***/ },
+/* 37 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var isSubscribed = false;
+	
+	BCD.addEvent('subscribePush', function (fabPushElement) {
+	  //Push notification button
+	  var tipsElement = fabPushElement.prev();
+	  //To check `push notification` is supported or not
+	  var isPushSupported = function isPushSupported() {
+	    console.log('check support');
+	    //To check `push notification` permission is denied by user
+	    if (!window.Notification || Notification.permission === 'denied') {
+	      console.log('User has blocked push notification.');
+	      return;
+	    }
+	
+	    //Check `push notification` is supported or not
+	    if (!('PushManager' in window)) {
+	      console.log('Sorry, Push notification isn\'t supported in your browser.');
+	      return;
+	    }
+	    //Click event for subscribe push
+	    fabPushElement.on('click', function () {
+	      if (isSubscribed) {
+	        unsubscribePush();
+	      } else {
+	        subscribePush();
+	      }
+	    });
+	    //Get `push notification` subscription
+	    //If `serviceWorker` is registered and ready
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      registration.pushManager.getSubscription().then(function (subscription) {
+	        //If already access granted, enable push button status
+	        //Tell application server to delete subscription
+	        if (subscription) {
+	          changePushStatus(true);
+	        } else {
+	          changePushStatus(false);
+	        }
+	      }).catch(function (error) {
+	        console.error('Error occurred while enabling push ', error);
+	      });
+	    });
+	  };
+	
+	  // Ask User if he/she wants to subscribe to push notifications and then
+	  // ..subscribe and send push notification
+	  function subscribePush() {
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      if (!registration.pushManager) {
+	        console.log('Your browser doesn\'t support push notification.');
+	        return false;
+	      }
+	
+	      //To subscribe `push notification` from push manager
+	      registration.pushManager.subscribe({
+	        userVisibleOnly: true //Always show notification when received
+	      }).then(function (subscription) {
+	        console.info('Push notification subscribed.');
+	        console.log(subscription);
+	        saveSubscriptionID(subscription);
+	        changePushStatus(true);
+	      }).catch(function (error) {
+	        changePushStatus(false);
+	        console.error('Push notification subscription error: ', error);
+	      });
+	    });
+	  }
+	
+	  // Unsubscribe the user from push notifications
+	  function unsubscribePush() {
+	    navigator.serviceWorker.ready.then(function (registration) {
+	      //Get `push subscription`
+	      registration.pushManager.getSubscription().then(function (subscription) {
+	        //If no `push subscription`, then return
+	        if (!subscription) {
+	          console.log('Unable to unregister push notification.');
+	          return;
+	        }
+	
+	        //Unsubscribe `push notification`
+	        subscription.unsubscribe().then(function () {
+	          console.info('Push notification unsubscribed.');
+	          console.log(subscription);
+	          deleteSubscriptionID(subscription);
+	          changePushStatus(false);
+	        }).catch(function (error) {
+	          console.error(error);
+	        });
+	      }).catch(function (error) {
+	        console.error('Failed to unsubscribe push notification.');
+	      });
+	    });
+	  }
+	
+	  //To change status
+	  function changePushStatus(status) {
+	    isSubscribed = status;
+	    if (status) {
+	      tipsElement.html('您已订阅，取消订阅后您将收不到更新提示！');
+	      fabPushElement.removeClass('btn-success').addClass('btn-warning').html('取消订阅');
+	    } else {
+	      tipsElement.html('您未订阅，订阅后您将可以收到更新提示');
+	      fabPushElement.removeClass('btn-warning').addClass('btn-success').html('订阅');
+	    }
+	  }
+	
+	  function saveSubscriptionID(subscription) {
+	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+	
+	    console.log("Subscription ID", subscription_id);
+	    new Image().src = 'http://119.29.150.243:3333/api/subscript/' + subscription_id;
+	
+	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/users'
+	    // : 'https://119.29.150.243:3011/api/users'), {
+	    //   method: 'post',
+	    //   headers: {
+	    //     'Accept': 'application/json',
+	    //     'Content-Type': 'application/json'
+	    //   },
+	    //   body: JSON.stringify({
+	    //     user_id: subscription_id
+	    //   })
+	    // });
+	  }
+	
+	  function deleteSubscriptionID(subscription) {
+	    var subscription_id = subscription.endpoint.split('gcm/send/')[1];
+	
+	    new Image().src = 'http://119.29.150.243:3333/api/unsubscript/' + subscription_id;
+	    // fetch((location.protocol=='http:' ? 'http://119.29.150.243:3333/api/user/'
+	    // : 'https://119.29.150.243:3011/api/user/') + subscription_id, {
+	    //   method: 'get',
+	    //   headers: {
+	    //     'Accept': 'application/json',
+	    //     'Content-Type': 'application/json'
+	    //   }
+	    // });
+	  }
+	
+	  isPushSupported(); //Check for push notification support
+	});
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	//这是个单例
+	
+	var m_article = __webpack_require__(11);
+	var m_setting = BCD.cache.getLocal('swblog_setting', { autoCache: false });
+	var btnElement, tipsElement, timer;
+	
+	m_article.onUpdate(function () {
+	    if (tipsElement) {
+	        m_article.initArticle.then(function (articleList) {
+	            var noContents = articleList.filter(function (o) {
+	                return !o.content;
+	            });
+	            tipsElement.html('已缓存文章：' + (articleList.length - noContents.length) + '篇');
+	        });
+	    }
+	});
+	
+	//To change status
+	function changeStatus(status) {
+	    m_setting.autoCache = status;
+	    BCD.cache.setLocal('swblog_setting', m_setting, { permanent: true });
+	    clearTimeout(timer);
+	    timer = setTimeout(function () {
+	        m_article.initArticle.then(function (articleList) {
+	            var noContents = articleList.filter(function (o) {
+	                return !o.content;
+	            });
+	            tipsElement.html('已缓存文章：' + (articleList.length - noContents.length) + '篇');
+	            if (m_setting.autoCache) {
+	                m_article.autoLoad();
+	            }
+	        });
+	    }, 5E3);
+	
+	    if (status) {
+	        btnElement.removeClass('btn-success').addClass('btn-warning').html('按需缓存');
+	    } else {
+	        btnElement.removeClass('btn-warning').addClass('btn-success').html('自动缓存全站');
+	    }
+	}
+	
+	BCD.addEvent('autoCache', function (ele) {
+	    btnElement = ele;
+	    tipsElement = ele.prev();
+	    changeStatus(m_setting.autoCache);
+	    btnElement.on('click', function () {
+	        changeStatus(!m_setting.autoCache);
+	    });
+	});
 
 /***/ }
 /******/ ]);

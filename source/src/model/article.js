@@ -19,7 +19,7 @@ let isPreload = false;
 const markdownCacheName = 'swblog-markdown';
 const sidebarName = '$sidebar$';
 const getSidebarPath = (path) => path + '/' + sidebarName + '.md';
-
+const articleModel = new BCD.Model(articleDict);
 
 BCD.addEvent('mkview', function (ele, option, data) {
   let name = m_util.getRandomName();
@@ -141,6 +141,9 @@ const getSortContent = (content, paragraph = 10) => {
 }
 
 const processItem = (item, content) => {
+  if(!content){
+      return;
+  }
   if (item.title == sidebarName) {
     item.content = content;
     return item;
@@ -180,7 +183,7 @@ const processItem = (item, content) => {
       isRaw = false;
     }
   }
-
+  articleModel.trigger('update_content');
   item.content = content; // = (content || '').replace(/^[\s]*---[-]*/, '');
   item.tfList = m_search.getTFs(content);
   item.summary = getSortContent(content);
@@ -309,6 +312,16 @@ const init = (list) => {
   tagList = [...tagSet];
 };
 
+const autoLoad = function(){
+  var totalList = sidebarList.concat(articleList);
+  var noContents = totalList.filter(function(o){
+      return !o.content;
+  });
+  m_util.iterator(noContents, function(item, next, list){
+      fetchContent([item]).then(next);
+  });
+}
+
 let processCount = 0;
 //先用缓存，请求回来再更新
 const initArticle = new Promise((resolve) => {
@@ -322,8 +335,8 @@ const initArticle = new Promise((resolve) => {
     //     data: totalList.map(getURL)
     //   }, preload);
     // }
-    resolve();
-    return 1; //缓存数据到localStorage
+    resolve(articleList);
+    return data && 1; //缓存数据到localStorage
   }, 0, 2E3, true);
 });
 
@@ -573,5 +586,13 @@ module.exports = {
   getArticleContent: (path) => fetchContent([articleDict[path]])
     .then(() => articleDict[path]),
   searchDirect,
-  searchList
+  searchList,
+  autoLoad,
+  onUpdate: function(callback){
+      var timer;
+      articleModel.on('update_content', function(){
+          clearTimeout(timer);
+          timer = setTimeout(callback, 100);
+      });
+  }
 };

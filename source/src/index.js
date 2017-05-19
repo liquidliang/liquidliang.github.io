@@ -5,7 +5,7 @@
 //require("babel-polyfill");  //太大了
 require("polyfill/");
 require('helper/common_event.js');
-require('helper/notification.js');
+
 const m_article = require('model/article');
 const m_config = require('model/config');
 const c_header = require('card/common/navigator');
@@ -14,6 +14,7 @@ const c_pageBook = require('page/book.js');
 const c_pageContent = require('page/content.js');
 const c_pageBlog = require('page/blog.js');
 const c_pageSearch = require('page/search.js');
+const c_setting = require('page/setting.js');
 let viewHeader = c_header();
 $('body').append(viewHeader);
 
@@ -48,12 +49,8 @@ m_config.getConfig.then(() =>
         if (['index', 'favor', 'tag'].indexOf(key) > -1) {
           c_pageList(page, key);
           next();
-        }else if (key == 'subscribe') {
-          page.addClass('text-center').html('<p style="margin-top: 100px;">'+
-          (window.Notification ? '您已禁止了通知，请重新设置' : '您的浏览器不支持该特性，请使用最新的Chrome浏览器') + '</p>'+
-          '<button style="margin-top: 10px;padding-left: 50px;padding-right: 50px;"'+
-          ' data-on="?m=subscribePush"'+
-          ' class="btn btn-warning btn-lg">订阅</button>');
+      }else if (key == 'setting') {
+          c_setting(page);
           next();
         } else if (key == 'blog') {
           c_pageBlog(page);
