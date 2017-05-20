@@ -2,6 +2,7 @@ const m_util = require('common/util/index');
 const m_search = require('helper/search');
 const m_readHistory = require('model/read_history');
 const m_readFavor = require('model/read_favor');
+const m_setting = require('model/setting');
 const swPostMessage = require('helper/sw_post_message.js');
 const m_ability = require('helper/ability.js');
 const m_promiseAjax = require('helper/promise_ajax.js');
@@ -318,7 +319,9 @@ const autoLoad = function(){
       return !o.content;
   });
   m_util.iterator(noContents, function(item, next, list){
+    if(m_setting.get('autoCache')){
       fetchContent([item]).then(next);
+    }      
   });
 }
 
