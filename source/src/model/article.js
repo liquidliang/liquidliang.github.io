@@ -318,10 +318,16 @@ const autoLoad = function(){
   var noContents = totalList.filter(function(o){
       return !o.content;
   });
-  m_util.iterator(noContents, function(item, next, list){
+  var batchList = [];
+  var item = noContents.splice(0, 5);
+  while(item.length){
+    batchList.push(item);
+    item = noContents.splice(0, 5);
+  }
+  m_util.iterator(batchList, function(item, next, list){
     if(m_setting.get('autoCache')){
-      fetchContent([item]).then(next);
-    }      
+      fetchContent(item).then(next);
+    }
   });
 }
 
