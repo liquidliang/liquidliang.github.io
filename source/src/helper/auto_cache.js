@@ -28,7 +28,7 @@ function changeStatus(status) {
               m_article.autoLoad();
           }
       });
-  }, 5E3);
+  }, 3E3);
 
   if (status) {
     btnElement.removeClass('btn-success').addClass('btn-warning').html('按需缓存');

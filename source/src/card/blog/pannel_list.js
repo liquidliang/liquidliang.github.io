@@ -54,7 +54,7 @@ module.exports = (view) => {
       return view.setView({
         source: function(){
             return new Promise(function(resolve){
-                setTimeout(resolve, 1E3);
+                setTimeout(resolve, 3E3);
             });
         },
         viewList: [viewPannelRecommendPost, viewPannelBook, viewPannelCatalog, viewPannelTag]
