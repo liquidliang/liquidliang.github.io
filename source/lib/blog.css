@@ -30,14 +30,13 @@ a.logo-link {
     margin-right: 10px;
     margin-top: 2px;
 }
-
-
-/* Media Queries */
-@media (min-width: 768px) {
-	.group2 {
-		text-align: right;
-	}
+.group1 {
+	float: left;
 }
+.group2 {
+	text-align: right;
+}
+
 
 
 [data-url]{
@@ -74,7 +73,7 @@ a.logo-link {
 	}
 }
 .markdown-body{
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.8;
   background-color: rgba(255,255,255,0.5);
 }

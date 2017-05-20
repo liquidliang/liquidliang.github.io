@@ -3,9 +3,18 @@ let storageKey = 'read_history';
 let readHistory = {};
 const init = ()=> {
   try{
-    readHistory = $.extend({}, JSON.parse(localStorage.getItem(storageKey)), readHistory);
+    readHistory = $.extend({}, BCD.cache.getLocal(storageKey), readHistory);
   }catch(e){}
 };
+
+const update = ()=>{
+  BCD.cache.setLocal(storageKey, readHistory, {permanent: true});
+}
+
+const set = (path, obj) => {
+  readHistory[path] = $.extend({}, readHistory[path], obj);
+  update();
+}
 
 m_config.getConfig.then(()=>{
   storageKey = 'read_history_' + m_config.username;
@@ -13,8 +22,9 @@ m_config.getConfig.then(()=>{
 })
 
 const addHistory = (path)=>{
-  readHistory[path] = Date.now();
-  localStorage.setItem(storageKey, JSON.stringify(readHistory));
+  set(path, {
+    time: Date.now()
+  });
 };
 
 BCD.addEvent('article_down', function(ele){
@@ -27,5 +37,11 @@ BCD.addEvent('article_down', function(ele){
 module.exports = {
   addHistory,
   hasRead: (path)=> !!readHistory[path],
-  getReadTime: (path)=> readHistory[path]
+  getReadTime: (path)=> readHistory[path] && readHistory[path].time,
+  setScrollY: (path, y) => {
+    set(path, {
+      scrollY: y
+    });
+  },
+  getScrollY: (path) => readHistory[path] && readHistory[path].scrollY
 };

@@ -502,52 +502,50 @@
 	  }
 	
 	  ele.attr('id', name);
-	  setTimeout(function () {
-	    //dom元素展示出来之后再绑定，不然流程图等会有样式问题
-	    m_loadJS.then(function () {
-	      editormd.markdownToHTML(name, {
-	        markdown: result, //+ "\r\n" + $("#append-test").text(),
-	        // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
-	        htmlDecode: "style,script,iframe", // you can filter tags decode
-	        //toc             : false,
-	        tocm: true, // Using [TOCM]
-	        //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
-	        //gfm             : false,
-	        //tocDropdown     : true,
-	        // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
-	        emoji: true,
-	        taskList: true,
-	        tex: true, // 默认不解析
-	        flowChart: true, // 默认不解析
-	        sequenceDiagram: true // 默认不解析
-	      });
-	
-	      var innerHtml = ele.html();
-	      if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
-	        ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
-	      }
-	
-	      if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) {
-	        (function () {
-	          //兼容TOC目录
-	          var baseHash = location.hash.replace(/\.md\/.*/, '.md');
-	          ele.html(ele.html().replace(/href="#([^"]*)/g, function ($0, $1) {
-	            if ($1) {
-	              return 'href="' + baseHash + '/' + $1;
-	            }
-	            return $0;
-	          }).replace(/name="([^"]*)/g, function ($0, $1) {
-	            if ($1) {
-	              return 'name="' + baseHash.substr(1) + '/' + $1;
-	            }
-	            return $0;
-	          }));
-	        })();
-	      }
-	      $('a[href^="http"]').attr('target', '_blank');
-	      $('a[href^="http"]').attr('rel', 'noopener');
+	  ele.showParentView(); //dom元素展示出来之后再绑定，不然流程图等会有样式问题
+	  m_loadJS.then(function () {
+	    editormd.markdownToHTML(name, {
+	      markdown: result, //+ "\r\n" + $("#append-test").text(),
+	      // htmlDecode: true, // 开启 HTML 标签解析，为了安全性，默认不开启
+	      htmlDecode: "style,script,iframe", // you can filter tags decode
+	      //toc             : false,
+	      tocm: true, // Using [TOCM]
+	      //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+	      //gfm             : false,
+	      //tocDropdown     : true,
+	      // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+	      emoji: true,
+	      taskList: true,
+	      tex: true, // 默认不解析
+	      flowChart: true, // 默认不解析
+	      sequenceDiagram: true // 默认不解析
 	    });
-	  }, 0);
+	
+	    var innerHtml = ele.html();
+	    if (/(<br>|<p><\/p>){2,}/.test(innerHtml)) {
+	      ele.html(innerHtml.replace(/(<br>|<p><\/p>){2,}/, ''));
+	    }
+	
+	    if (result.indexOf('[TOC]') > -1 && location.hash.indexOf('.md') > 0) {
+	      (function () {
+	        //兼容TOC目录
+	        var baseHash = location.hash.replace(/\.md\/.*/, '.md');
+	        ele.html(ele.html().replace(/href="#([^"]*)/g, function ($0, $1) {
+	          if ($1) {
+	            return 'href="' + baseHash + '/' + $1;
+	          }
+	          return $0;
+	        }).replace(/name="([^"]*)/g, function ($0, $1) {
+	          if ($1) {
+	            return 'name="' + baseHash.substr(1) + '/' + $1;
+	          }
+	          return $0;
+	        }));
+	      })();
+	    }
+	    $('a[href^="http"]').attr('target', '_blank');
+	    $('a[href^="http"]').attr('rel', 'noopener');
+	  });
 	});
 	
 	var getName = function getName(path) {
@@ -661,7 +659,7 @@
 	      isRaw = false;
 	    }
 	  }
-	  articleModel.trigger('update_content');
+	  //articleModel.trigger('update_content');
 	  item.content = content; // = (content || '').replace(/^[\s]*---[-]*/, '');
 	  item.tfList = m_search.getTFs(content);
 	  item.summary = getSortContent(content);
@@ -806,7 +804,9 @@
 	  }
 	  m_util.iterator(batchList, function (item, next, list) {
 	    if (m_setting.get('autoCache')) {
-	      fetchContent(item).then(next);
+	      fetchContent(item).then(next).then(function () {
+	        articleModel.trigger('update_content');
+	      });
 	    }
 	  });
 	};
@@ -815,7 +815,9 @@
 	//先用缓存，请求回来再更新
 	var initArticle = new Promise(function (resolve) {
 	  BCD.ajaxCache('./json/article.json', function (data) {
+	    var start = performance.now();
 	    init(data);
+	    console.log('init:', performance.now() - start);
 	    processCount++;
 	    // if (processCount === 2) { //如果网络请求失败，这里不会被执行
 	    //   let totalList = sidebarList.concat(articleList);
@@ -825,6 +827,7 @@
 	    //   }, preload);
 	    // }
 	    resolve(articleList);
+	    console.log('resolve:', performance.now() - start);
 	    return data && 1; //缓存数据到localStorage
 	  }, 0, 2E3, true);
 	});
@@ -1324,8 +1327,17 @@
 	var readHistory = {};
 	var init = function init() {
 	  try {
-	    readHistory = $.extend({}, JSON.parse(localStorage.getItem(storageKey)), readHistory);
+	    readHistory = $.extend({}, BCD.cache.getLocal(storageKey), readHistory);
 	  } catch (e) {}
+	};
+	
+	var update = function update() {
+	  BCD.cache.setLocal(storageKey, readHistory, { permanent: true });
+	};
+	
+	var set = function set(path, obj) {
+	  readHistory[path] = $.extend({}, readHistory[path], obj);
+	  update();
 	};
 	
 	m_config.getConfig.then(function () {
@@ -1334,8 +1346,9 @@
 	});
 	
 	var addHistory = function addHistory(path) {
-	  readHistory[path] = Date.now();
-	  localStorage.setItem(storageKey, JSON.stringify(readHistory));
+	  set(path, {
+	    time: Date.now()
+	  });
 	};
 	
 	BCD.addEvent('article_down', function (ele) {
@@ -1351,7 +1364,15 @@
 	    return !!readHistory[path];
 	  },
 	  getReadTime: function getReadTime(path) {
-	    return readHistory[path];
+	    return readHistory[path] && readHistory[path].time;
+	  },
+	  setScrollY: function setScrollY(path, y) {
+	    set(path, {
+	      scrollY: y
+	    });
+	  },
+	  getScrollY: function getScrollY(path) {
+	    return readHistory[path] && readHistory[path].scrollY;
 	  }
 	};
 
@@ -1918,7 +1939,7 @@
 	'use strict';
 	
 	module.exports = function () {
-	  return $('<div class="container" style="min-height:500px">' + '  <div class="row">' + '    <div class="col-sm-7 col-md-8 col-lg-8">' + '     <div data-selector="main"></div></div>' + '    <div class="col-sm-5 col-md-4 col-lg-4" data-selector="panel"></div>' + '  </div>' + '</div>');
+	  return $('<div class="container" style="min-height:500px">' + '  <div class="row">' + '    <div class="col-sm-12 col-md-8 col-lg-8">' + '     <div data-selector="main"></div></div>' + '    <div class="col-sm-12 col-md-4 col-lg-4" data-selector="panel"></div>' + '  </div>' + '</div>');
 	};
 
 /***/ },
@@ -2343,6 +2364,14 @@
 	  viewBody.addView(viewContent);
 	  viewBody.addView(viewPannelList);
 	
+	  var timer;
+	  BCD.scrollY.on(location.hash, function (ev, y) {
+	    clearTimeout(timer);
+	    timer = setTimeout(function () {
+	      m_readHistory.setScrollY(key, y); //记住阅读位置
+	    }, 100);
+	  });
+	
 	  var viewFoot = c_footer();
 	  page.setView({
 	    start: function start(hasRender) {
@@ -2355,10 +2384,14 @@
 	          page.setView({ title: data.title });
 	          document.title = data.title;
 	          viewContent.reset(data);
+	          window.scrollTo(0, m_readHistory.getScrollY(key));
 	        });
 	      }
 	    },
-	    viewList: [viewBody, viewFoot]
+	    viewList: [viewBody, viewFoot],
+	    end: function end() {
+	      window.scrollTo(0, m_readHistory.getScrollY(key));
+	    }
 	  });
 	};
 
@@ -2374,7 +2407,7 @@
 	module.exports = function (option) {
 	  return $.extend({
 	    name: 'blog/content',
-	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span data-on="?m=favor" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
+	    template: '<h1><%=obj.title%></h1>' + '  <div class="row">' + '    <div class="group1 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-folder-open"></span><%(obj.tagList||[]).forEach(function(item, i, arr){%>' + '       <%=i ? "&nbsp;>&nbsp;" : "&nbsp;"%><a data-on="?m=go" ' + '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' + '    </div>' + '    <div class="group2 col-sm-6 col-md-6">' + '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' + '      <span data-on="?m=favor" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' + '    </div>' + '  </div>' + '  <hr>' + '  <div data-on="?m=mkview">' + '  </div><br />' + '  <hr>' + '</article>' + '<ul class="pager">' + '  <li class="previous"><a data-on="?m=back">← 返回</a></li>' + ' <li><a target="_blank" rel="noopener" href="<%=CONFIG.getSearchIssueURL(obj.title)%>">查看评论</a></li>' + ' <li class="next"><a target="_blank" rel="noopener" href="<%=CONFIG.getNewIssueURL(obj.title)%>">去评论 &rarr;</a></li>' + '</ul>'
 	  }, option);
 	};
 

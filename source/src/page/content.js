@@ -20,6 +20,14 @@ module.exports = function(page, key) {
   viewBody.addView(viewContent);
   viewBody.addView(viewPannelList);
 
+  var timer;
+  BCD.scrollY.on(location.hash, function(ev, y){
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+      m_readHistory.setScrollY(key, y); //记住阅读位置
+    }, 100);
+  })
+
   let viewFoot = c_footer();
   page.setView({
     start: function(hasRender){
@@ -32,9 +40,13 @@ module.exports = function(page, key) {
           page.setView({title: data.title});
           document.title = data.title;
           viewContent.reset(data);
+          window.scrollTo(0, m_readHistory.getScrollY(key));
         });
       }
     },
-    viewList: [viewBody, viewFoot]
+    viewList: [viewBody, viewFoot],
+    end: function(){
+      window.scrollTo(0, m_readHistory.getScrollY(key));
+    }
   })
 };

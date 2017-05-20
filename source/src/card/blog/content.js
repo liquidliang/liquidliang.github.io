@@ -14,8 +14,8 @@ module.exports = function (option) {
       '       data-url="#!/<%=encodeURIComponent(["blog"].concat(arr.slice(0, i+1)).join("/"))%>"><%=item%></a><%})%>' +
       '    </div>' +
       '    <div class="group2 col-sm-6 col-md-6">' +
-      '      <span data-on="?m=favor" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' +
       '      <span class="glyphicon glyphicon-time"></span>&nbsp;<%-obj.time%>' +
+      '      <span data-on="?m=favor" style="color: darkmagenta;" class="glyphicon glyphicon-star-empty"></span>&nbsp;收藏&nbsp;&nbsp;' +
       '    </div>' +
       '  </div>' +
       '  <hr>' +
