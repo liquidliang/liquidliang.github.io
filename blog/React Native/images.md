@@ -86,21 +86,23 @@ var icon = this.props.active ? require('./my-icon-active.png') : require('./my-i
 ```
 
 ### 网络图片的请求参数
-  
+
 你可以在Image组件的source属性中指定一些请求参数，如下面的示例：
-  
+
 ```javascript
-<Image source={{
-  uri: 'https://facebook.github.io/react/img/logo_og.png',
-  method: 'POST',
-  headers: {
-    Pragma: 'no-cache'
-  },
-  body: 'Your Body goes here'
-}}
+<Image source={
+  {
+    uri: 'https://facebook.github.io/react/img/logo_og.png',
+    method: 'POST',
+    headers: {
+      Pragma: 'no-cache'
+    },
+    body: 'Your Body goes here'
+  }
+}
 style={{width: 400, height: 400}} />
 ```
-  
+
 ## 缓存控制（仅iOS）
 
 在某些情况下你可能仅仅想展示一张已经在本地缓存的图片，例如一个低分辨率的占位符，直到高分辨率的图片可用。在其他情况下你不关心图片是否是过时的，并愿意显示过时的图片，以节省带宽。缓存资源属性给你控制网络层与缓存交互的方式。
@@ -137,7 +139,7 @@ iOS会为同一张图片在相册中保存多个不同尺寸的副本。为了�
 
 ## 资源属性是一个对象（object）
 
-在React Native中，另一个值得一提的变动是我们把`src`属性改为了`source`属性，而且并不接受字符串，正确的值是一个带有`uri`属性的对象。 
+在React Native中，另一个值得一提的变动是我们把`src`属性改为了`source`属性，而且并不接受字符串，正确的值是一个带有`uri`属性的对象。
 
 ```javascript
 <Image source={{uri: 'something.jpg'}} />
@@ -159,9 +161,9 @@ return (
 );
 ```
 ## iOS边框圆角的注意事项
- 
+
 请注意下列边框圆角样式目前在iOS的图片组件上还不支持：
- 
+
 * `borderTopLeftRadius`
 * `borderTopRightRadius`
 * `borderBottomLeftRadius`
