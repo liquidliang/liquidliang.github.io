@@ -111,7 +111,7 @@ var styles = StyleSheet.create({
 
 | | |
 |--|--|
-|![](img/TutorialMock.png) |![](img/TutorialMock2.png)|
+|![](/blog/React Native/img/TutorialMock.png) |![](/blog/React Native/img/TutorialMock2.png)|
 
 ### 添加样式
 
@@ -187,7 +187,7 @@ var styles = StyleSheet.create({
 
 | | |
 |--|--|
-|![](img/TutorialStyledMock.png) |![](img/TutorialStyledMock2.png)|
+|![](/blog/React Native/img/TutorialStyledMock.png) |![](/blog/React Native/img/TutorialStyledMock2.png)|
 
 ### 拉取真正的数据
 
@@ -284,7 +284,7 @@ var REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/maste
 
 | | |
 |--|--|
-|![](img/TutorialSingleFetched.png) |![](img/TutorialSingleFetched2.png)|
+|![](/blog/React Native/img/TutorialSingleFetched.png) |![](/blog/React Native/img/TutorialSingleFetched2.png)|
 
 ## ListView
 
@@ -374,7 +374,7 @@ import {
 
 | | |
 |--|--|
-|![](img/TutorialFinal.png) |![](img/TutorialFinal2.png)|
+|![](/blog/React Native/img/TutorialFinal.png) |![](/blog/React Native/img/TutorialFinal2.png)|
 
 为了实现一个完整功能的应用，接下来其实还有一些工作要做，譬如：添加导航器，搜索，加载更多，等等等等。可以在[Movies示例](https://github.com/facebook/react-native/tree/master/Examples/Movies)中看看我们是怎么做的。
 

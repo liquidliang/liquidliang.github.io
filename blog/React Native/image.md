@@ -20,7 +20,7 @@ renderImages() {
 ```
 
 ### 截图
-![](img/components/image.png)
+![](/blog/React Native/img/components/image.png)
 
 ### GIF and WebP support on Android
 

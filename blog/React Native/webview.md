@@ -1,7 +1,7 @@
 创建一个原生的WebView，可以用于访问一个网页。
 
 ### 截图
-![](img/components/webview.png)
+![](/blog/React Native/img/components/webview.png)
 
 ### 属性
 
@@ -82,7 +82,7 @@
 	    <a class="hash-link" href="#onloadstart">#</a></h4>
 	    <div><p>加载开始时调用。</p></div>
 	</div>
-  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span> 
+  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span>
     <a class="hash-link" href="#onmessage">#</a></h4>
     <div>
       <p>在webview内部的网页中调用<code>window.postMessage</code>方法时可以触发此属性对应的函数，从而实现网页和RN之间的数据交换。

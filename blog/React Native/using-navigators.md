@@ -6,7 +6,7 @@
 
 React Native目前有几个内置的导航器组件，一般来说我们首推`Navigator`。它使用纯JavaScript实现了一个导航栈，因此可以跨平台工作，同时也便于定制。 
 
-![](img/NavigationStack-Navigator.gif)
+![](/blog/React Native/img/NavigationStack-Navigator.gif)
 
 ### 场景（Scene）的概念与使用
 

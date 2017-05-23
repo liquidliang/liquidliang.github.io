@@ -20,7 +20,7 @@ renderButton: function() {
 > 如果你希望包含多个子组件，用一个View来包装它们。
 
 ### 截图
-![](img/components/touchable.png)
+![](/blog/React Native/img/components/touchable.png)
 
 ### 属性
 

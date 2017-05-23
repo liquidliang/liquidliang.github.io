@@ -154,9 +154,9 @@ render() {
 In the example above the navigation bar color is changed when the new route is pushed.
 
 ### 截图
-![](img/components/navigatorios1.png)
+![](/blog/React Native/img/components/navigatorios1.png)
 
-![](img/components/navigatorios2.png)
+![](/blog/React Native/img/components/navigatorios2.png)
 
 ### 属性
 

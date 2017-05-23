@@ -4,9 +4,9 @@
 @keyword checkbox @keyword toggle @keyword 单选 @keyword 多选
 
 ### 截图
-![](img/components/switchandroid.png)
+![](/blog/React Native/img/components/switchandroid.png)
 
-![](img/components/switchios.png)
+![](/blog/React Native/img/components/switchios.png)
 
 ### 属性
 

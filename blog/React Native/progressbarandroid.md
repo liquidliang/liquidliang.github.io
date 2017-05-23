@@ -19,7 +19,7 @@ render: function() {
 },
 ```
 ### 截图
-![](img/components/progressbarandroid.png)
+![](/blog/React Native/img/components/progressbarandroid.png)
 
 ### 属性
 

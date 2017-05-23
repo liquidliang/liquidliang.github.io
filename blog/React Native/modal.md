@@ -53,7 +53,7 @@ class ModalExample extends Component {
 ```
 
 ### 截图
-![](img/components/modal.png)
+![](/blog/React Native/img/components/modal.png)
 
 ### 属性
 

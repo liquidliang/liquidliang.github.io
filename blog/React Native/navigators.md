@@ -7,7 +7,7 @@ You can use navigators to transition between multiple screens. These transitions
 
 React Native has several built-in navigation components, but for your first app you will probably want to use `Navigator`. It provides a JavaScript implementation of a navigation stack, so it works on both iOS and Android and is easy to customize.
 
-![](img/NavigationStack-Navigator.gif)
+![](/blog/React Native/img/NavigationStack-Navigator.gif)
 
 ### Working with Scenes
 

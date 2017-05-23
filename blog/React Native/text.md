@@ -26,7 +26,7 @@ var styles = StyleSheet.create({
 ```
 
 ### 截图
-![](img/components/text.png)
+![](/blog/React Native/img/components/text.png)
 
 ### 属性
 
