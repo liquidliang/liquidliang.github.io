@@ -100,7 +100,7 @@ exports.examples = [
       'the button',
     render: function() {
       return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={ {flexDirection: 'row', justifyContent: 'space-between'} }>
           <Button
             onPress={onButtonPress}
             title="This looks great!"

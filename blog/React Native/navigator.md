@@ -12,7 +12,7 @@ __译注__：本文档的说明较为简略，使用上有一定的难度。论�
 ### 基本用法
 ```javascript
 <Navigator
-    initialRoute={{name: 'My First Scene', index: 0}}
+    initialRoute={ {name: 'My First Scene', index: 0} }
     renderScene={(route, navigator) =>
       <MySceneComponent
         name={route.name}
@@ -22,12 +22,12 @@ __译注__：本文档的说明较为简略，使用上有一定的难度。论�
             name: 'Scene ' + nextIndex,
             index: nextIndex,
           });
-        }}
+        } }
         onBack={() => {
           if (route.index > 0) {
             navigator.pop();
           }
-        }}
+        } }
       />
     }
   />

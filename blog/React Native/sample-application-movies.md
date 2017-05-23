@@ -43,7 +43,7 @@ __译注__：本文的示例代码改用了ES6语法，可能和其他文档写�
 
 ```javascript
 var MOCKED_MOVIES_DATA = [
-  {title: '标题', year: '2015', posters: {thumbnail: 'http://i.imgur.com/UePbdph.jpg'}},
+  {title: '标题', year: '2015', posters: {thumbnail: 'http://i.imgur.com/UePbdph.jpg'} },
 ];
 ```
 
@@ -75,7 +75,7 @@ import {
       <View style={styles.container}>
         <Text>{movie.title}</Text>
         <Text>{movie.year}</Text>
-        <Image source={{uri: movie.posters.thumbnail}} />
+        <Image source={ {uri: movie.posters.thumbnail} } />
       </View>
     );
   }
@@ -102,7 +102,7 @@ var styles = StyleSheet.create({
 
 ```javascript
         <Image
-          source={{uri: movie.posters.thumbnail}}
+          source={ {uri: movie.posters.thumbnail} }
           style={styles.thumbnail}
         />
 ```
@@ -133,7 +133,7 @@ var styles = StyleSheet.create({
       return (
         <View style={styles.container}>
           <Image
-            source={{uri: movie.posters.thumbnail}}
+            source={ {uri: movie.posters.thumbnail} }
             style={styles.thumbnail}
           />
           <View style={styles.rightContainer}>
@@ -268,7 +268,7 @@ var REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/maste
     return (
       <View style={styles.container}>
         <Image
-          source={{uri: movie.posters.thumbnail}}
+          source={ {uri: movie.posters.thumbnail} }
           style={styles.thumbnail}
         />
         <View style={styles.rightContainer}>
@@ -459,7 +459,7 @@ class SampleAppMovies extends Component {
     return (
       <View style={styles.container}>
         <Image
-          source={{uri: movie.posters.thumbnail}}
+          source={ {uri: movie.posters.thumbnail} }
           style={styles.thumbnail}
         />
         <View style={styles.rightContainer}>

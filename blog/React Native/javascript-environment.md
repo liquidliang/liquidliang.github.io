@@ -42,7 +42,7 @@ ES7
 
 其他特性
 
-* [JSX](https://facebook.github.io/react/docs/jsx-in-depth.html): `<View style={{color: 'red'}} />`
+* [JSX](https://facebook.github.io/react/docs/jsx-in-depth.html): `<View style={ {color: 'red'} } />`
 * [Flow](http://flowtype.org/): `function foo(x: ?number): string {}`
 
 ## 接口兼容（Polyfills）

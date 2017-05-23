@@ -9,7 +9,7 @@
      barStyle="light-content"
    />
    <Navigator
-     initialRoute={{statusBarHidden: true}}
+     initialRoute={ {statusBarHidden: true} }
      renderScene={(route, navigator) =>
        <View>
          <StatusBar hidden={route.statusBarHidden} />
@@ -329,7 +329,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setHidden(true, 'slide');
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setHidden(true, 'slide')</Text>
           </View>
@@ -338,7 +338,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setHidden(false, 'fade');
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setHidden(false, 'fade')</Text>
           </View>
@@ -347,7 +347,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setBarStyle('default', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setBarStyle('default', true)</Text>
           </View>
@@ -356,7 +356,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setBarStyle('light-content', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setBarStyle('light-content', true)</Text>
           </View>
@@ -365,7 +365,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setNetworkActivityIndicatorVisible(true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setNetworkActivityIndicatorVisible(true)</Text>
           </View>
@@ -374,7 +374,7 @@ const StatusBarStaticIOSExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setNetworkActivityIndicatorVisible(false);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setNetworkActivityIndicatorVisible(false)</Text>
           </View>
@@ -392,7 +392,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setHidden(true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setHidden(true)</Text>
           </View>
@@ -401,7 +401,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setHidden(false);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setHidden(false)</Text>
           </View>
@@ -410,7 +410,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setBackgroundColor('#ff00ff', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setBackgroundColor('#ff00ff', true)</Text>
           </View>
@@ -419,7 +419,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           style={styles.wrapper}
           onPress={() => {
             StatusBar.setBackgroundColor('#00ff00', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setBackgroundColor('#00ff00', true)</Text>
           </View>
@@ -429,7 +429,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           onPress={() => {
             StatusBar.setTranslucent(true);
             StatusBar.setBackgroundColor('rgba(0, 0, 0, 0.4)', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setTranslucent(true) and setBackgroundColor('rgba(0, 0, 0, 0.4)', true)</Text>
           </View>
@@ -439,7 +439,7 @@ const StatusBarStaticAndroidExample = React.createClass({
           onPress={() => {
             StatusBar.setTranslucent(false);
             StatusBar.setBackgroundColor('black', true);
-          }}>
+          } }>
           <View style={styles.button}>
             <Text>setTranslucent(false) and setBackgroundColor('black', true)</Text>
           </View>

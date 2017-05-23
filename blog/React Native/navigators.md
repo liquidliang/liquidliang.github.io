@@ -67,10 +67,10 @@ Enough about scenes, let's start navigating. We will start by rendering a `Navig
 render() {
   return (
     <Navigator
-      initialRoute={{ title: 'My Initial Scene', index: 0 }}
+      initialRoute={ { title: 'My Initial Scene', index: 0 } }
       renderScene={(route, navigator) => {
         <MyScene title={route.title} />
-      }}
+      } }
     />
   );
 }
@@ -101,7 +101,7 @@ export default class SimpleNavigationApp extends Component {
   render() {
     return (
       <Navigator
-        initialRoute={{ title: 'My Initial Scene', index: 0 }}
+        initialRoute={ { title: 'My Initial Scene', index: 0 } }
         renderScene={(route, navigator) =>
           <MyScene
             title={route.title}
@@ -113,14 +113,14 @@ export default class SimpleNavigationApp extends Component {
                 title: 'Scene ' + nextIndex,
                 index: nextIndex,
               });
-            }}
+            } }
 
             // Function to call to go back to the previous scene
             onBack={() => {
               if (route.index > 0) {
                 navigator.pop();
               }
-            }}
+            } }
           />
         }
       />

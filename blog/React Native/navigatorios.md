@@ -12,11 +12,11 @@ export default class NavigatorIOSApp extends Component {
   render() {
     return (
       <NavigatorIOS
-        initialRoute={{
+        initialRoute={ {
           component: MyScene,
           title: 'My Initial Scene',
-        }}
-        style={{flex: 1}}
+        } }
+        style={ {flex: 1} }
       />
     );
   }
@@ -58,11 +58,11 @@ In this code, the navigator renders the component specified in `initialRoute`, w
 You can optionally pass in a `passProps` property to your `initialRoute`. `NavigatorIOS` passes this in as props to the rendered component:
 
 ```js
-initialRoute={{
+initialRoute={ {
   component: MyScene,
   title: 'My Initial Scene',
   passProps: { myProp: 'foo' }
-}}
+} }
 ```
 
 You can then access the props passed in via `{this.props.myProp}`.
@@ -89,7 +89,7 @@ class MyView extends Component {
     };
     return(
       <TouchableHighlight onPress={() => this._handleNextPress(nextRoute)}>
-        <Text style={{marginTop: 200, alignSelf: 'center'}}>
+        <Text style={ {marginTop: 200, alignSelf: 'center'} }>
           See you on the other nav {this.props.myProp}!
         </Text>
       </TouchableHighlight>
@@ -111,14 +111,14 @@ class NavvyIOS extends Component {
     return (
       <NavigatorIOS
         ref='nav'
-        initialRoute={{
+        initialRoute={ {
           component: MyView,
           title: 'Foo This',
           passProps: { myProp: 'foo' },
           rightButtonTitle: 'Add',
           onRightButtonPress: () => this._handleNavigationRequest(),
-        }}
-        style={{flex: 1}}
+        } }
+        style={ {flex: 1} }
       />
     );
   }
@@ -144,7 +144,7 @@ render() {
   return (
     <NavigatorIOS
       //...
-      style={{flex: 1}}
+      style={ {flex: 1} }
       barTintColor='#ffffcc'
     />
   );
@@ -587,11 +587,11 @@ class NavigatorIOSExample extends React.Component {
     return (
       <NavigatorIOS
         style={styles.container}
-        initialRoute={{
+        initialRoute={ {
           title: NavigatorIOSExample.title,
           component: NavigatorIOSExamplePage,
           passProps: {onExampleExit},
-        }}
+        } }
         tintColor="#008888"
       />
     );

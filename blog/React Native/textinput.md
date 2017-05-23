@@ -15,7 +15,7 @@ class UselessTextInput extends Component {
   render() {
     return (
       <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        style={ {height: 40, borderColor: 'gray', borderWidth: 1} }
         onChangeText={(text) => this.setState({text})}
         value={this.state.text}
       />
@@ -56,10 +56,10 @@ class UselessTextInputMultiline extends Component {
   // 你可以试着输入一种颜色，比如red，那么这个red就会作用到View的背景色样式上
   render() {
     return (
-     <View style={{
+     <View style={ {
        backgroundColor: this.state.text,
        borderBottomColor: '#000000',
-       borderBottomWidth: 1 }}
+       borderBottomWidth: 1 } }
      >
        <UselessTextInput
          multiline = {true}
@@ -479,7 +479,7 @@ class TextEventsExample extends React.Component {
           )}
           onKeyPress={(event) => {
             this.updateText('onKeyPress key: ' + event.nativeEvent.key);
-          }}
+          } }
           style={styles.default}
         />
         <Text style={styles.eventLabel}>
@@ -510,10 +510,10 @@ class AutoExpandingTextInput extends React.Component {
         multiline={true}
         onChangeText={(text) => {
           this.setState({text});
-        }}
+        } }
         onContentSizeChange={(event) => {
           this.setState({height: event.nativeEvent.contentSize.height});
-        }}
+        } }
         style={[styles.default, {height: Math.max(35, this.state.height)}]}
         value={this.state.text}
       />
@@ -540,7 +540,7 @@ class RewriteExample extends React.Component {
           onChangeText={(text) => {
             text = text.replace(/ /g, '_');
             this.setState({text});
-          }}
+          } }
           style={styles.default}
           value={this.state.text}
         />
@@ -566,7 +566,7 @@ class RewriteExampleInvalidCharacters extends React.Component {
           multiline={false}
           onChangeText={(text) => {
             this.setState({text: text.replace(/\s/g, '')});
-          }}
+          } }
           style={styles.default}
           value={this.state.text}
         />
@@ -623,7 +623,7 @@ class TokenizedTextExample extends React.Component {
           style={styles.multiline}
           onChangeText={(text) => {
             this.setState({text});
-          }}>
+          } }>
           <Text>{parts}</Text>
         </TextInput>
       </View>
@@ -706,7 +706,7 @@ class SelectionExample extends React.Component {
     };
   }
 
-  onSelectionChange({nativeEvent: {selection}}) {
+  onSelectionChange({nativeEvent: {selection} }) {
     this.setState({selection});
   }
 
@@ -717,7 +717,7 @@ class SelectionExample extends React.Component {
 
   select(start, end) {
     this._textInput.focus();
-    this.setState({selection: {start, end}});
+    this.setState({selection: {start, end} });
   }
 
   selectRandom() {
@@ -1339,10 +1339,10 @@ class AutoExpandingTextInput extends React.Component {
         multiline={true}
         onContentSizeChange={(event) => {
           this.setState({height: event.nativeEvent.contentSize.height});
-        }}
+        } }
         onChangeText={(text) => {
           this.setState({text});
-        }}
+        } }
         style={[styles.default, {height: Math.max(35, this.state.height)}]}
         value={this.state.text}
       />
@@ -1367,7 +1367,7 @@ class RewriteExample extends React.Component {
           onChangeText={(text) => {
             text = text.replace(/ /g, '_');
             this.setState({text});
-          }}
+          } }
           style={styles.default}
           value={this.state.text}
         />
@@ -1425,7 +1425,7 @@ class TokenizedTextExample extends React.Component {
           style={styles.multiline}
           onChangeText={(text) => {
             this.setState({text});
-          }}>
+          } }>
           <Text>{parts}</Text>
         </TextInput>
       </View>
@@ -1525,7 +1525,7 @@ class SelectionExample extends React.Component {
     };
   }
 
-  onSelectionChange({nativeEvent: {selection}}) {
+  onSelectionChange({nativeEvent: {selection} }) {
     this.setState({selection});
   }
 
@@ -1536,7 +1536,7 @@ class SelectionExample extends React.Component {
 
   select(start, end) {
     this._textInput.focus();
-    this.setState({selection: {start, end}});
+    this.setState({selection: {start, end} });
   }
 
   selectRandom() {
@@ -1741,7 +1741,7 @@ exports.examples = [
           <TextInput
             defaultValue="Same BackgroundColor as View "
             style={[styles.singleLine, {backgroundColor: 'rgba(100, 100, 100, 0.3)'}]}>
-            <Text style={{backgroundColor: 'rgba(100, 100, 100, 0.3)'}}>
+            <Text style={ {backgroundColor: 'rgba(100, 100, 100, 0.3)'} }>
               Darker backgroundColor
             </Text>
           </TextInput>

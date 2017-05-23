@@ -88,7 +88,7 @@ class CameraRollExample extends React.Component {
         />
         <Text>{'Group Type: ' + this.state.groupTypes}</Text>
         <CameraRollView
-          ref={(ref) => { this._cameraRollView = ref; }}
+          ref={(ref) => { this._cameraRollView = ref; } }
           batchSize={20}
           groupTypes={this.state.groupTypes}
           renderImage={this._renderImage}

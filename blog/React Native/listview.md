@@ -59,7 +59,7 @@ ListView还支持一些高级特性，譬如给每段/组(section)数据添加�
     <h4 class="propTitle"><a class="anchor" name="onchangevisiblerows"></a>onChangeVisibleRows <span class="propType">function</span> <a class="hash-link" href="#onchangevisiblerows">#</a></h4>
     <div>
       <p>(visibleRows, changedRows) =&gt; void</p>
-      <p>当可见的行的集合变化的时候调用此回调函数。<code>visibleRows</code> 以 { sectionID: { rowID: true }}的格式包含了所有可见行，而<code>changedRows</code> 以{ sectionID: { rowID: true | false }}的格式包含了所有刚刚改变了可见性的行，其中如果值为true表示一个行变得可见，而为false表示行刚刚离开可视区域而变得不可见。</p>
+      <p>当可见的行的集合变化的时候调用此回调函数。<code>visibleRows</code> 以 { sectionID: { rowID: true } }的格式包含了所有可见行，而<code>changedRows</code> 以{ sectionID: { rowID: true | false } }的格式包含了所有刚刚改变了可见性的行，其中如果值为true表示一个行变得可见，而为false表示行刚刚离开可视区域而变得不可见。</p>
     </div>
   </div>
   <div class="prop">
@@ -228,7 +228,7 @@ var ListViewSimpleExample = React.createClass({
       <TouchableHighlight onPress={() => {
           this._pressRow(rowID);
           highlightRow(sectionID, rowID);
-        }}>
+        } }>
         <View>
           <View style={styles.row}>
             <Image style={styles.thumb} source={imgSource} />
@@ -261,10 +261,10 @@ var ListViewSimpleExample = React.createClass({
     return (
       <View
         key={`${sectionID}-${rowID}`}
-        style={{
+        style={ {
           height: adjacentRowHighlighted ? 4 : 1,
           backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
-        }}
+        } }
       />
     );
   }

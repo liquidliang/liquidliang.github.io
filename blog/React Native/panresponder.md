@@ -170,7 +170,7 @@ var PanResponderExample = React.createClass({
         <View
           ref={(circle) => {
             this.circle = circle;
-          }}
+          } }
           style={styles.circle}
           {...this._panResponder.panHandlers}
         />

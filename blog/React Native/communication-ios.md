@@ -35,7 +35,7 @@ import {
 class ImageBrowserApp extends Component {
   renderImage(imgURI) {
     return (
-      <Image source={{uri: imgURI}} />
+      <Image source={ {uri: imgURI} } />
     );
   }
   render() {

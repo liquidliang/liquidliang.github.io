@@ -66,7 +66,7 @@ var icon = this.props.active ? require('./my-icon-active.png') : require('./my-i
 如果你在编写一个混合App（一部分UI使用React Native，而另一部分使用平台原生代码），也可以使用已经打包到App中的图片资源（通过Xcode的asset类目或者Android的drawable文件夹打包）：
 
 ```javascript
-<Image source={{uri: 'app_icon'}} style={{width: 40, height: 40}} />
+<Image source={ {uri: 'app_icon'} } style={ {width: 40, height: 40} } />
 ```
 
 注意：这一做法并没有任何安全检查。你需要自己确保图片在应用中确实存在，而且还需要指定尺寸。
@@ -78,11 +78,11 @@ var icon = this.props.active ? require('./my-icon-active.png') : require('./my-i
 
 ```javascript
 // 正确
-<Image source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-       style={{width: 400, height: 400}} />
+<Image source={ {uri: 'https://facebook.github.io/react/img/logo_og.png'} }
+       style={ {width: 400, height: 400} } />
 
 // 错误
-<Image source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}} />
+<Image source={ {uri: 'https://facebook.github.io/react/img/logo_og.png'} } />
 ```
 
 ### 网络图片的请求参数
@@ -100,7 +100,7 @@ var icon = this.props.active ? require('./my-icon-active.png') : require('./my-i
     body: 'Your Body goes here'
   }
 }
-style={{width: 400, height: 400}} />
+style={ {width: 400, height: 400} } />
 ```
 
 ## 缓存控制（仅iOS）
@@ -113,8 +113,8 @@ style={{width: 400, height: 400}} />
 * `only-if-cached`：现有的缓存数据将用于满足请求，忽略其期限或到期日。如果缓存中没有对应请求的数据，则不尝试从原始地址加载，并且认为请求是失败的。
 
 ```javascript
-<Image source={{uri: 'https://facebook.github.io/react/img/logo_og.png', cache: 'only-if-cached'}}
-       style={{width: 400, height: 400}} />
+<Image source={ {uri: 'https://facebook.github.io/react/img/logo_og.png', cache: 'only-if-cached'} }
+       style={ {width: 400, height: 400} } />
 ```
 
 ## 本地文件系统中的图片
@@ -142,10 +142,10 @@ iOS会为同一张图片在相册中保存多个不同尺寸的副本。为了�
 在React Native中，另一个值得一提的变动是我们把`src`属性改为了`source`属性，而且并不接受字符串，正确的值是一个带有`uri`属性的对象。
 
 ```javascript
-<Image source={{uri: 'something.jpg'}} />
+<Image source={ {uri: 'something.jpg'} } />
 ```
 
-深层次的考虑是，这样可以使我们在对象中添加一些元数据(metadata)。假设你在使用`require('./my-icon.png')`，那么我们就会在其中添加真实文件路径以及尺寸等信息（这只是举个例子，未来的版本中require的具体行为可能会变化）。此外这也是考虑了未来的扩展性，比如我们可能会加入精灵图（sprites）的支持：在输出`{uri: ...}`的基础上，我们可以进一步输出裁切信息`{uri: ..., crop: {left: 10, top: 50, width: 20, height: 40}}`，这样理论上就可以在现有的代码中无缝支持精灵图的切分。
+深层次的考虑是，这样可以使我们在对象中添加一些元数据(metadata)。假设你在使用`require('./my-icon.png')`，那么我们就会在其中添加真实文件路径以及尺寸等信息（这只是举个例子，未来的版本中require的具体行为可能会变化）。此外这也是考虑了未来的扩展性，比如我们可能会加入精灵图（sprites）的支持：在输出`{uri: ...}`的基础上，我们可以进一步输出裁切信息`{uri: ..., crop: {left: 10, top: 50, width: 20, height: 40} }`，这样理论上就可以在现有的代码中无缝支持精灵图的切分。
 
 对于开发者来说，则可以在其中标注一些有用的属性，例如图片的尺寸，这样可以使图片自己去计算将要显示的尺寸（而不必在样式中写死）。请在这一数据结构中自由发挥，存储你可能需要的任何图片相关的信息。
 

@@ -71,7 +71,7 @@ var BasicSegmentedControlExample = React.createClass({
   render() {
     return (
       <View>
-        <View style={{marginBottom: 10}}>
+        <View style={ {marginBottom: 10} }>
           <SegmentedControlIOS values={['One', 'Two']} />
         </View>
         <View>
@@ -122,7 +122,7 @@ var ColorSegmentedControlExample = React.createClass({
   render() {
     return (
       <View>
-        <View style={{marginBottom: 10}}>
+        <View style={ {marginBottom: 10} }>
           <SegmentedControlIOS tintColor="#ff0000" values={['One', 'Two', 'Three', 'Four']} selectedIndex={0} />
         </View>
         <View>

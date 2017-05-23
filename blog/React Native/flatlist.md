@@ -336,11 +336,11 @@ class FlatListExample extends React.PureComponent {
 
   _scrollPos = new Animated.Value(0);
   _scrollSinkX = Animated.event(
-    [{nativeEvent: { contentOffset: { x: this._scrollPos } }}],
+    [{nativeEvent: { contentOffset: { x: this._scrollPos } } }],
     {useNativeDriver: true},
   );
   _scrollSinkY = Animated.event(
-    [{nativeEvent: { contentOffset: { y: this._scrollPos } }}],
+    [{nativeEvent: { contentOffset: { y: this._scrollPos } } }],
     {useNativeDriver: true},
   );
 

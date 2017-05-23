@@ -87,13 +87,13 @@ var TabBarExample = React.createClass({
         barTintColor="darkslateblue">
         <TabBarIOS.Item
           title="Blue Tab"
-          icon={{uri: base64Icon, scale: 3}}
+          icon={ {uri: base64Icon, scale: 3} }
           selected={this.state.selectedTab === 'blueTab'}
           onPress={() => {
             this.setState({
               selectedTab: 'blueTab',
             });
-          }}>
+          } }>
           {this._renderContent('#414A8C', 'Blue Tab')}
         </TabBarIOS.Item>
         <TabBarIOS.Item
@@ -105,7 +105,7 @@ var TabBarExample = React.createClass({
               selectedTab: 'redTab',
               notifCount: this.state.notifCount + 1,
             });
-          }}>
+          } }>
           {this._renderContent('#783E33', 'Red Tab', this.state.notifCount)}
         </TabBarIOS.Item>
         <TabBarIOS.Item
@@ -119,7 +119,7 @@ var TabBarExample = React.createClass({
               selectedTab: 'greenTab',
               presses: this.state.presses + 1
             });
-          }}>
+          } }>
           {this._renderContent('#21551C', 'Green Tab', this.state.presses)}
         </TabBarIOS.Item>
       </TabBarIOS>

@@ -12,7 +12,7 @@ renderImages() {
       />
       <Image
         style={styles.logo}
-        source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+        source={ {uri: 'http://facebook.github.io/react/img/logo_og.png'} }
       />
     </View>
   );
@@ -57,7 +57,7 @@ dependencies {
     <div class="prop">
         <h4 class="propTitle"><a class="anchor" name="onlayout"></a>onLayout <span class="propType">function</span> <a class="hash-link" href="#onlayout">#</a></h4>
         <div>
-            <p>当元素挂载或者布局改变的时候调用，参数为：<code>{nativeEvent: {layout: {x, y, width, height}}}</code>.</p>
+            <p>当元素挂载或者布局改变的时候调用，参数为：<code>{nativeEvent: {layout: {x, y, width, height} } }</code>.</p>
         </div>
     </div>
         <div class="prop">
@@ -231,7 +231,7 @@ dependencies {
     <div class="prop">
         <h4 class="propTitle"><a class="anchor" name="onerror"></a><span class="platform">ios</span>onError <span class="propType">function</span> <a class="hash-link" href="#onerror">#</a></h4>
         <div>
-            <p>当加载错误的时候调用此回调函数，参数为<code>{nativeEvent: {error}}</code></p>
+            <p>当加载错误的时候调用此回调函数，参数为<code>{nativeEvent: {error} }</code></p>
         </div>
     </div>
     <div class="prop"><h4 class="propTitle"><a class="anchor" name="onpartialload"></a><span class="platform">ios</span>onPartialLoad
@@ -241,7 +241,7 @@ dependencies {
     <div class="prop">
         <h4 class="propTitle"><a class="anchor" name="onprogress"></a><span class="platform">ios</span>onProgress <span class="propType">function</span> <a class="hash-link" href="#onprogress">#</a></h4>
         <div>
-            <p>在加载过程中不断调用，参数为<code>{nativeEvent: {loaded, total}}</code></p>
+            <p>在加载过程中不断调用，参数为<code>{nativeEvent: {loaded, total} }</code></p>
         </div>
     </div>
 </div>
@@ -313,7 +313,7 @@ var NetworkImageCallbackExample = React.createClass({
             } else {
               this._loadEventFired(`✔ onLoad (+${new Date() - mountTime}ms)`);
             }
-          }}
+          } }
           onLoadEnd={() => {
             this._loadEventFired(`✔ onLoadEnd (+${new Date() - mountTime}ms)`);
             this.setState({startLoadPrefetched: true}, () => {
@@ -323,7 +323,7 @@ var NetworkImageCallbackExample = React.createClass({
                 this._loadEventFired(`✘ Prefetch failed (+${new Date() - mountTime}ms)`);
               });
             });
-          }}
+          } }
         />
         {this.state.startLoadPrefetched ?
           <Image
@@ -338,11 +338,11 @@ var NetworkImageCallbackExample = React.createClass({
               } else {
                 this._loadEventFired(`✔ (prefetched) onLoad (+${new Date() - mountTime}ms)`);
               }
-            }}
+            } }
             onLoadEnd={() => this._loadEventFired(`✔ (prefetched) onLoadEnd (+${new Date() - mountTime}ms)`)}
           />
           : null}
-        <Text style={{marginTop: 20}}>
+        <Text style={ {marginTop: 20} }>
           {this.state.events.join('\n')}
         </Text>
       </View>
@@ -368,7 +368,7 @@ var NetworkImageExample = React.createClass({
     var loader = this.state.loading ?
       <View style={styles.progress}>
         <Text>{this.state.progress}%</Text>
-        <ActivityIndicator style={{marginLeft:5}} />
+        <ActivityIndicator style={ {marginLeft:5} } />
       </View> : null;
     return this.state.error ?
       <Text>{this.state.error}</Text> :
@@ -398,14 +398,14 @@ var ImageSizeExample = React.createClass({
   },
   render: function() {
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={ {flexDirection: 'row'} }>
         <Image
-          style={{
+          style={ {
             width: 60,
             height: 60,
             backgroundColor: 'transparent',
             marginRight: 10,
-          }}
+          } }
           source={this.props.source} />
         <Text>
           Actual dimensions:{'\n'}
@@ -426,7 +426,7 @@ var MultipleSourcesExample = React.createClass({
   render: function() {
     return (
       <View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={ {flexDirection: 'row', justifyContent: 'space-between'} }>
           <Text
             style={styles.touchableText}
             onPress={this.decreaseImageSize} >
@@ -440,9 +440,9 @@ var MultipleSourcesExample = React.createClass({
         </View>
         <Text>Container image size: {this.state.width}x{this.state.height} </Text>
         <View
-          style={{height: this.state.height, width: this.state.width}} >
+          style={ {height: this.state.height, width: this.state.width} } >
           <Image
-            style={{flex: 1}}
+            style={ {flex: 1} }
             source={[
               {uri: 'https://facebook.github.io/react/img/logo_small.png', width: 38, height: 38},
               {uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},
@@ -486,7 +486,7 @@ exports.examples = [
     render: function() {
       return (
         <Image
-          source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+          source={ {uri: 'https://facebook.github.io/react/img/logo_og.png'} }
           style={styles.base}
         />
       );
@@ -511,8 +511,8 @@ exports.examples = [
     title: 'Image Loading Events',
     render: function() {
       return (
-        <NetworkImageCallbackExample source={{uri: 'http://origami.design/public/images/bird-logo.png?r=1&t=' + Date.now()}}
-          prefetchedSource={{uri: IMAGE_PREFETCH_URL}}/>
+        <NetworkImageCallbackExample source={ {uri: 'http://origami.design/public/images/bird-logo.png?r=1&t=' + Date.now()} }
+          prefetchedSource={ {uri: IMAGE_PREFETCH_URL} }/>
       );
     },
   },
@@ -520,7 +520,7 @@ exports.examples = [
     title: 'Error Handler',
     render: function() {
       return (
-        <NetworkImageExample source={{uri: 'https://TYPO_ERROR_facebook.github.io/react/img/logo_og.png'}} />
+        <NetworkImageExample source={ {uri: 'https://TYPO_ERROR_facebook.github.io/react/img/logo_og.png'} } />
       );
     },
     platform: 'ios',
@@ -529,7 +529,7 @@ exports.examples = [
     title: 'Image Download Progress',
     render: function() {
       return (
-        <NetworkImageExample source={{uri: 'http://origami.design/public/images/bird-logo.png?r=1'}}/>
+        <NetworkImageExample source={ {uri: 'http://origami.design/public/images/bird-logo.png?r=1'} }/>
       );
     },
     platform: 'ios',
@@ -541,7 +541,7 @@ exports.examples = [
       return (
         <Image
           defaultSource={require('./bunny.png')}
-          source={{uri: 'https://facebook.github.io/origami/public/images/birds.jpg'}}
+          source={ {uri: 'https://facebook.github.io/origami/public/images/birds.jpg'} }
           style={styles.base}
         />
       );
@@ -663,7 +663,7 @@ exports.examples = [
     render: function() {
       return (
         <Image
-          style={{width: 60, height: 60, backgroundColor: 'transparent'}}
+          style={ {width: 60, height: 60, backgroundColor: 'transparent'} }
           source={fullImage}>
           <Text style={styles.nestedText}>
             React
@@ -803,7 +803,7 @@ exports.examples = [
       return (
         <Image
           style={styles.gif}
-          source={{uri: 'https://38.media.tumblr.com/9e9bd08c6e2d10561dd1fb4197df4c4e/tumblr_mfqekpMktw1rn90umo1_500.gif'}}
+          source={ {uri: 'https://38.media.tumblr.com/9e9bd08c6e2d10561dd1fb4197df4c4e/tumblr_mfqekpMktw1rn90umo1_500.gif'} }
         />
       );
     },
@@ -815,7 +815,7 @@ exports.examples = [
       return (
         <Image
           style={styles.base64}
-          source={{uri: base64Icon, scale: 3}}
+          source={ {uri: base64Icon, scale: 3} }
         />
       );
     },
@@ -856,7 +856,7 @@ exports.examples = [
     render: function() {
       return (
         <Image
-          source={{uri: 'legacy_image', width: 120, height: 120}}
+          source={ {uri: 'legacy_image', width: 120, height: 120} }
         />
       );
     },
@@ -867,24 +867,24 @@ exports.examples = [
       'Images shipped in a separate native bundle',
     render: function() {
       return (
-        <View style={{flexDirection: 'row'}}>
+        <View style={ {flexDirection: 'row'} }>
           <Image
-            source={{
+            source={ {
               url: 'ImageInBundle',
               bundle: 'RNTesterBundle',
               width: 100,
               height: 100,
-            }}
-            style={{borderColor: 'yellow', borderWidth: 4}}
+            } }
+            style={ {borderColor: 'yellow', borderWidth: 4} }
           />
           <Image
-            source={{
+            source={ {
               url: 'ImageInAssetCatalog',
               bundle: 'RNTesterBundle',
               width: 100,
               height: 100,
-            }}
-            style={{marginLeft: 10, borderColor: 'blue', borderWidth: 4}}
+            } }
+            style={ {marginLeft: 10, borderColor: 'blue', borderWidth: 4} }
           />
         </View>
       );

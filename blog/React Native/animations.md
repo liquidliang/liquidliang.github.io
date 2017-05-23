@@ -32,10 +32,10 @@ export default class FadeInView extends Component {
   render() {
     return (
       <Animated.View                            // 可动画化的视图组件
-        style={{
+        style={ {
           ...this.props.style,
           opacity: this.state.fadeAnim,          // 将透明度指定为动画变量值
-        }}
+        } }
       >
         {this.props.children}
       </Animated.View>
@@ -50,8 +50,8 @@ export default class FadeInView extends Component {
 ```javascript
 render() {
   return (
-    <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
-      <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
+    <FadeInView style={ {width: 250, height: 50, backgroundColor: 'powderblue'} }>
+      <Text style={ {fontSize: 28, textAlign: 'center', margin: 10} }>Fading in</Text>
     </FadeInView>
   )
 }
@@ -209,7 +209,7 @@ Animated.timing(opacity, {
 
 ```javascript
 onScroll={Animated.event(
-  [{nativeEvent: {contentOffset: {x: scrollX}}}]   // scrollX = e.nativeEvent.contentOffset.x
+  [{nativeEvent: {contentOffset: {x: scrollX} } }]   // scrollX = e.nativeEvent.contentOffset.x
 )}
 onPanResponderMove={Animated.event([
   null,                                          // 忽略原生事件

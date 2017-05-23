@@ -64,7 +64,7 @@ import { AppRegistry, Text, View } from 'react-native';
 
 const App = () => {
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={ {alignItems: 'center'} }>
       <Text>Hello!</Text>
     </View>
   );

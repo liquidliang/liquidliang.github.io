@@ -89,7 +89,7 @@
 	    <a class="hash-link" href="#onloadstart">#</a></h4>
 	    <div><p>加载开始时调用。</p></div>
 	</div>
-  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span> 
+  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span>
     <a class="hash-link" href="#onmessage">#</a></h4>
     <div>
       <p>在webview内部的网页中调用<code>window.postMessage</code>方法时可以触发此属性对应的函数，从而实现网页和RN之间的数据交换。
@@ -261,7 +261,7 @@ class WebViewExample extends React.Component {
           ref={WEBVIEW_REF}
           automaticallyAdjustContentInsets={false}
           style={styles.webView}
-          source={{uri: this.state.url}}
+          source={ {uri: this.state.url} }
           javaScriptEnabled={true}
           domStorageEnabled={true}
           decelerationRate="normal"
@@ -350,11 +350,13 @@ class ScaledWebView extends React.Component {
     return (
       <View>
         <WebView
-          style={{
+          style={
+						{
             backgroundColor: BGWASH,
             height: 200,
-          }}
-          source={{uri: 'https://facebook.github.io/react/'}}
+          }
+				}
+          source={ {uri: 'https://facebook.github.io/react/'} }
           scalesPageToFit={this.state.scalingEnabled}
         />
         <View style={styles.buttons}>
@@ -408,11 +410,11 @@ class MessagingTest extends React.Component {
         </View>
         <View style={styles.container}>
           <WebView
-            ref={webview => { this.webview = webview; }}
-            style={{
+            ref={webview => { this.webview = webview; } }
+            style={ {
               backgroundColor: BGWASH,
               height: 100,
-            }}
+            } }
             source={require('./messagingtest.html')}
             onMessage={this.onMessage}
           />
@@ -434,12 +436,12 @@ class InjectJS extends React.Component {
     return (
       <View>
         <WebView
-          ref={webview => { this.webview = webview; }}
-          style={{
+          ref={webview => { this.webview = webview; } }
+          style={ {
             backgroundColor: BGWASH,
             height: 300,
-          }}
-          source={{uri: 'https://www.facebook.com'}}
+          } }
+          source={ {uri: 'https://www.facebook.com'} }
           scalesPageToFit={true}
         />
         <View style={styles.buttons}>
@@ -582,10 +584,10 @@ exports.examples = [
     render(): React.Element<any> {
       return (
         <WebView
-          style={{
+          style={ {
             backgroundColor: BGWASH,
             height: 100,
-          }}
+          } }
           source={require('./helloworld.html')}
           scalesPageToFit={true}
         />
@@ -597,11 +599,11 @@ exports.examples = [
     render(): React.Element<any> {
       return (
         <WebView
-          style={{
+          style={ {
             backgroundColor: BGWASH,
             height: 100,
-          }}
-          source={{html: HTML}}
+          } }
+          source={ {html: HTML} }
           scalesPageToFit={true}
         />
       );
@@ -612,15 +614,15 @@ exports.examples = [
     render(): React.Element<any> {
       return (
         <WebView
-          style={{
+          style={ {
             backgroundColor: BGWASH,
             height: 100,
-          }}
-          source={{
+          } }
+          source={ {
             uri: 'http://www.posttestserver.com/post.php',
             method: 'POST',
             body: 'foo=bar&bar=foo'
-          }}
+          } }
           scalesPageToFit={false}
         />
       );

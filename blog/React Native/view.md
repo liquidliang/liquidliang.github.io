@@ -1,9 +1,9 @@
 作为创建UI时最基础的组件，`View`是一个支持Flexbox布局、样式、一些触摸处理、和一些无障碍功能的容器，并且它可以放到其它的视图里，也可以有任意多个任意类型的子视图。不论在什么平台上，`View`都会直接对应一个平台的原生视图，无论它是`UIView`、`<div>`还是`android.view.View`。下面的例子创建了一个`View`，包含了两个有颜色的方块和一个自定义的组件，并且设置了一个内边距：
 
 ```javascript
-<View style={{flexDirection: 'row', height: 100, padding: 20}}>
-  <View style={{backgroundColor: 'blue', flex: 0.3}} />
-  <View style={{backgroundColor: 'red', flex: 0.5}} />
+<View style={ {flexDirection: 'row', height: 100, padding: 20} }>
+  <View style={ {backgroundColor: 'blue', flex: 0.3} } />
+  <View style={ {backgroundColor: 'red', flex: 0.5} } />
   <MyCustomComponent {...customProps} />
 </View>
 ```
@@ -38,7 +38,7 @@
 		<h4 class="propTitle"><a class="anchor" name="onlayout"></a>onLayout <span class="propType">function</span> <a class="hash-link" href="#onlayout">#</a></h4>
 		<div>
 			<p>当组件挂载或者布局变化的时候调用，参数为：</p>
-			<p><code>{nativeEvent: { layout: {x, y, width, height}}}</code></p>
+			<p><code>{nativeEvent: { layout: {x, y, width, height} } }</code></p>
 			<p>这个事件会在布局计算完成后立即调用一次，不过收到此事件时新的布局可能还没有在屏幕上呈现，尤其是一个布局动画正在进行中的时候。</p>
 		</div>
 	</div>

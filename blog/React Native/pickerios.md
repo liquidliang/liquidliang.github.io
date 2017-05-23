@@ -120,7 +120,7 @@ var PickerStyleExample = React.createClass({
     var selectionString = make.name + ' ' + make.models[this.state.modelIndex];
     return (
       <PickerIOS
-        itemStyle={{fontSize: 25, color: 'red', textAlign: 'left', fontWeight: 'bold'}}
+        itemStyle={ {fontSize: 25, color: 'red', textAlign: 'left', fontWeight: 'bold'} }
         selectedValue={this.state.carMake}
         onValueChange={(carMake) => this.setState({carMake, modelIndex: 0})}>
         {Object.keys(CAR_MAKES_AND_MODELS).map((carMake) => (

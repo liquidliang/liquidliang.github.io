@@ -61,11 +61,11 @@ React Navigation中的视图是原生组件，同时用到了运行在原生线�
 
 ```javascript
 <NavigatorIOS
-  initialRoute={{
+  initialRoute={ {
     component: MyScene,
     title: 'My Initial Scene',
     passProps: { myProp: 'foo' },
-  }}
+  } }
 />
 ```
 
@@ -81,11 +81,11 @@ export default class NavigatorIOSApp extends Component {
   render() {
     return (
       <NavigatorIOS
-        initialRoute={{
+        initialRoute={ {
           component: MyScene,
           title: 'My Initial Scene',
-        }}
-        style={{flex: 1}}
+        } }
+        style={ {flex: 1} }
       />
     )
   }

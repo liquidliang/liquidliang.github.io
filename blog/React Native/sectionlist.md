@@ -193,7 +193,7 @@ class SectionListExample extends React.PureComponent {
           <PlainInput
             onChangeText={filterText => {
               this.setState(() => ({filterText}));
-            }}
+            } }
             placeholder="Search..."
             value={this.state.filterText}
           />

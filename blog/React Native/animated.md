@@ -19,7 +19,7 @@ class FadeInView extends React.Component {
    render() {
      return (
        <Animated.View          // Special animatable View
-         style={{opacity: this.state.fadeAnim}}> // Binds
+         style={ {opacity: this.state.fadeAnim} }> // Binds
          {this.props.children}
        </Animated.View>
      );
@@ -112,7 +112,7 @@ class FadeInView extends React.Component {
 		<div>
 			<p>接受一个映射的数组，对应的解开每个值，然后调用所有对应的输出的<code>setValue</code>方法。例如：</p>
 			<pre><code class="lang-javascript"> onScroll={<span class="hljs-keyword">this</span>.AnimatedEvent(
-   [{nativeEvent: {contentOffset: {x: <span class="hljs-keyword">this</span>._scrollX}}}]
+   [{nativeEvent: {contentOffset: {x: <span class="hljs-keyword">this</span>._scrollX} } }]
    {listener},          <span class="hljs-comment">// 可选的异步监听函数</span>
  )
  ...
@@ -242,7 +242,7 @@ class DraggableView extends React.Component {
        onPanResponderRelease: () => {
          Animated.spring(
            this.state.pan,         // Auto-multiplexed
-           {toValue: {x: 0, y: 0}} // Back to zero
+           {toValue: {x: 0, y: 0} } // Back to zero
          ).start();
        },
      });
@@ -302,9 +302,9 @@ class DraggableView extends React.Component {
 		<h4 class="propTitle"><a class="anchor" name="gettranslatetransform"></a>getTranslateTransform<span class="propType">()</span> <a class="hash-link" href="#gettranslatetransform">#</a></h4>
 		<div>
 			<p>将一个<code>{x, y}</code> 组合转换为一个可用的位移变换(translation transform)，例如：</p>
-			<pre><code class="lang-javascript"> style={{
+			<pre><code class="lang-javascript"> style={ {
    transform: <span class="hljs-keyword">this</span>.state.anim.getTranslateTransform()
- }}
+ } }
 </code></pre>
 		</div>
 	</div>
@@ -360,9 +360,9 @@ exports.examples = [
         render() {
           return (
             <Animated.View   // Special animatable View
-              style={{
+              style={ {
                 opacity: this.state.fadeAnim,  // Binds
-              }}>
+              } }>
               {this.props.children}
             </Animated.View>
           );
@@ -384,7 +384,7 @@ exports.examples = [
                   this.setState((state) => (
                     {show: !state.show}
                   ));
-                }}>
+                } }>
                 Press to {this.state.show ?
                   'Hide' : 'Show'}
               </RNTesterButton>
@@ -417,7 +417,7 @@ exports.examples = [
               velocity: 3,  // Velocity makes it move
               tension: -10, // Slow
               friction: 1,  // Oscillate a lot
-            }).start(); }}>
+            }).start(); } }>
             Press to Fling it!
           </RNTesterButton>
           <Animated.View
@@ -494,7 +494,7 @@ exports.examples = [
                   duration: 2000,
                 })),
               ),
-            ]).start(); }}>
+            ]).start(); } }>
             Press to Animate
           </RNTesterButton>
           {['Composite', 'Easing', 'Animations!'].map(

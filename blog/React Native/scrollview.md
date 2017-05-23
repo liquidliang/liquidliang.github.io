@@ -432,21 +432,21 @@ exports.examples = [
     return (
       <View>
         <ScrollView
-          ref={(scrollView) => { _scrollView = scrollView; }}
+          ref={(scrollView) => { _scrollView = scrollView; } }
           automaticallyAdjustContentInsets={false}
-          onScroll={() => { console.log('onScroll!'); }}
+          onScroll={() => { console.log('onScroll!'); } }
           scrollEventThrottle={200}
           style={styles.scrollView}>
           {THUMBS.map(createThumbRow)}
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { _scrollView.scrollTo({y: 0}); }}>
+          onPress={() => { _scrollView.scrollTo({y: 0}); } }>
           <Text>Scroll to top</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { _scrollView.scrollToEnd({animated: true}); }}>
+          onPress={() => { _scrollView.scrollToEnd({animated: true}); } }>
           <Text>Scroll to bottom</Text>
         </TouchableOpacity>
       </View>
@@ -460,7 +460,7 @@ exports.examples = [
     return (
       <View>
         <ScrollView
-          ref={(scrollView) => { _scrollView = scrollView; }}
+          ref={(scrollView) => { _scrollView = scrollView; } }
           automaticallyAdjustContentInsets={false}
           horizontal={true}
           style={[styles.scrollView, styles.horizontalScrollView]}>
@@ -468,12 +468,12 @@ exports.examples = [
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { _scrollView.scrollTo({x: 0}); }}>
+          onPress={() => { _scrollView.scrollTo({x: 0}); } }>
           <Text>Scroll to start</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { _scrollView.scrollToEnd({animated: true}); }}>
+          onPress={() => { _scrollView.scrollToEnd({animated: true}); } }>
           <Text>Scroll to end</Text>
         </TouchableOpacity>
       </View>
@@ -489,7 +489,7 @@ class Thumb extends React.Component {
   render() {
     return (
       <View style={styles.button}>
-        <Image style={styles.img} source={{uri:this.props.uri}} />
+        <Image style={styles.img} source={ {uri:this.props.uri} } />
       </View>
     );
   }

@@ -316,7 +316,7 @@ class MapViewExample extends React.Component {
      };
  
      return (
-       <MapView region={region} pitchEnabled={false} style={{flex: 1}} onChange={this.onRegionChange}/>
+       <MapView region={region} pitchEnabled={false} style={ {flex: 1} } onChange={this.onRegionChange}/>
      );
    }  
  }

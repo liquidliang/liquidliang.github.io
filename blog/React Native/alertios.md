@@ -135,8 +135,8 @@ class PromptOptions extends React.Component {
   render() {
     return (
       <View>
-        <Text style={{marginBottom: 10}}>
-          <Text style={{fontWeight: 'bold'}}>Prompt value:</Text> {this.state.promptValue}
+        <Text style={ {marginBottom: 10} }>
+          <Text style={ {fontWeight: 'bold'} }>Prompt value:</Text> {this.state.promptValue}
         </Text>
 
         <TouchableHighlight

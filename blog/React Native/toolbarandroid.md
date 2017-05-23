@@ -178,7 +178,7 @@ var ToolbarAndroidExample = React.createClass({
           <ToolbarAndroid
             logo={require('image!launcher_icon')}
             style={styles.toolbar}>
-            <View style={{height: 56, flexDirection: 'row', alignItems: 'center'}}>
+            <View style={ {height: 56, flexDirection: 'row', alignItems: 'center'} }>
               <SwitchAndroid
                 value={this.state.toolbarSwitch}
                 onValueChange={(value) => this.setState({'toolbarSwitch': value})} />
@@ -202,7 +202,7 @@ var ToolbarAndroidExample = React.createClass({
         <RNTesterBlock title="Toolbar with custom title colors">
           <ToolbarAndroid
             navIcon={require('image!ic_menu_black_24dp')}
-            onIconClicked={() => this.setState({colorProps: {}})}
+            onIconClicked={() => this.setState({colorProps: {} })}
             title="Wow, such toolbar"
             style={styles.toolbar}
             subtitle="Much native"

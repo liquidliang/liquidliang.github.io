@@ -232,7 +232,7 @@ var ViewPagerAndroidExample = React.createClass({
         <View key={i} style={pageStyle} collapsable={false}>
           <Image
             style={styles.image}
-            source={{uri: IMAGE_URIS[i % BGCOLOR.length]}}
+            source={ {uri: IMAGE_URIS[i % BGCOLOR.length]} }
           />
           <LikeCount />
        </View>
@@ -249,7 +249,7 @@ var ViewPagerAndroidExample = React.createClass({
           onPageSelected={this.onPageSelected}
           onPageScrollStateChanged={this.onPageScrollStateChanged}
           pageMargin={10}
-          ref={viewPager => { this.viewPager = viewPager; }}>
+          ref={viewPager => { this.viewPager = viewPager; } }>
           {pages}
         </ViewPagerAndroid>
         <View style={styles.buttons}>
