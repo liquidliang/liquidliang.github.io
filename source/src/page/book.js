@@ -72,6 +72,9 @@ module.exports = function (page, key) {
             currentDom.parent().addClass('active');
             currentDom.show();
             viewContent.reset(data);
+            if(currentDom[0].scrollIntoViewIfNeeded){
+              currentDom[0].scrollIntoViewIfNeeded();
+            }
           });
         } else if (slidebar.chapters[0]) {
           return BCD.replaceHash(slidebar.chapters[0].href);

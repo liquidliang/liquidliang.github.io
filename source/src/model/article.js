@@ -75,8 +75,18 @@ BCD.addEvent('mkview', function (ele, option, data) {
           return $0
         }));
     }
-    $('a[href^="http"]').attr('target', '_blank');
-    $('a[href^="http"]').attr('rel', 'noopener');
+    ele.find('a[href]').each(function(){
+      var aDom = $(this);
+      var href = aDom.attr('href');
+      if(/^http/.test(href)){
+        aDom.attr('target', '_blank');
+        aDom.attr('rel', 'noopener');
+      }else if(/html$|html$/.test(href)){ //GitBook不同章节之间跳转
+          aDom.attr('href', location.hash.replace(/[^//]+\.md/, '') + href.replace(/html$|html$/, 'md'));
+      }
+    });
+
+
   });
 });
 

@@ -543,8 +543,17 @@
 	        }));
 	      })();
 	    }
-	    $('a[href^="http"]').attr('target', '_blank');
-	    $('a[href^="http"]').attr('rel', 'noopener');
+	    ele.find('a[href]').each(function () {
+	      var aDom = $(this);
+	      var href = aDom.attr('href');
+	      if (/^http/.test(href)) {
+	        aDom.attr('target', '_blank');
+	        aDom.attr('rel', 'noopener');
+	      } else if (/html$|html$/.test(href)) {
+	        //GitBook不同章节之间跳转
+	        aDom.attr('href', location.hash.replace(/[^//]+\.md/, '') + href.replace(/html$|html$/, 'md'));
+	      }
+	    });
 	  });
 	});
 	
@@ -2316,6 +2325,9 @@
 	            currentDom.parent().addClass('active');
 	            currentDom.show();
 	            viewContent.reset(data);
+	            if (currentDom[0].scrollIntoViewIfNeeded) {
+	              currentDom[0].scrollIntoViewIfNeeded();
+	            }
 	          });
 	        } else if (slidebar.chapters[0]) {
 	          return BCD.replaceHash(slidebar.chapters[0].href);
