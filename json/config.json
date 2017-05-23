@@ -1,5 +1,6 @@
 {
   "author": "liquidliang",
+  "logoTitle": "我的阅读空间",
   "nav": [
     ["Home", "#!/index"],
     ["收藏", "#!/favor"],
