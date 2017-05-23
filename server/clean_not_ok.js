@@ -36,10 +36,18 @@ function clean() {
           if(attrDict.title){
             content = '## ' + attrDict.title + '\n' + content;
           }
-          console.log('去除可能导致Github 返回404的部分' + path);
-          fs.writeFileSync(path, content);
+          console.log('去除可能导致Github 返回404的部分(Jekyll的头部)' + path);
+
         }
       }
+
+      if(/[\{]{2,}/.test(content)){
+        content = content.replace(/[\{]{2,}/g, function($0){return $0.split('').join(' ')});
+        content = content.replace(/[\}]{2,}/g, function($0){return $0.split('').join(' ')});
+        console.log('去除可能导致Github.io服务挂掉的部分(improperly terminated Liquid output tag)' + path);
+      }
+
+      fs.writeFileSync(path, content);
     }
   });
 

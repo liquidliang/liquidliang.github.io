@@ -301,8 +301,8 @@ render() {
 如果希望当前的路由与其他路由有不同样式，这时可以使用`Link`组件的`activeStyle`属性。
 
 ```html
-<Link to="/about" activeStyle={{color: 'red'}}>About</Link>
-<Link to="/repos" activeStyle={{color: 'red'}}>Repos</Link>
+<Link to="/about" activeStyle={ {color: 'red'} }>About</Link>
+<Link to="/repos" activeStyle={ {color: 'red'} }>Repos</Link>
 ```
 
 上面代码中，当前页面的链接会红色显示。

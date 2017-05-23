@@ -9,7 +9,7 @@
 JSX会对HTML字符串转义。如果不希望被转义，可以采用下面的写法。
 
 ```javascript
-<div dangerouslySetInnerHTML={{__html: 'cc &copy; 2015'}} />
+<div dangerouslySetInnerHTML={ {__html: 'cc &copy; 2015'} } />
 ```
 
 ## 注释

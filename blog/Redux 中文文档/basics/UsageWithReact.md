@@ -117,9 +117,9 @@ import React, { PropTypes } from 'react'
 const Todo = ({ onClick, completed, text }) => (
   <li
     onClick={onClick}
-    style={{
+    style={ {
       textDecoration: completed ? 'line-through' : 'none'
-    }}
+    } }
   >
     {text}
   </li>
@@ -179,7 +179,7 @@ const Link = ({ active, children, onClick }) => {
        onClick={e => {
          e.preventDefault()
          onClick()
-       }}
+       } }
     >
       {children}
     </a>
@@ -385,10 +385,10 @@ let AddTodo = ({ dispatch }) => {
         }
         dispatch(addTodo(input.value))
         input.value = ''
-      }}>
+      } }>
         <input ref={node => {
           input = node
-        }} />
+        } } />
         <button type="submit">
           Add Todo
         </button>

@@ -5,9 +5,9 @@
 
 ``` html
 <!-- Handlebars 模板 -->
-{{#if ok}}
+{ {#if ok} }
   <h1>Yes</h1>
-{{/if}}
+{ {/if} }
 ```
 
 在 Vue.js ，我们使用 `v-if` 指令实现同样的功能：

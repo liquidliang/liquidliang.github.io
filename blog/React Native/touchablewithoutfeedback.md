@@ -51,7 +51,7 @@
         <h4 class="propTitle"><a class="anchor" name="onlayout"></a>onLayout <span class="propType">function</span> <a class="hash-link" href="#onlayout">#</a></h4>
         <div>
             <p>当加载或者布局改变的时候被调用，参数为：</p>
-            <p>  <code>{nativeEvent: {layout: {x, y, width, height} } }</code></p>
+            <p>  <code>{nativeEvent: {layout: {x, y, width, height}}}</code></p>
         </div>
     </div>
     <div class="prop">

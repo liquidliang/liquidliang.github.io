@@ -110,7 +110,7 @@ $ sudo gem install cocoapods
 </div>
 <div markdown class="md-block objc swift">
 
-![Before RN Integration](/blog/React Native/img/react-native-existing-app-integration-ios-before.png)
+![Before RN Integration](img/react-native-existing-app-integration-ios-before.png)
 
 ## 依赖包
 
@@ -124,7 +124,7 @@ React Native的植入过程同时需要React和React Native两个node依赖包�
 
 下面是一个最简单的`package.json`的内容示例。
 
-> 示例中的`version`字段没有太大意义（除非你要把你的项目发布到npm仓库）。`scripts`中是用于启动packager服务的命令。`dependencies`中的react和react-native的版本取决于你的具体需求。一般来说我们推荐使用最新版本。你可以使用`npm info react`和`npm info react-native`来查看当前的最新版本。另外，react-native对react的版本有严格要求，高于或低于某个范围都不可以。本文无法在这里列出所有react native和对应的react版本要求，只能提醒读者先尝试执行npm install，然后注意观察安装过程中的报错信息，例如`require react@某.某.某版本, but none was installed`，然后根据这样的提示，执行`npm i -S react@某.某.某版本`。
+> 示例中的`version`字段没有太大意义（除非你要把你的项目发布到npm仓库）。`scripts`中是用于启动packager服务的命令。dependencies中的react和react-native的版本取决于你的具体需求。一般来说我们推荐使用最新版本。你可以使用`npm info react`和`npm info react-native`来查看当前的最新版本。另外，react-native对react的版本有严格要求，高于或低于某个范围都不可以。本文无法在这里列出所有react native和对应的react版本要求，只能提醒读者先尝试执行npm install，然后注意观察安装过程中的报错信息，例如`require react@某.某.某版本, but none was installed`，然后根据这样的提示，执行`npm i -S react@某.某.某版本`。
 
 </div><div markdown class="md-block objc">
 
@@ -209,9 +209,7 @@ target 'NumberTileGame' do
     'RCTWebSocket', # 这个模块是用于调试功能的
     # 在这里继续添加你所需要的模块
   ]
-  # 如果你的RN版本 >= 0.42.0，请加入下面这行
-  pod "Yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
-  
+
 end
 ```
 
@@ -236,8 +234,6 @@ target 'swift-2048' do
     'RCTWebSocket', # 这个模块是用于调试功能的
     # 在这里继续添加你所需要的模块
   ]
-  # 如果你的RN版本 >= 0.42.0，请加入下面这行
-  pod "Yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
 
 end
 ```
@@ -283,7 +279,7 @@ Pod installation complete! There are 3 dependencies from the Podfile and 1 total
 
 首先创建一个空的`index.ios.js`文件。一般来说我们把它放置在项目根目录下。
 
-> `index.ios.js`是React Native应用在iOS上的入口文件。而且它是不可或缺的！它可以是个很简单的文件，简单到可以只包含一行`require/import`导入语句。本教程中为了简单示范，把全部的代码都写到了`index.ios.js`里（当然实际开发中我们并不推荐这样做）。
+> `index.ios.js`是React Native应用在iOS上的入口文件。而且它是不可或缺的！它可以是个很简单的文件，简单到可以只包含一行`require/import`导入语句。 is the starting point for React Native applications on iOS. And it is always required. It can be a small file that `require`s other file that are part of your React Native component or application, or it can contain all the code that is needed for it. In our case, we will just put everything in `index.ios.js`
 
 ```bash
 # 在项目根目录执行以下命令创建文件：
@@ -315,7 +311,7 @@ class RNHighScores extends React.Component {
         <Text style={styles.highScoresTitle}>
           2048 High Scores!
         </Text>
-        <Text style={styles.scores}>    
+        <Text style={styles.scores}>
           {contents}
         </Text>
       </View>
@@ -350,7 +346,7 @@ AppRegistry.registerComponent('RNHighScores', () => RNHighScores);
 
 ## The Magic: `RCTRootView`
 
-现在我们已经在`index.ios.js`中创建了React Native组件，下一步就是把这个组件添加给一个新的或已有的`ViewController`。 The easiest path to take is to optionally create an event path to your component and then add that component to an existing `ViewController`.
+Now that your React Native component is created via `index.ios.js`, you need to add that component to a new or existing `ViewController`. The easiest path to take is to optionally create an event path to your component and then add that component to an existing `ViewController`.
 
 We will tie our React Native component with a new native view in the `ViewController` that will actually host it called `RCTRootView` .
 
@@ -358,7 +354,7 @@ We will tie our React Native component with a new native view in the `ViewContro
 
 You can add a new link on the main game menu to go to the "High Score" React Native page.
 
-![Event Path](/blog/React Native/img/react-native-add-react-native-integration-link.png)
+![Event Path](img/react-native-add-react-native-integration-link.png)
 
 #### 事件处理
 
@@ -457,7 +453,7 @@ import React
 
 Wire up the new link in the main menu to the newly added event handler method.
 
-![Event Path](/blog/React Native/img/react-native-add-react-native-integration-wire-up.png)
+![Event Path](img/react-native-add-react-native-integration-wire-up.png)
 
 > One of the easier ways to do this is to open the view in the storyboard and right click on the new link. Select something such as the `Touch Up Inside` event, drag that to the storyboard and then select the created method from the list provided.
 
@@ -503,11 +499,11 @@ In our sample application, you should see the link to the "High Scores" and then
 
 Here is the *native* application home screen:
 
-![Home Screen](/blog/React Native/img/react-native-add-react-native-integration-example-home-screen.png)
+![Home Screen](img/react-native-add-react-native-integration-example-home-screen.png)
 
 Here is the *React Native* high score screen:
 
-![High Scores](/blog/React Native/img/react-native-add-react-native-integration-example-high-scores.png)
+![High Scores](img/react-native-add-react-native-integration-example-high-scores.png)
 
 > If you are getting module resolution issues when running your application please see [this GitHub issue](https://github.com/facebook/react-native/issues/4968) for information and possible resolution. [This comment](https://github.com/facebook/react-native/issues/4968#issuecomment-220941717) seemed to be the latest possible resolution.
 
@@ -531,31 +527,11 @@ Here is the *React Native* high score screen:
     $ npm install --save react react-native
     $ curl -o .flowconfig https://raw.githubusercontent.com/facebook/react-native/master/.flowconfig
 
-`npm init`创建了一个空的node模块（其实就是创建了一个package.json描述文件），而`npm install`则创建了node_modules目录并把react和react-native下载到了其中。至于第三步curl命令，其实质是`下载`.flowconfig配置文件，这个文件用于约束js代码的写法。这一步非必需，可跳过。下面我们打开新创建的`package.json`文件，然后在其`scripts`字段中加入:
+This creates a node module for your app and adds the `react-native` npm dependency. Now open the newly created `package.json` file and add this under `scripts`:
 
     "start": "node node_modules/react-native/local-cli/cli.js start"
 
-现在你的`package.json`内容应该类似这样：
-
-```bash
-{
-  "name": "NumberTileGame",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
-  },
-  "dependencies": {
-    "react": "15.4.1",
-    "react-native": "0.39.2"
-  }
-}
-```
-
-> 示例中的`version`字段没有太大意义（除非你要把你的项目发布到npm仓库）。`scripts`中是用于启动packager服务的命令。`dependencies`中的react和react-native的版本取决于你的具体需求。一般来说我们推荐使用最新版本。你可以使用`npm info react`和`npm info react-native`来查看当前的最新版本。另外，react-native对react的版本有严格要求，高于或低于某个范围都不可以。本文无法在这里列出所有react native和对应的react版本要求，只能提醒读者先尝试执行npm install，然后注意观察安装过程中的报错信息，例如`require react@某.某.某版本, but none was installed`，然后根据这样的提示，执行`npm i -S react@某.某.某版本`。
-
-
-接下来在项目根目录中创建`index.android.js`文件，然后将下面的代码复制粘贴进来：
+首先在项目根目录中创建`index.android.js`文件，然后将下面的代码复制粘贴进来：
 
 ```js
 'use strict';
@@ -592,9 +568,9 @@ var styles = StyleSheet.create({
 AppRegistry.registerComponent('HelloWorld', () => HelloWorld);
 ```
 
-## 准备工作
+## Prepare your current app
 
-在你的app中 `build.gradle` 文件中添加 React Native 依赖:
+In your app's `build.gradle` file add the React Native dependency:
 
 ```
  dependencies {
@@ -603,9 +579,9 @@ AppRegistry.registerComponent('HelloWorld', () => HelloWorld);
  }
 ```
 
-> 如果想要指定特定的React Native版本，可以用具体的版本号替换 `+`，当然前提是你从npm里下载的是这个版本 。 
+> If you want to ensure that you are always using a specific React Native version in your native build, replace `+` with an actual React Native version you've downloaded from `npm`.
 
-在项目的 `build.gradle` 文件中为 React Native 添加一个 maven 依赖的入口，必须写在 "allprojects" 代码块中:
+In your project's `build.gradle` file add an entry for the local React Native maven directory:
 
 ```
 allprojects {
@@ -620,13 +596,13 @@ allprojects {
 }
 ```
 
-> 确保依赖路径的正确！以免在 Android Studio 运行Gradle同步构建时抛出 “Failed to resolve: com.facebook.react:react-native:0.x.x" 异常。
+> Make sure that the path is correct! You shouldn’t run into any “Failed to resolve: com.facebook.react:react-native:0.x.x" errors after running Gradle sync in Android Studio.
 
-接着，在 `AndroidManifest.xml` 清单文件中声明网络权限:
+Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-如果需要访问 `DevSettingsActivity` 界面，也需要在 `AndroidManifest.xml` 中声明:
+If you need to access to the `DevSettingsActivity` add to your `AndroidManifest.xml`:
 
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
 
@@ -635,9 +611,9 @@ This is only really used in dev mode when reloading JavaScript from the developm
 
 ## 添加原生代码
 
-想要通过原生代码调用 React Native ，就像这样，我们需要在一个 `Activity` 中创建一个 `ReactRootView` 对象，将它关联一个 React application 并设为界面的主视图。
+You need to add some native code in order to start the React Native runtime and get it to render something. To do this, we're going to create an `Activity` that creates a `ReactRootView`, starts a React application inside it and sets it as the main content view.
 
-> 如果你想在安卓5.0以下的系统上运行，请用 `com.android.support:appcompat` 包中的 `AppCompatActivity` 代替 `Activity` 。
+> If you are targetting Android version <5, use the `AppCompatActivity` class from the `com.android.support:appcompat` package instead of `Activity`.
 
  
 ```java
@@ -658,10 +634,7 @@ public class MyReactActivity extends Activity implements DefaultHardwareBackBtnH
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-                
-        // 注意这里的HelloWorld必须对应“index.android.js”中的
-        // “AppRegistry.registerComponent()”的第一个参数
-        mReactRootView.startReactApplication(mReactInstanceManager, "HelloWorld", null);  
+        mReactRootView.startReactApplication(mReactInstanceManager, "HelloWorld", null);
 
         setContentView(mReactRootView);
     }
@@ -673,11 +646,11 @@ public class MyReactActivity extends Activity implements DefaultHardwareBackBtnH
 }
 ```
 
-> 如果你的项目名字不是叫“HelloWorld”，则需要将“index.android.js”中的“AppRegistry.registerComponent()”方法中的第一个参数替换为对应的名字。
+> If you are using a starter kit for React Native, replace the "HelloWorld" string with the one in your index.android.js file (it’s the first argument to the `AppRegistry.registerComponent()` method).
 
-如果你使用的是 Android Studio , 可以使用`Alt + Enter`快捷键来自动为MyReactActivity类补上缺失的import语句。注意引入的`BuildConfig`应该是在你自己的包中，而不是在`...facebook...`的包中。
+If you are using Android Studio, use `Alt + Enter` to add all missing imports in your MyReactActivity class. Be careful to use your package’s `BuildConfig` and not the one from the `...facebook...` package.
  
-我们需要把 `MyReactActivity` 的主题设定为 `Theme.AppCompat.Light.NoActionBar` ，因为里面有许多组件都使用了这一主题。
+We need set the theme of `MyReactActivity` to `Theme.AppCompat.Light.NoActionBar` beause some components rely on this theme.
 
  ```xml
  <activity
@@ -687,9 +660,9 @@ public class MyReactActivity extends Activity implements DefaultHardwareBackBtnH
  </activity>
  ```
 
-> 一个`ReactInstanceManager`可以在多个activities或fragments间共享。 You will want to make your own `ReactFragment` or `ReactActivity` and have a singleton *holder* that holds a `ReactInstanceManager`. When you need the `ReactInstanceManager` (e.g., to hook up the `ReactInstanceManager` to the lifecycle of those Activities or Fragments) use the one provided by the singleton.
+> A `ReactInstanceManager` can be shared amongst multiple activities and/or fragments. You will want to make your own `ReactFragment` or `ReactActivity` and have a singleton *holder* that holds a `ReactInstanceManager`. When you need the `ReactInstanceManager` (e.g., to hook up the `ReactInstanceManager` to the lifecycle of those Activities or Fragments) use the one provided by the singleton.
 
-下一步我们需要把一些activity的生命周期回调传递给`ReactInstanceManager`：
+Next, we need to pass some activity lifecycle callbacks down to the `ReactInstanceManager`:
 
 ```java
 @Override
@@ -697,7 +670,7 @@ protected void onPause() {
     super.onPause();
 
     if (mReactInstanceManager != null) {
-        mReactInstanceManager.onHostPause(this);
+        mReactInstanceManager.onHostPause();
     }
 }
 
@@ -748,37 +721,7 @@ public boolean onKeyUp(int keyCode, KeyEvent event) {
 }
 ```
 
-现在activity已就绪，可以运行一些JavaScript代码了。
-
-### 配置权限以便开发中的红屏错误能正确显示
-
-如果你的应用会运行在Android 6.0（API level 23）或更高版本，请确保你在开发版本中有打开`悬浮窗(overlay)`权限。If your app is targeting the Android `API level 23` or greater, make sure you have the `overlay` permission enabled for the development build. You can check it with `Settings.canDrawOverlays(this);`. This is required in dev builds because react native development errors must be displayed above all the other windows. Due to the new permissions system introduced in the API level 23, the user needs to approve it. This can be acheived by adding the following code to the Activity file in the onCreate() method. OVERLAY_PERMISSION_REQ_CODE is a field of the class which would be responsible for passing the result back to the Activity.
-
-```java
-if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    if (!Settings.canDrawOverlays(this)) {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                   Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-    }
-}
-```
-
-Finally, the `onActivityResult()` method (as shown in the code below) has to be overridden to handle the permission Accepted or Denied cases for consistent UX.
-
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                // SYSTEM_ALERT_WINDOW permission not granted...
-            }
-        }
-    }
-}
-```
-
+That's it, your activity is ready to run some JavaScript code.
 
 ## 运行你的应用
 
@@ -786,23 +729,24 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     $ npm start
 
-保持packager的窗口运行不要关闭，然后像往常一样编译运行你的Android应用(在命令行中执行`./gradlew installDebug`或是在Android Studio中编译运行)。
+Now build and run your Android app as normal (`./gradlew installDebug` from command-line; in Android Studio just create debug build as usual).
 
-> 如果你是使用Android Studio来编译运行，有可能会导致packger报错退出。这种情况下你需要安装[watchman](https://facebook.github.io/watchman/)。但是watchman目前没有稳定的Windows版本，所以在Windows下这种崩溃情况暂时没有特别好的解决方案。
+> If you are using Android Studio for your builds and not the Gradle Wrapper directly, make sure you install [watchman](https://facebook.github.io/watchman/) before running `npm start`. It will prevent the packager from crashing due to conflicts between Android Studio and the React Native packager.
 
-编译执行一切顺利进行之后，在进入到MyReactActivity时应该就能立刻从packager中读取JavaScript代码并执行和显示：
+Once you reach your React-powered activity inside the app, it should load the JavaScript code from the development server and display:
 
-![Screenshot](/blog/React Native/img/EmbeddedAppAndroid.png)
+![Screenshot](img/EmbeddedAppAndroid.png)
 
 ## 在Android Studio中打包
 
-你也可以使用Android Studio来打release包！其步骤基本和原生应用一样，只是在每次编译打包之前需要先执行js文件的打包(即生成离线的jsbundle文件)。具体的js打包命令如下：
+你也可以使用Android Studio来打包！You can use Android Studio to create your release builds too! It’s as easy as creating release builds of your previously-existing native Android app. There’s just one additional step, which you’ll have to do before every release build. You need to execute the following to create a React Native bundle, which’ll be included with your native Android app:
 
     $ react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/com/your-company-name/app-package-name/src/main/assets/index.android.bundle --assets-dest android/com/your-company-name/app-package-name/src/main/res/
 
-注意把上述命令中的路径替换为你实际项目的路径。如果assets目录不存在，需要提前自己创建一个。
+Don’t forget to replace the paths with correct ones and create the assets folder if it doesn’t exist!
 
-然后在Android Studio中正常生成release版本即可！
+Now just create a release build of your native app from within Android Studio as usual and you should be good to go!
+
 </div>
 <script class="markdown-script">
 window.display = function (type, value) {

@@ -8,7 +8,7 @@
 
 * Android SDK version 23 (编译SDK版本号在[build.gradle](https://github.com/facebook/react-native/blob/master/ReactAndroid/build.gradle)中可以找到)
 * SDK build tools version 23.0.1(编译工具版本号在[build.gradle](https://github.com/facebook/react-native/blob/master/ReactAndroid/build.gradle)中可以找到)
-* Android Support Repository >= 17 
+* Local Maven repository for Support Libraries（之前叫做Android Support Repository） >= 17 (Android Support Library所需的模块)
 * Android NDK(下载及解压指南看[这里](http://developer.android.com/ndk/downloads/index.html))
 
 将Gradle指向你的安卓SDK: 设置`$ANDROID_SDK`和`$ANDORID_NDK`为对应的目录，或者按照以下内容在react-native根目录下创建local.properties文件（注意：windows下需要使用反双斜杠）。
@@ -32,8 +32,7 @@ ndk.dir=/Users/your_unix_name/android-ndk/android-ndk-r10e
 
 更多参考您可以访问官网NDK界面 [official page](http://developer.android.com/ndk/downloads/index.html).
 
-__译注__:建议安装r10e版本，否则在编译过程可能会出错。
-
+__译注__:建议安装r10e版本，否则在编译过程可能会出错
 # 编译源代码：
 
 ## 1.在你的分支代码中进行安装
@@ -54,7 +53,7 @@ npm install --save github:facebook/react-native#master
 ...
     dependencies {
         classpath 'com.android.tools.build:gradle:1.3.1'
-        classpath 'de.undercouch:gradle-download-task:3.1.2'
+        classpath 'de.undercouch:gradle-download-task:2.0.0'
 
         // 注意：不要把你的应用的依赖放在这里；
         // 它们应该放在各自模块的build.gradle文件中
@@ -74,7 +73,7 @@ project(':ReactAndroid').projectDir = new File(rootProject.projectDir, '../node_
 ...
 ```
 
-修改你的`android/app/build.gradle`文件，使用`:ReactAndroid`替换预编译库。例如用`compile project(':ReactAndroid')`替换`compile 'com.facebook.react:react-native:0.16.+'`
+修改你的`android/app/build.gradle`文件，使用`:ReactAndroid`替换预编译库。例如用`compile project(':ReactAndroid'):`替换`compile 'com.facebook.react:react-native:0.16.+'`
 
 ```
 ...
@@ -92,17 +91,16 @@ dependencies {
 ## 让第三方模块使用你的分支
 如果你使用第三方的React Native模块，你需要重写它们的依赖以避免它们仍然打包官方的预编译库。否则当你编译时会报错-`Error: more than one library with package name 'com.facebook.react'.`（错误：有几个重名的'com.facebook.react'的包）
 
-修改你的`android/app/build.gradle`文件，添加如下内容：
+修改你的`android/app/build.gradle`文件，替换`compile project(':react-native-custom-module')`为以下内容：
 
 ```
-configurations.all {
+compile(project(':react-native-custom-module')) {
     exclude group: 'com.facebook.react', module: 'react-native'
 }
 ```
-
 # 在Android Studio中构建您的项目
 
-在Android Studio欢迎页中选择`Import project`，随后选择您应用所在的文件夹。
+在Android Studio欢迎页中选择`Import project`，随后选择您应用所在的文件夹
 
 您还需要使用_Run_按钮(__译注__：Android Studio中绿色的运行按钮)来在设备上运行您的app，此外Android Studio不会自动开启服务，你还需要通过`npm start`来启动。
 
@@ -116,28 +114,3 @@ gradle.projectsLoaded {
     }
 }
 ```
-
-## Additional notes
-
-Building from source can take a long time, especially for the first build, as it needs to download ~200 MB of artifacts and compile the native code. Every time you update the `react-native` version from your repo, the build directory may get deleted, and all the files are re-downloaded. To avoid this, you might want to change your build directory path by editing the `~/.gradle/init.gradle ` file:
-
-```gradle
-gradle.projectsLoaded {
-    rootProject.allprojects {
-        buildDir = "/path/to/build/directory/${rootProject.name}/${project.name}"
-    }
-}
-```
-
-## Building for Maven/Nexus deployment
-
-If you find that you need to push up a locally compiled React Native .aar and related files to a remote Nexus repository, you can.
-
-Start by following the `Point Gradle to your Android SDK` section of this page. Once you do this, assuming you have Gradle configured properly, you can then run the following command from the root of your React Native checkout to build and package all required files:
-
-```
-./gradlew ReactAndroid:installArchives
-```
-
-This will package everything that would typically be included in the `android` directory of your `node_modules/react-native/` installation in the root directory of your React Native checkout. 
-

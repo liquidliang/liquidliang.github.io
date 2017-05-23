@@ -59,7 +59,7 @@ var vm = new Vue({
     // 声明 message 为一个空值字符串
     message: ''
   },
-  template: '<div>{{ message }}</div>'
+  template: '<div>{ { message } }</div>'
 })
 // 之后设置 `message` 
 vm.message = 'Hello!'
@@ -76,7 +76,7 @@ vm.message = 'Hello!'
 例如，当你设置 `vm.someData = 'new value'` ，该组件不会立即重新渲染。当刷新队列时，组件会在事件循环队列清空时的下一个“tick”更新。多数情况我们不需要关心这个过程，但是如果你想在 DOM 状态更新后做点什么，这就可能会有些棘手。虽然 Vue.js 通常鼓励开发人员沿着“数据驱动”的方式思考，避免直接接触 DOM，但是有时我们确实要这么做。为了在数据变化之后等待 Vue 完成更新 DOM ，可以在数据变化之后立即使用 `Vue.nextTick(callback)` 。这样回调函数在 DOM 更新完成后就会调用。例如：
 
 ```html
-<div id="example">{{message}}</div>
+<div id="example">{ {message} }</div>
 ```
 ``` js
 var vm = new Vue({
@@ -94,7 +94,7 @@ Vue.nextTick(function () {
 在组件内使用 `vm.$nextTick()` 实例方法特别方便，因为它不需要全局 `Vue` ，并且回调函数中的 `this` 将自动绑定到当前的 Vue 实例上：
 ``` js
 Vue.component('example', {
-  template: '<span>{{ message }}</span>',
+  template: '<span>{ { message } }</span>',
   data: function () {
     return {
       message: 'not updated'

@@ -234,7 +234,7 @@ export default class Footer extends Component {
       <a href='#' onClick={e => {
         e.preventDefault()
         this.props.onFilterChange(filter)
-      }}>
+      } }>
         {name}
       </a>
     )
@@ -276,10 +276,10 @@ export default class Todo extends Component {
     return (
       <li
         onClick={this.props.onClick}
-        style={{
+        style={ {
           textDecoration: this.props.completed ? 'line-through' : 'none',
           cursor: this.props.completed ? 'default' : 'pointer'
-        }}>
+        } }>
         {this.props.text}
       </li>
     )

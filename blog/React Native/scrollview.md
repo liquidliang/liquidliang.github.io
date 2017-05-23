@@ -4,12 +4,6 @@
 
 ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者。
 
-`ScrollView`和`ListView/FlatList`应该如何选择？ScrollView会简单粗暴地把所有子元素一次性全部渲染出来。其原理浅显易懂，使用上自然也最简单。然而这样简单的渲染逻辑自然带来了性能上的不足。想象一下你有一个特别长的列表需要显示，可能有好几屏的高度。创建和渲染那些屏幕以外的JS组件和原生视图，显然对于渲染性能和内存占用都是一种极大的拖累和浪费。
-
-这就是为什么我们还有专门的`ListView`组件。`ListView`会惰性渲染子元素，只在它们将要出现在屏幕中时开始渲染。这种惰性渲染逻辑要复杂很多，因而API在使用上也更为繁琐。除非你要渲染的数据特别少，否则你都应该尽量使用`ListView`，哪怕它们用起来更麻烦。
-
-`FlatList`是0.43版本开始新出的改进版的`ListView`，性能更优，但可能不够稳定，尚待时间考验。
-
 ### 属性
 
 <div class="props">
@@ -36,7 +30,7 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="horizontal"></a>horizontal <span class="propType">bool</span> <a class="hash-link" href="#horizontal">#</a></h4>
 		<div>
-			<p>当此属性为true的时候，所有的子视图会在水平方向上排成一行，而不是默认的在垂直方向上排成一列。默认值为false。</p>
+			<p>当此属性为true的时候，所有的的子视图会在水平方向上排成一行，而不是默认的在垂直方向上排成一列。默认值为false。</p>
 		</div>
 	</div>
 	<div class="prop">
@@ -51,16 +45,10 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 		</div>
 	</div>
 	<div class="prop">
-		<h4 class="propTitle"><a class="anchor" name="keyboardshouldpersisttaps"></a>keyboardShouldPersistTaps <span class="propType">enum('always', 'never', 'handled', false, true)</span> <a class="hash-link" href="#keyboardshouldpersisttaps">#</a></h4>
-		<div><p>如果当前界面有软键盘，那么点击scrollview后是否收起键盘，取决于本属性的设置。（译注：很多人反应TextInput无法自动失去焦点/需要点击多次切换到其他组件等等问题，其关键都是需要将TextInput放到ScrollView中再设置本属性）</p>
-		<ul>
-			<li><code>'never'</code>（默认值），点击TextInput以外的子组件会使当前的软键盘收起。此时子元素不会收到点击事件。</li>
-			<li><code>'always'</code>，键盘不会自动收起，ScrollView也不会捕捉点击事件，但子组件可以捕获。</li>
-			<li><code>'handled'</code>，当点击事件被子组件捕获时，键盘不会自动收起。这样切换TextInput时键盘可以保持状态。多数带有TextInput的情况下你应该选择此项。</li>
-			<li><code>false</code>，已过期，请使用'never'代替。</li>
-			<li><code>true</code>，已过期，请使用'always'代替。</li>
-		</ul>
-	</div>
+		<h4 class="propTitle"><a class="anchor" name="keyboardshouldpersisttaps"></a>keyboardShouldPersistTaps <span class="propType">bool</span> <a class="hash-link" href="#keyboardshouldpersisttaps">#</a></h4>
+		<div>
+			<p>当此属性为false的时候，在软键盘激活之后，点击焦点文本输入框以外的地方，键盘就会隐藏。如果为true，滚动视图不会响应点击操作，并且键盘不会自动消失。默认值为false。</p>
+		</div>
 	</div>
 	<div class="prop"><h4 class="propTitle"><a class="anchor" name="oncontentsizechange"></a>onContentSizeChange <span
 	        class="propType">function</span> <a class="hash-link" href="#oncontentsizechange">#</a></h4>
@@ -194,29 +182,6 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 	    </div>
 	</div>
 	<div class="prop">
-		<h4 class="propTitle"><a class="anchor" name="overscrollmode"></a><span
-        class="platform">android</span>overScrollMode <span class="propType">enum('auto', 'always', 'never')</span> <a
-        class="hash-link" href="#overscrollmode">#</a></h4>
-    <div><p>覆盖默认的overScroll模式</p>
-        <p>可选的值有：</p>
-        <ul>
-            <li><code>'auto'</code> - 默认值，允许用户在内容超出视图高度之后可以滚动视图。
-            </li>
-            <li><code>'always'</code> - 无论内容尺寸，用户始终可以滚动视图。</li>
-            <li><code>'never'</code> - 始终不允许用户滚动视图。</li>
-        </ul>
-    </div>
-    </div>
-    <div class="prop">
-    	<h4 class="propTitle"><a class="anchor" name="scrollperftag"></a><span class="platform">android</span>scrollPerfTag
-    <span class="propType">string</span> <a class="hash-link" href="#scrollperftag">#</a></h4>
-	    <div><p>Tag used to log scroll performance on this scroll view. Will force
-	        momentum events to be turned on (see sendMomentumEvents). This doesn't do
-	        anything out of the box and you need to implement a custom native
-	        FpsListener for it to be useful.</p></div>
-		</div>
-	</div>
-	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="alwaysbouncehorizontal"></a><span class="platform">ios</span>alwaysBounceHorizontal <span class="propType">bool</span> <a class="hash-link" href="#alwaysbouncehorizontal">#</a></h4>
 		<div>
 			<p>当此属性为true时，水平方向即使内容比滚动视图本身还要小，也可以弹性地拉动一截。当<code>horizontal={true}</code>时默认值为true，否则为false。</p>
@@ -231,13 +196,13 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="automaticallyadjustcontentinsets"></a><span class="platform">ios</span>automaticallyAdjustContentInsets <span class="propType">bool</span> <a class="hash-link" href="#automaticallyadjustcontentinsets">#</a></h4>
 		<div>
-			<p>当滚动视图放在一个导航条或者工具条后面的时候，iOS系统是否要自动调整内容的范围。默认值为true。（译注：如果你的ScrollView或ListView的头部出现莫名其妙的空白，尝试将此属性置为false）</p>
+			<p>如果滚动视图放在一个导航条或者工具条后面的时候，iOS系统是否要自动调整内容的范围。默认值为true。（译注：如果你的ScrollView或ListView的头部出现莫名其妙的空白，尝试将此属性置为false）</p>
 		</div>
 	</div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="bounces"></a><span class="platform">ios</span>bounces <span class="propType">bool</span> <a class="hash-link" href="#bounces">#</a></h4>
 		<div>
-			<p>当值为true时，如果内容范围比滚动视图本身大，在到达内容末尾的时候，可以弹性地拉动一截。如果为false，尾部的所有弹性都会被禁用，即使<code>alwaysBounce</code>属性为true。默认值为true。</p>
+			<p>当值为true时，如果内容范围比滚动视图本身大，在到达内容末尾的时候，可以弹性地拉动一截。如果为false，尾部的所有弹性都会被禁用，即使<code>alwaysBounce*</code>属性为true。默认值为true。</p>
 		</div>
 	</div>
 	<div class="prop">
@@ -285,19 +250,6 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 		<div>
 			<p>当值为真时，滚动视图在拖拽的时候会锁定只有垂直或水平方向可以滚动。默认值为false。</p>
 		</div>
-	</div>
-	<div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="indicatorstyle"></a><span class="platform">ios</span>indicatorStyle
-    <span class="propType">enum('default', 'black', 'white')</span> <a class="hash-link"
-                                                                       href="#indicatorstyle">#</a>
-    </h4>
-    <div><p>设置滚动条的样式。</p>
-        <ul>
-            <li><code>default</code>，默认值，等同<code>black</code>.</li>
-            <li><code>black</code>，黑色滚动条。</li>
-            <li><code>white</code>，白色滚动条。</li>
-        </ul>
-    </div>
 	</div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="maximumzoomscale"></a><span class="platform">ios</span>maximumZoomScale <span class="propType">number</span> <a class="hash-link" href="#maximumzoomscale">#</a></h4>
@@ -374,7 +326,7 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
 		</div>
 	</div>
 	<div class="prop">
-		<h4 class="propTitle"><a class="anchor" name="stickyheaderindices"></a>stickyHeaderIndices <span class="propType">[number]</span> <a class="hash-link" href="#stickyheaderindices">#</a></h4>
+		<h4 class="propTitle"><a class="anchor" name="stickyheaderindices"></a><span class="platform">ios</span>stickyHeaderIndices <span class="propType">[number]</span> <a class="hash-link" href="#stickyheaderindices">#</a></h4>
 		<div>
 			<p>一个子视图下标的数组，用于决定哪些成员会在滚动之后固定在屏幕顶端。举个例子，传递<code>stickyHeaderIndices={[0]}</code>会让第一个成员固定在滚动视图顶端。这个属性不能和<code>horizontal={true}</code>一起使用。</p>
 		</div>
@@ -396,12 +348,6 @@ ScrollView内部的其他响应者尚无法阻止ScrollView本身成为响应者
             <p>使用示例:</p>
             <p><code>scrollTo({x: 0, y: 0, animated: true})</code></p></div>
     </div>
-    <div class="prop"><h4 class="methodTitle"><a class="anchor" name="scrolltoend"></a>scrollToEnd<span class="methodType">(options?)</span> <a class="hash-link" href="#scrolltoend">#</a></h4>
-    	<div>
-    	<p>滚动到视图底部（水平方向的视图则滚动到最右边）。</p><p>加上动画参数 <code>scrollToEnd({animated: true})</code>则启用平滑滚动动画，或是调用
-<code>scrollToEnd({animated: false})</code>来立即跳转。如果不使用参数，则<code>animated</code>选项默认启用。</p>
-		</div>
-	</div>
 </div>
 
 ### 例子
@@ -444,11 +390,6 @@ exports.examples = [
           onPress={() => { _scrollView.scrollTo({y: 0}); } }>
           <Text>Scroll to top</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => { _scrollView.scrollToEnd({animated: true}); } }>
-          <Text>Scroll to bottom</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -471,29 +412,23 @@ exports.examples = [
           onPress={() => { _scrollView.scrollTo({x: 0}); } }>
           <Text>Scroll to start</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => { _scrollView.scrollToEnd({animated: true}); } }>
-          <Text>Scroll to end</Text>
-        </TouchableOpacity>
       </View>
     );
   }
 }];
 
-class Thumb extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
+var Thumb = React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
     return false;
-  }
-
-  render() {
+  },
+  render: function() {
     return (
       <View style={styles.button}>
         <Image style={styles.img} source={ {uri:this.props.uri} } />
       </View>
     );
   }
-}
+});
 
 var THUMBS = ['https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851549_767334479959628_274486868_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851561_767334496626293_1958532586_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851579_767334503292959_179092627_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851589_767334513292958_1747022277_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851563_767334559959620_1193692107_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851593_767334566626286_1953955109_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851591_767334523292957_797560749_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851567_767334529959623_843148472_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851548_767334489959627_794462220_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851575_767334539959622_441598241_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851573_767334549959621_534583464_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851583_767334573292952_1519550680_n.png'];
 THUMBS = THUMBS.concat(THUMBS); // double length of THUMBS

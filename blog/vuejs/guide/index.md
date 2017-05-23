@@ -26,7 +26,7 @@ Vue.js 的核心是一个允许你采用简洁的模板语法来声明式的将�
 
 ``` html
 <div id="app">
-  {{ message }}
+  { { message } }
 </div>
 ```
 ``` js
@@ -39,7 +39,7 @@ var app = new Vue({
 ```
 {% raw %}
 <div id="app" class="demo">
-  {{ message }}
+  { { message } }
 </div>
 <script>
 var app = new Vue({
@@ -131,7 +131,7 @@ var app3 = new Vue({
 <div id="app-4">
   <ol>
     <li v-for="todo in todos">
-      {{ todo.text }}
+      { { todo.text } }
     </li>
   </ol>
 </div>
@@ -152,7 +152,7 @@ var app4 = new Vue({
 <div id="app-4" class="demo">
   <ol>
     <li v-for="todo in todos">
-      {{ todo.text }}
+      { { todo.text } }
     </li>
   </ol>
 </div>
@@ -178,7 +178,7 @@ var app4 = new Vue({
 
 ``` html
 <div id="app-5">
-  <p>{{ message }}</p>
+  <p>{ { message } }</p>
   <button v-on:click="reverseMessage">Reverse Message</button>
 </div>
 ```
@@ -197,7 +197,7 @@ var app5 = new Vue({
 ```
 {% raw %}
 <div id="app-5" class="demo">
-  <p>{{ message }}</p>
+  <p>{ { message } }</p>
   <button v-on:click="reverseMessage">Reverse Message</button>
 </div>
 <script>
@@ -221,7 +221,7 @@ Vue 也提供了 `v-model` 指令，它使得在表单输入和应用状态中�
 
 ``` html
 <div id="app-6">
-  <p>{{ message }}</p>
+  <p>{ { message } }</p>
   <input v-model="message">
 </div>
 ```
@@ -235,7 +235,7 @@ var app6 = new Vue({
 ```
 {% raw %}
 <div id="app-6" class="demo">
-  <p>{{ message }}</p>
+  <p>{ { message } }</p>
   <input v-model="message">
 </div>
 <script>
@@ -280,7 +280,7 @@ Vue.component('todo-item', {
   // "prop", which is like a custom attribute.
   // This prop is called todo.
   props: ['todo'],
-  template: '<li>{{ todo.text }}</li>'
+  template: '<li>{ { todo.text } }</li>'
 })
 ```
 
@@ -299,7 +299,7 @@ Vue.component('todo-item', {
 ``` js
 Vue.component('todo-item', {
   props: ['todo'],
-  template: '<li>{{ todo.text }}</li>'
+  template: '<li>{ { todo.text } }</li>'
 })
 
 var app7 = new Vue({
@@ -322,7 +322,7 @@ var app7 = new Vue({
 <script>
 Vue.component('todo-item', {
   props: ['todo'],
-  template: '<li>{{ todo.text }}</li>'
+  template: '<li>{ { todo.text } }</li>'
 })
 var app7 = new Vue({
   el: '#app-7',

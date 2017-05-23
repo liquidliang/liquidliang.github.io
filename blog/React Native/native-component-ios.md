@@ -15,15 +15,15 @@
 - 实现`-(UIView *)view`方法
 
 ```objective-c
-// RNTMapManager.m
+// RCTMapManager.m
 #import <MapKit/MapKit.h>
 
-#import <React/RCTViewManager.h>
+#import "RCTViewManager.h"
 
-@interface RNTMapManager : RCTViewManager
+@interface RCTMapManager : RCTViewManager
 @end
 
-@implementation RNTMapManager
+@implementation RCTMapManager
 
 RCT_EXPORT_MODULE()
 
@@ -42,8 +42,8 @@ RCT_EXPORT_MODULE()
 
 var { requireNativeComponent } = require('react-native');
 
-// requireNativeComponent 自动把这个组件提供给 "RNTMapManager"
-module.exports = requireNativeComponent('RNTMap', null);
+// requireNativeComponent 自动把这个组件提供给 "RCTMapManager"
+module.exports = requireNativeComponent('RCTMap', null);
 ```
 
 现在我们就已经实现了一个完整功能的地图组件了，诸如捏放和其它的手势都已经完整支持。但是现在我们还不能真正的从Javascript端控制它。(╯﹏╰)
@@ -53,7 +53,7 @@ module.exports = requireNativeComponent('RNTMap', null);
 我们能让这个组件变得更强大的第一件事情就是要能够封装一些原生属性供Javascript使用。举例来说，我们希望能够禁用手指捏放操作，然后指定一个初始的地图可见区域。禁用捏放操作只需要一个布尔值类型的属性就行了，所以我们添加这么一行：
 
 ```objective-c
-// RNTMapManager.m
+// RCTMapManager.m
 RCT_EXPORT_VIEW_PROPERTY(pitchEnabled, BOOL)
 ```
 
@@ -73,7 +73,7 @@ RCT_EXPORT_VIEW_PROPERTY(pitchEnabled, BOOL)
 import React, { Component, PropTypes } from 'react';
 import { requireNativeComponent } from 'react-native';
 
-var RNTMap = requireNativeComponent('RNTMap', MapView);
+var RCTMap = requireNativeComponent('RCTMap', MapView);
 
 export default class MapView extends Component {
   static propTypes = {
@@ -85,7 +85,7 @@ export default class MapView extends Component {
     pitchEnabled: PropTypes.bool,
   };
   render() {
-    return <RNTMap {...this.props} />;
+    return <RCTMap {...this.props} />;
   }
 }
 ```
@@ -97,8 +97,8 @@ _译注_：使用了封装组件之后，你还需要注意到module.exports导�
 现在，让我们添加一个更复杂些的`region`属性。我们首先添加原生代码：
 
 ```objective-c
-// RNTMapManager.m
-RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RNTMap)
+// RCTMapManager.m
+RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
 {
   [view setRegion:json ? [RCTConvert MKCoordinateRegion:json] : defaultView.region animated:YES];
 }
@@ -207,16 +207,16 @@ var RCTSwitch = requireNativeComponent('RCTSwitch', Switch, {
 
 ## 事件
 
-现在我们已经有了一个原生地图组件，并且从JS可以很容易的控制它了。不过我们怎么才能处理来自用户的事件，譬如缩放操作或者拖动来改变可视区域？关键的步骤是在`RNTMapManager`中声明一个事件处理函数的属性（onChange），来委托我们提供的所有视图，然后把事件传递给JavaScript。最终的代码看起来类似这样（比起完整的实现有所简化）：
+现在我们已经有了一个原生地图组件，并且从JS可以很容易的控制它了。不过我们怎么才能处理来自用户的事件，譬如缩放操作或者拖动来改变可视区域？关键的步骤是在`RCTMapManager`中声明一个事件处理函数的属性（onChange），来委托我们提供的所有视图，然后把事件传递给JavaScript。最终的代码看起来类似这样（比起完整的实现有所简化）：
 
 ```objective-c
-// RNTMap.h
+// RCTMap.h
 
 #import <MapKit/MapKit.h>
 
-#import <React/RCTComponent.h>
+#import "RCTComponent.h"
 
-@interface RNTMap: MKMapView
+@interface RCTMap: MKMapView
 
 @property (nonatomic, copy) RCTBubblingEventBlock onChange;
 
@@ -224,27 +224,27 @@ var RCTSwitch = requireNativeComponent('RCTSwitch', Switch, {
 ```
 
 ```objective-c
-// RNTMap.m
+// RCTMap.m
 
-#import "RNTMap.h"
+#import "RCTMap.h"
 
-@implementation RNTMap
+@implementation RCTMap
 
 @end
 ```
 
 ```objective-c
-#import "RNTMapManager.h"
+#import "RCTMapManager.h"
 
 #import <MapKit/MapKit.h>
 
-#import "RNTMap.h"
-#import <React/UIView+React.h>
+#import "RCTMap.h"
+#import "UIView+React.h"
 
-@interface RNTMapManager() <MKMapViewDelegate>
+@interface RCTMapManager() <MKMapViewDelegate>
 @end
 
-@implementation RNTMapManager
+@implementation RCTMapManager
 
 RCT_EXPORT_MODULE()
 
@@ -252,14 +252,14 @@ RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
 
 - (UIView *)view
 {
-  RNTMap *map = [RNTMap new];
+  RCTMap *map = [RCTMap new];
   map.delegate = self;
   return map;
 }
 
 #pragma mark MKMapViewDelegate
 
-- (void)mapView:(RNTMap *)mapView regionDidChangeAnimated:(BOOL)animated
+- (void)mapView:(RCTMap *)mapView regionDidChangeAnimated:(BOOL)animated
 {
   if (!mapView.onChange) {
     return;
@@ -277,52 +277,33 @@ RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
 }
 ```
 
-如你所见，我们刚才通过继承`MKMapView`添加了事件处理函数，然后我们将`onChange`暴露出来，委托`RNTMapManager`代理其创建的所有视图。最后在委托方法`-mapView:regionDidChangeAnimated:`中，根据对应的视图调用事件处理函数并传递区域数据。调用`onChange`事件会触发JavaScript端的同名回调函数。这个回调会被原生事件执行，然后我们通常都会在封装组件里做一些处理，来使得API更简明：
+如你所见，我们刚才通过继承`MKMapView`添加了事件处理函数，然后我们将`onChange`暴露出来，委托`RCTMapManager`代理其创建的所有视图。最后在委托方法`-mapView:regionDidChangeAnimated:`中，根据对应的视图调用事件处理函数并传递区域数据。调用`onChange`事件会触发JavaScript端的同名回调函数。这个回调会被原生事件执行，然后我们通常都会在封装组件里做一些处理，来使得API更简明：
 
 
 ```javascript
 // MapView.js
 
 class MapView extends React.Component {
-  static propTypes = {
-    /**
-     * Callback that is called continuously when the user is dragging the map.
-     */
-    onChange: React.PropTypes.func,
-    ...
-  };
-  _onChange = (event: Event) => {
+  constructor() {
+    this._onChange = this._onChange.bind(this);
+  }
+  _onChange(event: Event) {
     if (!this.props.onRegionChange) {
       return;
     }
-    this.props.onRegionChange(event.nativeEvent);
+    this.props.onRegionChange(event.nativeEvent.region);
   }
   render() {
-    return <RNTMap {...this.props} onChange={this._onChange} />;
+    return <RCTMap {...this.props} onChange={this._onChange} />;
   }
 }
-
-class MapViewExample extends React.Component {
-   onRegionChange(event: Event) {
-     // Do stuff with event.region.latitude, etc.
-   }
- 
-   render() {
-     var region = {
-       latitude: 37.48,
-       longitude: -122.16,
-       latitudeDelta: 0.1,
-       longitudeDelta: 0.1,
-     };
- 
-     return (
-       <MapView region={region} pitchEnabled={false} style={ {flex: 1} } onChange={this.onRegionChange}/>
-     );
-   }  
- }
- 
- // Module name
- +AppRegistry.registerComponent('MapViewExample', () => MapViewExample);
+MapView.propTypes = {
+  /**
+   * Callback that is called continuously when the user is dragging the map.
+   */
+  onRegionChange: React.PropTypes.func,
+  ...
+};
 ```
 
 ## 样式
@@ -377,5 +358,5 @@ var styles = StyleSheet.create({
 }
 ```
 
-本向导覆盖了包装原生组件所需了解的许多方面，不过你可能还有很多知识需要了解，譬如特殊的方式来插入和布局子视图。如果你想更深入了解，可以阅读`RNTMapManager`和其它的组件的[源代码](https://github.com/facebook/react-native/blob/master/React/Views)。
+本向导覆盖了包装原生组件所需了解的许多方面，不过你可能还有很多知识需要了解，譬如特殊的方式来插入和布局子视图。如果你想更深入了解，可以阅读`RCTMapManager`和其它的组件的[源代码](https://github.com/facebook/react-native/blob/master/React/Views)。
 

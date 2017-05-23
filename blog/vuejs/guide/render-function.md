@@ -256,7 +256,7 @@ render: function (createElement) {
 
 ``` html
 <ul v-if="items.length">
-  <li v-for="item in items">{{ item.name }}</li>
+  <li v-for="item in items">{ { item.name } }</li>
 </ul>
 <p v-else>No items found.</p>
 ```
@@ -539,13 +539,13 @@ Vue.component('smart-list', {
   <textarea v-model="templateText" rows="10"></textarea>
   <div v-if="typeof result === 'object'">
     <label>render:</label>
-    <pre><code>{{ result.render }}</code></pre>
+    <pre><code>{ { result.render } }</code></pre>
     <label>staticRenderFns:</label>
-    <pre v-for="(fn, index) in result.staticRenderFns"><code>_m({{ index }}): {{ fn }}</code></pre>
+    <pre v-for="(fn, index) in result.staticRenderFns"><code>_m({ { index } }): { { fn } }</code></pre>
   </div>
   <div v-else>
     <label>Compilation Error:</label>
-    <pre><code>{{ result }}</code></pre>
+    <pre><code>{ { result } }</code></pre>
   </div>
 </div>
 <script>
@@ -556,7 +556,7 @@ new Vue({
 <div>\n\
   <h1>I\'m a template!</h1>\n\
   <p v-if="message">\n\
-    {{ message }}\n\
+    { { message } }\n\
   </p>\n\
   <p v-else>\n\
     No message.\n\

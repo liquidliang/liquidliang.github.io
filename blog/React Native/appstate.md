@@ -1,4 +1,4 @@
-`AppState`能告诉你应用当前是在前台还是在后台，并且能在状态变化的时候通知你。
+`AppState`（此组件能用于Android）能告诉你应用当前是在前台还是在后台，并且能在状态变化的时候通知你。
 
 AppState通常在处理推送通知的时候用来决定内容和对应的行为。
 
@@ -27,11 +27,8 @@ componentDidMount() {
 componentWillUnmount() {
   AppState.removeEventListener('change', this._handleAppStateChange);
 }
-_handleAppStateChange = (nextAppState) => {
-  if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-    console.log('App has come to the foreground!')
-  }
-  this.setState({appState: nextAppState});
+_handleAppStateChange(currentAppState) {
+  this.setState({ currentAppState, });
 }
 render() {
   return (

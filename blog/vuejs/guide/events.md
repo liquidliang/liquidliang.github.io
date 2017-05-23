@@ -8,7 +8,7 @@
 ``` html
 <div id="example-1">
   <button v-on:click="counter += 1">增加 1</button>
-  <p>这个按钮被点击了 {{ counter }} 次。</p>
+  <p>这个按钮被点击了 { { counter } } 次。</p>
 </div>
 ```
 ``` js
@@ -25,7 +25,7 @@ var example1 = new Vue({
 {% raw %}
 <div id="example-1" class="demo">
   <button v-on:click="counter += 1">增加 1</button>
-  <p>这个按钮被点击了 {{ counter }} 次。</p>
+  <p>这个按钮被点击了 { { counter } } 次。</p>
 </div>
 <script>
 var example1 = new Vue({

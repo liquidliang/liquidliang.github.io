@@ -19,7 +19,7 @@ render: function() {
 },
 ```
 ### 截图
-![](/blog/React Native/img/components/progressbarandroid.png)
+![](img/components/progressbarandroid.png)
 
 ### 属性
 
@@ -74,8 +74,8 @@ render: function() {
 
 var ProgressBar = require('ProgressBarAndroid');
 var React = require('React');
-var RNTesterBlock = require('RNTesterBlock');
-var RNTesterPage = require('RNTesterPage');
+var UIExplorerBlock = require('UIExplorerBlock');
+var UIExplorerPage = require('UIExplorerPage');
 
 var TimerMixin = require('react-timer-mixin');
 
@@ -112,51 +112,51 @@ var ProgressBarAndroidExample = React.createClass({
 
   render: function() {
     return (
-      <RNTesterPage title="ProgressBar Examples">
-        <RNTesterBlock title="Default ProgressBar">
+      <UIExplorerPage title="ProgressBar Examples">
+        <UIExplorerBlock title="Default ProgressBar">
           <ProgressBar />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Small ProgressBar">
+        <UIExplorerBlock title="Small ProgressBar">
           <ProgressBar styleAttr="Small" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Large ProgressBar">
+        <UIExplorerBlock title="Large ProgressBar">
           <ProgressBar styleAttr="Large" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Inverse ProgressBar">
+        <UIExplorerBlock title="Inverse ProgressBar">
           <ProgressBar styleAttr="Inverse" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Small Inverse ProgressBar">
+        <UIExplorerBlock title="Small Inverse ProgressBar">
           <ProgressBar styleAttr="SmallInverse" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Large Inverse ProgressBar">
+        <UIExplorerBlock title="Large Inverse ProgressBar">
           <ProgressBar styleAttr="LargeInverse" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Horizontal Indeterminate ProgressBar">
+        <UIExplorerBlock title="Horizontal Indeterminate ProgressBar">
           <ProgressBar styleAttr="Horizontal" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Horizontal ProgressBar">
+        <UIExplorerBlock title="Horizontal ProgressBar">
           <MovingBar styleAttr="Horizontal" indeterminate={false} />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Large Red ProgressBar">
+        <UIExplorerBlock title="Large Red ProgressBar">
           <ProgressBar styleAttr="Large" color="red" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Horizontal Black Indeterminate ProgressBar">
+        <UIExplorerBlock title="Horizontal Black Indeterminate ProgressBar">
           <ProgressBar styleAttr="Horizontal" color="black" />
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Horizontal Blue ProgressBar">
+        <UIExplorerBlock title="Horizontal Blue ProgressBar">
           <MovingBar styleAttr="Horizontal" indeterminate={false} color="blue" />
-        </RNTesterBlock>
-      </RNTesterPage>
+        </UIExplorerBlock>
+      </UIExplorerPage>
     );
   },
 });

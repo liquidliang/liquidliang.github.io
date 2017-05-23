@@ -11,13 +11,13 @@
 
 ``` html
 <input v-model="message" placeholder="edit me">
-<p>Message is: {{ message }}</p>
+<p>Message is: { { message } }</p>
 ```
 
 {% raw %}
 <div id="example-1" class="demo">
   <input v-model="message" placeholder="edit me">
-  <p>Message is: {{ message }}</p>
+  <p>Message is: { { message } }</p>
 </div>
 <script>
 new Vue({
@@ -33,7 +33,7 @@ new Vue({
 
 ``` html
 <span>Multiline message is:</span>
-<p style="white-space: pre">{{ message }}</p>
+<p style="white-space: pre">{ { message } }</p>
 <br>
 <textarea v-model="message" placeholder="add multiple lines"></textarea>
 ```
@@ -41,7 +41,7 @@ new Vue({
 {% raw %}
 <div id="example-textarea" class="demo">
   <span>Multiline message is:</span>
-  <p style="white-space: pre">{{ message }}</p>
+  <p style="white-space: pre">{ { message } }</p>
   <br>
   <textarea v-model="message" placeholder="add multiple lines"></textarea>
 </div>
@@ -55,7 +55,7 @@ new Vue({
 </script>
 {% endraw %}
 
-<p class="tip">在文本区域插值( `<textarea>{{text}}</textarea>` ) 并不会生效，应用 `v-model` 来代替</p>
+<p class="tip">在文本区域插值( `<textarea>{ {text} }</textarea>` ) 并不会生效，应用 `v-model` 来代替</p>
 
 ### 复选框
 
@@ -63,12 +63,12 @@ new Vue({
 
 ``` html
 <input type="checkbox" id="checkbox" v-model="checked">
-<label for="checkbox">{{ checked }}</label>
+<label for="checkbox">{ { checked } }</label>
 ```
 {% raw %}
 <div id="example-2" class="demo">
   <input type="checkbox" id="checkbox" v-model="checked">
-  <label for="checkbox">{{ checked }}</label>
+  <label for="checkbox">{ { checked } }</label>
 </div>
 <script>
 new Vue({
@@ -90,7 +90,7 @@ new Vue({
 <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
 <label for="mike">Mike</label>
 <br>
-<span>Checked names: {{ checkedNames }}</span>
+<span>Checked names: { { checkedNames } }</span>
 ```
 
 ``` js
@@ -111,7 +111,7 @@ new Vue({
   <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
   <label for="mike">Mike</label>
   <br>
-  <span>Checked names: {{ checkedNames }}</span>
+  <span>Checked names: { { checkedNames } }</span>
 </div>
 <script>
 new Vue({
@@ -133,7 +133,7 @@ new Vue({
 <input type="radio" id="two" value="Two" v-model="picked">
 <label for="two">Two</label>
 <br>
-<span>Picked: {{ picked }}</span>
+<span>Picked: { { picked } }</span>
 ```
 {% raw %}
 <div id="example-4" class="demo">
@@ -143,7 +143,7 @@ new Vue({
   <input type="radio" id="two" value="Two" v-model="picked">
   <label for="two">Two</label>
   <br>
-  <span>Picked: {{ picked }}</span>
+  <span>Picked: { { picked } }</span>
 </div>
 <script>
 new Vue({
@@ -165,7 +165,7 @@ new Vue({
   <option>B</option>
   <option>C</option>
 </select>
-<span>Selected: {{ selected }}</span>
+<span>Selected: { { selected } }</span>
 ```
 {% raw %}
 <div id="example-5" class="demo">
@@ -174,7 +174,7 @@ new Vue({
     <option>B</option>
     <option>C</option>
   </select>
-  <span>Selected: {{ selected }}</span>
+  <span>Selected: { { selected } }</span>
 </div>
 <script>
 new Vue({
@@ -195,7 +195,7 @@ new Vue({
   <option>C</option>
 </select>
 <br>
-<span>Selected: {{ selected }}</span>
+<span>Selected: { { selected } }</span>
 ```
 {% raw %}
 <div id="example-6" class="demo">
@@ -205,7 +205,7 @@ new Vue({
     <option>C</option>
   </select>
   <br>
-  <span>Selected: {{ selected }}</span>
+  <span>Selected: { { selected } }</span>
 </div>
 <script>
 new Vue({
@@ -222,10 +222,10 @@ new Vue({
 ``` html
 <select v-model="selected">
   <option v-for="option in options" v-bind:value="option.value">
-    {{ option.text }}
+    { { option.text } }
   </option>
 </select>
-<span>Selected: {{ selected }}</span>
+<span>Selected: { { selected } }</span>
 ```
 ``` js
 new Vue({
@@ -244,10 +244,10 @@ new Vue({
 <div id="example-7" class="demo">
   <select v-model="selected">
     <option v-for="option in options" v-bind:value="option.value">
-      {{ option.text }}
+      { { option.text } }
     </option>
   </select>
-  <span>Selected: {{ selected }}</span>
+  <span>Selected: { { selected } }</span>
 </div>
 <script>
 new Vue({

@@ -8,7 +8,7 @@
 ``` html
 <ul id="example-1">
   <li v-for="item in items">
-    {{ item.message }}
+    { { item.message } }
   </li>
 </ul>
 ```
@@ -30,7 +30,7 @@ var example1 = new Vue({
 {% raw %}
 <ul id="example-1" class="demo">
   <li v-for="item in items">
-    {{item.message}}
+    { {item.message} }
   </li>
 </ul>
 <script>
@@ -56,7 +56,7 @@ var example1 = new Vue({
 ``` html
 <ul id="example-2">
   <li v-for="(item, index) in items">
-    {{ parentMessage }} - {{ index }} - {{ item.message }}
+    { { parentMessage } } - { { index } } - { { item.message } }
   </li>
 </ul>
 ```
@@ -79,7 +79,7 @@ var example2 = new Vue({
 {% raw%}
 <ul id="example-2" class="demo">
   <li v-for="(item, index) in items">
-    {{ parentMessage }} - {{ index }} - {{ item.message }}
+    { { parentMessage } } - { { index } } - { { item.message } }
   </li>
 </ul>
 <script>
@@ -114,7 +114,7 @@ var example2 = new Vue({
 ``` html
 <ul>
   <template v-for="item in items">
-    <li>{{ item.msg }}</li>
+    <li>{ { item.msg } }</li>
     <li class="divider"></li>
   </template>
 </ul>
@@ -127,7 +127,7 @@ var example2 = new Vue({
 ``` html
 <ul id="repeat-object" class="demo">
   <li v-for="value in object">
-    {{ value }}
+    { { value } }
   </li>
 </ul>
 ```
@@ -150,7 +150,7 @@ new Vue({
 {% raw %}
 <ul id="repeat-object" class="demo">
   <li v-for="value in object">
-    {{ value }}
+    { { value } }
   </li>
 </ul>
 <script>
@@ -171,7 +171,7 @@ new Vue({
 
 ``` html
 <div v-for="(value, key) in object">
-  {{ key }} : {{ value }}
+  { { key } } : { { value } }
 </div>
 ```
 
@@ -179,7 +179,7 @@ new Vue({
 
 ``` html
 <div v-for="(value, key, index) in object">
-  {{ index }}. {{ key }} : {{ value }}
+  { { index } }. { { key } } : { { value } }
 </div>
 ```
 
@@ -191,7 +191,7 @@ new Vue({
 
 ``` html
 <div>
-  <span v-for="n in 10">{{ n }}</span>
+  <span v-for="n in 10">{ { n } }</span>
 </div>
 ```
 
@@ -199,7 +199,7 @@ new Vue({
 
 {% raw %}
 <div id="range" class="demo">
-  <span v-for="n in 10">{{ n }} </span>
+  <span v-for="n in 10">{ { n } } </span>
 </div>
 <script>
 new Vue({ el: '#range' })
@@ -252,7 +252,7 @@ new Vue({ el: '#range' })
 Vue.component('todo-item', {
   template: '\
     <li>\
-      {{ title }}\
+      { { title } }\
       <button v-on:click="$emit(\'remove\')">X</button>\
     </li>\
   ',
@@ -298,7 +298,7 @@ new Vue({
 Vue.component('todo-item', {
   template: '\
     <li>\
-      {{ title }}\
+      { { title } }\
       <button v-on:click="$emit(\'remove\')">X</button>\
     </li>\
   ',
@@ -401,7 +401,7 @@ example1.items.splice(newLength)
 例如：
 
 ``` html
-<li v-for="n in evenNumbers">{{ n }}</li>
+<li v-for="n in evenNumbers">{ { n } }</li>
 ```
 
 ``` js
@@ -420,7 +420,7 @@ computed: {
 或者，你也可以在计算属性不适用的情况下 (例如，在嵌套 `v-for` 循环中) 使用 method 方法：
 
 ``` html
-<li v-for="n in even(numbers)">{{ n }}</li>
+<li v-for="n in even(numbers)">{ { n } }</li>
 ```
 
 ``` js

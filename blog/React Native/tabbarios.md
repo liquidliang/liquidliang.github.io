@@ -1,7 +1,7 @@
 #### __译注__：本组件，以及一切带IOS或Android后缀的组件，都不能跨平台运行。如果需要替代品，请到[js.coach](https://js.coach/react-native?search=tab)或[github](https://github.com/search?utf8=%E2%9C%93&q=react+native+tab)上搜索。
 
 ### 截图
-![](/blog/React Native/img/components/tabbarios.png)
+![](img/components/tabbarios.png)
 
 ### 属性
 
@@ -24,12 +24,6 @@
 			<p>当前被选中的标签图标的颜色。</p>
 		</div>
 	</div>
-  <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="unselecteditemtintcolor"></a>unselectedItemTintColor <span class="propType">string</span> <a class="hash-link" href="#unselecteditemtintcolor">#</a></h4>
-    <div>
-      <p>当前没有被选中的标签图标的颜色。仅在iOS 10及以上版本有效</p>
-    </div>
-  </div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="translucent"></a>translucent <span class="propType">bool</span> <a class="hash-link" href="#translucent">#</a></h4>
 		<div>

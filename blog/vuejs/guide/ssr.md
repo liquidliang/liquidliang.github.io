@@ -70,7 +70,7 @@ renderer.renderToString(app, function (error, html) {
 
 ``` js
 new Vue({
-  template: '<div>你已经在这花了 {{ counter }} 秒。</div>',
+  template: '<div>你已经在这花了 { { counter } } 秒。</div>',
   data: {
     counter: 0
   },
@@ -101,7 +101,7 @@ new Vue({
     // 主要的Vue实例必须返回，并且有一个根节点在id "app"上，这样客户端可以加载它。
 
     return new Vue({
-      template: '<div id="app">你已经在这花了 {{ counter }} 秒。</div>',
+      template: '<div id="app">你已经在这花了 { { counter } } 秒。</div>',
       data: {
         counter: 0
       },
@@ -298,7 +298,7 @@ var renderer = createRenderer({
 ``` js
 Vue.component({
   name: 'list-item',
-  template: '<li>{{ item.name }}</li>',
+  template: '<li>{ { item.name } }</li>',
   props: ['item'],
   serverCacheKey: function (props) {
     return props.item.type + '::' + props.item.id

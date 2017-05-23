@@ -130,7 +130,7 @@
   ``` js
   // 创建构造器
   var Profile = Vue.extend({
-    template: '<p>{{firstName}} {{lastName}} aka {{alias}}</p>',
+    template: '<p>{ {firstName} } { {lastName} } aka { {alias} }</p>',
     data: function () {
       return {
         firstName: 'Walter',
@@ -313,7 +313,7 @@
   在render函数中编译模板字符串。**只在独立构建时有效**
 
   ``` js
-  var res = Vue.compile('<div><span>{{ msg }}</span></div>')
+  var res = Vue.compile('<div><span>{ { msg } }</span></div>')
 
   new Vue({
     data: {
@@ -369,7 +369,7 @@
   })
   ```
 
-  <p class="tip">注意，__不应该对 `data` 属性使用箭头函数__ (例如`data: () => { return { a: this.myProp }}`)。理由是箭头函数绑定了父级作用域的上下文，所以 this 将不会按照期望指向 Vue 实例，`this.myProp` 将是 undefined。</p>
+  <p class="tip">注意，__不应该对 `data` 属性使用箭头函数__ (例如`data: () => { return { a: this.myProp } }`)。理由是箭头函数绑定了父级作用域的上下文，所以 this 将不会按照期望指向 Vue 实例，`this.myProp` 将是 undefined。</p>
 
 - **参考:** [深入响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html)
 
@@ -424,7 +424,7 @@
   ``` js
   var Comp = Vue.extend({
     props: ['msg'],
-    template: '<div>{{ msg }}</div>'
+    template: '<div>{ { msg } }</div>'
   })
 
   var vm = new Comp({
@@ -831,7 +831,7 @@
 
 - **类型:** `Array<string>`
 
-- **默认值:** `{% raw %}["{{", "}}"]{% endraw %}`
+- **默认值:** `{% raw %}["{ {", "} }"]{% endraw %}`
 
 - **详细:**
 
@@ -1281,14 +1281,14 @@
 
 - **详细：**
 
-  更新元素的 `textContent`。如果要更新部分的 `textContent` ，需要使用 `{% raw %}{{ Mustache }}{% endraw %}` 插值。
+  更新元素的 `textContent`。如果要更新部分的 `textContent` ，需要使用 `{% raw %}{ { Mustache } }{% endraw %}` 插值。
 
 - **示例：**
 
   ```html
   <span v-text="msg"></span>
   <!-- 和下面的一样 -->
-  <span>{{msg}}</span>
+  <span>{ {msg} }</span>
   ```
 
 - **参考：** [数据绑定语法 - 插值](https://cn.vuejs.org/v2/guide/syntax.html#Text)
@@ -1396,7 +1396,7 @@
 
   ``` html
   <div v-for="item in items">
-    {{ item.text }}
+    { { item.text } }
   </div>
   ```
 
@@ -1412,7 +1412,7 @@
 
   ``` html
   <div v-for="item in items" :key="item.id">
-    {{ item.text }}
+    { { item.text } }
   </div>
   ```
 
@@ -1595,7 +1595,7 @@
 - **示例：**
 
   ```html
-  <span v-pre>{{ this will not be compiled }}</span>
+  <span v-pre>{ { this will not be compiled } }</span>
    ```
 
 ### v-cloak
@@ -1616,7 +1616,7 @@
 
   ```html
   <div v-cloak>
-    {{ message }}
+    { { message } }
   </div>
   ```
 
@@ -1632,17 +1632,17 @@
 
   ```html
   <!-- 单个元素 -->
-  <span v-once>This will never change: {{msg}}</span>
+  <span v-once>This will never change: { {msg} }</span>
   <!-- 有子元素 -->
   <div v-once>
     <h1>comment</h1>
-    <p>{{msg}}</p>
+    <p>{ {msg} }</p>
   </div>
   <!-- 组件 -->
   <my-component v-once :comment="msg"></my-component>
   <!-- v-for 指令-->
   <ul>
-    <li v-for="i in list" v-once>{{i}}</li>
+    <li v-for="i in list" v-once>{ {i} }</li>
   </ul>
   ```
 
@@ -1677,7 +1677,7 @@
 
   ``` html
   <transition>
-    <span :key="text">{{ text }}</span>
+    <span :key="text">{ { text } }</span>
   </transition>
   ```
 
@@ -1819,7 +1819,7 @@
   ```html
   <transition-group tag="ul" name="slide">
     <li v-for="item in items" :key="item.id">
-      {{ item.text }}
+      { { item.text } }
     </li>
   </transition-group>
   ```

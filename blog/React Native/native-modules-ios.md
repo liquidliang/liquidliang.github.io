@@ -12,8 +12,8 @@
 
 ```objective-c
 // CalendarManager.h
-#import <React/RCTBridgeModule.h>
-#import <React/RCTLog.h>
+#import "RCTBridgeModule.h"
+#import "RCTLog.h"
 
 @interface CalendarManager : NSObject <RCTBridgeModule>
 @end
@@ -110,7 +110,7 @@ CalendarManager.addEvent('Birthday Party', '4 Privet Drive, Surrey', date.toISOS
 随着`CalendarManager.addEvent`方法变得越来越复杂，参数的个数越来越多，其中有一些可能是可选的参数。在这种情况下我们应该考虑修改我们的API，用一个dictionary来存放所有的事件参数，像这样：
 
 ```objective-c
-#import <React/RCTConvert.h>
+#import "RCTConvert.h"
 
 RCT_EXPORT_METHOD(addEvent:(NSString *)name details:(NSDictionary *)details)
 {
@@ -165,10 +165,6 @@ CalendarManager.findEvents((error, events) => {
 原生模块通常只应调用回调函数一次。但是，它可以保存callback并在将来调用。这在封装那些通过“委托函数”来获得返回值的iOS API时最为常见。[`RCTAlertManager`](https://github.com/facebook/react-native/blob/master/React/Modules/RCTAlertManager.m)中就属于这种情况。
 
 如果你想传递一个更接近`Error`类型的对象给Javascript，可以用[`RCTUtils.h`](https://github.com/facebook/react-native/blob/master/React/Base/RCTUtils.h)提供的`RCTMakeError`函数。现在它仅仅是发送了一个和Error结构一样的dictionary给Javascript，但我们考虑在将来版本里让它产生一个真正的`Error`对象。
-
-> **注意**
->
-> 如果你传递了回调函数，那么在原生端就必须执行它（如果传递了两个，比如onSuccess和onFail，那么执行其中一个即可），否则会导致内存泄漏。
 
 ## Promises
 
@@ -324,87 +320,41 @@ RCT_EXPORT_METHOD(updateStatusBarAnimation:(UIStatusBarAnimation)animation
 
 ## 给Javascript发送事件
 
-即使没有被JavaScript调用，原生模块也可以给JavaScript发送事件通知。最好的方法是继承`RCTEventEmitter`，实现`suppportEvents`方法并调用`self sendEventWithName:`。
+即使没有被JavaScript调用，本地模块也可以给JavaScript发送事件通知。最直接的方式是使用`eventDispatcher`:
 
 ```objective-c
-// CalendarManager.h
-#import <React/RCTBridgeModule.h>
-#import <React/RCTEventEmitter.h>
-
-@interface CalendarManager : RCTEventEmitter <RCTBridgeModule>
-
-@end
-```
-```objective-c
-// CalendarManager.m
-#import "CalendarManager.h"
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
 
 @implementation CalendarManager
 
-RCT_EXPORT_MODULE();
-
-- (NSArray<NSString *> *)supportedEvents
-{
-  return @[@"EventReminder"];
-}
+@synthesize bridge = _bridge;
 
 - (void)calendarEventReminderReceived:(NSNotification *)notification
 {
   NSString *eventName = notification.userInfo[@"name"];
-  [self sendEventWithName:@"EventReminder" body:@{@"name": eventName}];
+  [self.bridge.eventDispatcher sendAppEventWithName:@"EventReminder"
+                                               body:@{@"name": eventName}];
 }
 
 @end
 ```
-JavaScript代码可以创建一个包含你的模块的`NativeEventEmitter`实例来订阅这些事件。
+
+在JavaScript中可以这样订阅事件：
 
 ```javascript
-import { NativeEventEmitter, NativeModules } from 'react-native';
-const { CalendarManager } = NativeModules;
+import { NativeAppEventEmitter } from 'react-native';
 
-const calendarManagerEmitter = new NativeEventEmitter(CalendarManager);
-
-const subscription = calendarManagerEmitter.addListener(
+var subscription = NativeAppEventEmitter.addListener(
   'EventReminder',
-  (reminder) => console.log(reminder.name)
+  (reminder) => console.log(reminder.name)
 );
 ...
-// 别忘了取消订阅，通常在componentWillUnmount生命周期方法中实现。
+// 千万不要忘记忘记取消订阅, 通常在componentWillUnmount函数中实现。
 subscription.remove();
 ```
-更多给JavaScript发送事件的例子请看[`RCTLocationObserver`](https://github.com/facebook/react-native/blob/master/Libraries/Geolocation/RCTLocationObserver.m)。
 
-
-## 优化无监听处理的事件
-
-如果你发送了一个事件却没有任何监听处理，则会因此收到一个资源警告。要优化因此带来的额外开销，你可以在你的`RCTEventEmitter`子类中覆盖`startObserving`和`stopObserving`方法。
-
-```objective-c
-@implementation CalendarManager
-{
-  bool hasListeners;
-}
-
-// 在添加第一个监听函数时触发
--(void)startObserving { 
-    hasListeners = YES;
-    // Set up any upstream listeners or background tasks as necessary
-}
-
-// Will be called when this module's last listener is removed, or on dealloc.
--(void)stopObserving { 
-    hasListeners = NO;
-    // Remove upstream listeners, stop unnecessary background tasks
-}
-
-- (void)calendarEventReminderReceived:(NSNotification *)notification
-{
-  NSString *eventName = notification.userInfo[@"name"];
-  if (hasListeners) { // Only send events if anyone is listening
-    [self sendEventWithName:@"EventReminder" body:@{@"name": eventName}];
-  }
-}
-```
+更多的给JavaScript发送事件的例子，参见[`RCTLocationObserver`](https://github.com/facebook/react-native/blob/master/Libraries/Geolocation/RCTLocationObserver.m).
 
 ## 从Swift导出
 
@@ -431,7 +381,7 @@ class CalendarManager: NSObject {
 
 ```objc
 // CalendarManagerBridge.m
-#import <React/RCTBridgeModule.h>
+#import "RCTBridgeModule.h"
 
 @interface RCT_EXTERN_MODULE(CalendarManager, NSObject)
 
@@ -440,11 +390,11 @@ RCT_EXTERN_METHOD(addEvent:(NSString *)name location:(NSString *)location date:(
 @end
 ```
 
-请注意，一旦你[在IOS中混用2种语言](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html), 那就还需要一个额外的桥接头文件，称作“bridging header”，用来导出Objective-C文件给Swift。如果你是通过Xcode菜单中的`File>New File`来创建的Swift文件，Xcode会自动为你创建这个头文件。在这个头文件中，你需要引入`RCTBridgeModule.h`。
+请注意，一旦你[在IOS中混用2种语言](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html), 你还需要一个额外的桥接头文件，称作“bridging header”，用来导出Objective-C文件给Swift。如果你是通过Xcode菜单中的`File>New File`来创建的Swift文件，Xcode会自动为你创建这个头文件。在这个头文件中，你需要引入`RCTBridgeModule.h`。
 
 ```objc
 // CalendarManager-Bridging-Header.h
-#import <React/RCTBridgeModule.h>
+#import "RCTBridgeModule.h"
 ```
 
 同样的，你也可以使用`RCT_EXTERN_REMAP_MODULE`和`RCT_EXTERN_REMAP_METHOD`来改变导出模块和方法的JavaScript调用名称。

@@ -21,7 +21,7 @@ React优势之一是你可以很容易地从React组件里跟踪数据流动。�
 var Button = React.createClass({
   render: function() {
     return (
-      <button style={{'{{'}}background: this.props.color}}>
+      <button style={ {'{ {'} }background: this.props.color} }>
         {this.props.children}
       </button>
     );
@@ -58,7 +58,7 @@ var Button = React.createClass({
   },
   render: function() {
     return (
-      <button style={{'{{'}}background: this.context.color}}>
+      <button style={ {'{ {'} }background: this.context.color} }>
         {this.props.children}
       </button>
     );
@@ -146,7 +146,7 @@ void componentDidUpdate(
 ```javascript
 function Button(props, context) {
   return (
-    <button style={{'{{'}}background: context.color}}>
+    <button style={ {'{ {'} }background: context.color} }>
       {props.children}
     </button>
   );

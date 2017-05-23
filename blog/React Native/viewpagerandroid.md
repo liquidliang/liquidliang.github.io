@@ -32,7 +32,7 @@ var styles = {
 ```
 
 ### 截图
-![](/blog/React Native/img/components/viewpager.png)
+![](img/components/viewpager.png)
 
 ### 属性
 

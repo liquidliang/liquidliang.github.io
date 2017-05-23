@@ -141,7 +141,7 @@ JSX 的渲染功能有下面这些优势：
 	    <div class="list-container">
 	        <ul v-if="items.length">
 	            <li v-for="item in items">
-	                {{ item.name }}
+	                { { item.name } }
 	            </li>
 	        </ul>
 	        <p v-else>No items found.</p>
@@ -164,7 +164,7 @@ JSX 的渲染功能有下面这些优势：
 ``` pug
 div.list-container
   ul(v-if="items.length")
-    li(v-for="item in items") {{ item.name }}
+    li(v-for="item in items") { { item.name } }
   p(v-else) No items found.
 ```
 

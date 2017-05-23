@@ -6,7 +6,7 @@
 
 React Native目前有几个内置的导航器组件，一般来说我们首推`Navigator`。它使用纯JavaScript实现了一个导航栈，因此可以跨平台工作，同时也便于定制。 
 
-![](/blog/React Native/img/NavigationStack-Navigator.gif)
+![](img/NavigationStack-Navigator.gif)
 
 ### 场景（Scene）的概念与使用
 
@@ -58,7 +58,7 @@ class YoDawgApp extends Component {
 AppRegistry.registerComponent('YoDawgApp', () => YoDawgApp);
 ```
 
-我们现在已经创建了只有单个场景的App。其中的`MyScene`同时也是一个[可复用的React组件](https://facebook.github.io/react/docs/reusable-components.html)的例子。
+我们现在已经创建了只有单个场景的App。其中的`MyScene`同时也是一个[可复用的Reac组件](https://facebook.github.io/react/docs/reusable-components.html)的例子。
 
 ### 使用Navigator
 

@@ -51,13 +51,13 @@
 
 ```php
 <html>
-  <head><title>Car {{ $car->id }}</title></head>
+  <head><title>Car { { $car->id } }</title></head>
   <body>
-    <h1>Car {{ $car->id }}</h1>
+    <h1>Car { { $car->id } }</h1>
     <ul>
-      <li>Make: {{ $car->make }}</li>
-      <li>Model: {{ $car->model }}</li>
-      <li>Produced on: {{ $car->produced_on }}</li>
+      <li>Make: { { $car->make } }</li>
+      <li>Model: { { $car->model } }</li>
+      <li>Produced on: { { $car->produced_on } }</li>
     </ul>
   </body>
 </html>
@@ -238,7 +238,7 @@ Google 公司推出的 Angular 是最流行的 MVVM 前端框架。
       placeholder="在这里输入您的大名"
     >
   </p>
-  <h1>你好，{{name}}</h1>
+  <h1>你好，{ {name} }</h1>
 </div>
 ```
 
@@ -269,7 +269,7 @@ HTML 代码
 ```html
 <div id="journal">
   <input type="text" v-model="message">
-  <div>{{message}}</div>
+  <div>{ {message} }</div>
 </div>
 ```
 

@@ -120,7 +120,7 @@ new Vue({
 
 ``` js
 Vue.component('my-component', {
-  template: '<span>{{ message }}</span>',
+  template: '<span>{ { message } }</span>',
   data: {
     message: 'hello'
   }
@@ -141,7 +141,7 @@ Vue.component('my-component', {
 var data = { counter: 0 }
 
 Vue.component('simple-counter', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+  template: '<button v-on:click="counter += 1">{ { counter } }</button>',
   // data 是一个函数，因此 Vue 不会警告，
   // 但是我们为每一个组件返回了同一个对象引用
   data: function () {
@@ -163,7 +163,7 @@ new Vue({
 <script>
 var data = { counter: 0 }
 Vue.component('simple-counter', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+  template: '<button v-on:click="counter += 1">{ { counter } }</button>',
   data: function () {
     return data
   }
@@ -194,7 +194,7 @@ data: function () {
 </div>
 <script>
 Vue.component('my-component', {
-  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+  template: '<button v-on:click="counter += 1">{ { counter } }</button>',
   data: function () {
     return {
       counter: 0
@@ -231,7 +231,7 @@ Vue.component('child', {
   props: ['message'],
   // 就像 data 一样，prop 可以用在模板内
   // 同样也可以在 vm 实例中像 “this.message” 这样使用
-  template: '<span>{{ message }}</span>'
+  template: '<span>{ { message } }</span>'
 })
 ```
 
@@ -253,7 +253,7 @@ new Vue({
   components: {
     child: {
       props: ['message'],
-      template: '<span>{{ message }}</span>'
+      template: '<span>{ { message } }</span>'
     }
   }
 })
@@ -268,7 +268,7 @@ HTML 特性是不区分大小写的。所以，当使用非字符串模版时，
 Vue.component('child', {
   // camelCase in JavaScript
   props: ['myMessage'],
-  template: '<span>{{ myMessage }}</span>'
+  template: '<span>{ { myMessage } }</span>'
 })
 ```
 
@@ -314,7 +314,7 @@ new Vue({
   components: {
     child: {
       props: ['myMessage'],
-      template: '<span>{{myMessage}}</span>'
+      template: '<span>{ {myMessage} }</span>'
     }
   }
 })
@@ -445,7 +445,7 @@ Vue.component('example', {
 
 ``` html
 <div id="counter-event-example">
-  <p>{{ total }}</p>
+  <p>{ { total } }</p>
   <button-counter v-on:increment="incrementTotal"></button-counter>
   <button-counter v-on:increment="incrementTotal"></button-counter>
 </div>
@@ -453,7 +453,7 @@ Vue.component('example', {
 
 ``` js
 Vue.component('button-counter', {
-  template: '<button v-on:click="increment">{{ counter }}</button>',
+  template: '<button v-on:click="increment">{ { counter } }</button>',
   data: function () {
     return {
       counter: 0
@@ -482,13 +482,13 @@ new Vue({
 
 {% raw %}
 <div id="counter-event-example" class="demo">
-  <p>{{ total }}</p>
+  <p>{ { total } }</p>
   <button-counter v-on:increment="incrementTotal"></button-counter>
   <button-counter v-on:increment="incrementTotal"></button-counter>
 </div>
 <script>
 Vue.component('button-counter', {
-  template: '<button v-on:click="increment">{{ counter }}</button>',
+  template: '<button v-on:click="increment">{ { counter } }</button>',
   data: function () {
     return {
       counter: 0
@@ -678,7 +678,7 @@ bus.$on('id-selected', function (id) {
 
 ``` html
 <child-component>
-  {{ message }}
+  { { message } }
 </child-component>
 ```
 
@@ -829,7 +829,7 @@ Vue.component('child-component', {
   <child>
     <template scope="props">
       <span>hello from parent</span>
-      <span>{{ props.text }}</span>
+      <span>{ { props.text } }</span>
     </template>
   </child>
 </div>
@@ -852,7 +852,7 @@ Vue.component('child-component', {
 <my-awesome-list :items="items">
   <!-- 作用域插槽也可以在这里命名 -->
   <template slot="item" scope="props">
-    <li class="my-fancy-item">{{ props.text }}</li>
+    <li class="my-fancy-item">{ { props.text } }</li>
   </template>
 </my-awesome-list>
 ```
@@ -1080,7 +1080,7 @@ template: '<div><stack-overflow></stack-overflow></div>'
 
 ``` html
 <p>
-  <span>{{ folder.name }}</span>
+  <span>{ { folder.name } }</span>
   <tree-folder-contents :children="folder.children"/>
 </p>
 ```
@@ -1090,7 +1090,7 @@ template: '<div><stack-overflow></stack-overflow></div>'
 <ul>
   <li v-for="child in children">
     <tree-folder v-if="child.children" :folder="child"/>
-    <span v-else>{{ child.name }}</span>
+    <span v-else>{ { child.name } }</span>
   </li>
 </ul>
 ```

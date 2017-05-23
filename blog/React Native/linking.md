@@ -8,7 +8,7 @@
 
 ```javascript
 componentDidMount() {
-  Linking.getInitialURL().then((url) => {
+  var url = Linking.getInitialURL().then(url) => {
     if (url) {
       console.log('Initial url is: ' + url);
     }
@@ -28,7 +28,7 @@ componentDidMount() {
 对于iOS来说，如果要在App启动后也监听传入的App链接，那么首先需要在项目中链接`RCTLinking`，具体步骤请参考[使用链接库](linking-libraries-ios.html)这篇文档，然后需要在`AppDelegate.m`中增加以下代码：
 
 ```objective-c
-#import <React/RCTLinkingManager.h>
+#import "RCTLinkingManager.h"
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
    sourceApplication:(NSString *)sourceApplication annotation:(id)annotation

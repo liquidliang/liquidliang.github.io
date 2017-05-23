@@ -11,8 +11,8 @@ Angular的典型句法之一。
 ```html
 
 <ul> 
-    <li ng-repeat="framework in frameworks" title="{{framework.description}}">               
-                  {{framework.name}} 
+    <li ng-repeat="framework in frameworks" title="{ {framework.description} }">               
+                  { {framework.name} } 
     </li> 
 </ul>
 
@@ -23,6 +23,6 @@ Angular的典型句法之一。
 ```html
 
 <input ng-model="user.name" type="text" />
-Hello {{user.name}}!
+Hello { {user.name} }!
 
 ```

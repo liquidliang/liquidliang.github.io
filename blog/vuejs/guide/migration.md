@@ -377,7 +377,7 @@ Debouncing 曾经被用来控制 Ajax 请求及其它高耗任务的频率。 Vu
 <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
 <div id="debounce-search-demo" class="demo">
   <input v-model="searchQuery" placeholder="Type something">
-  <strong>{{ searchIndicator }}</strong>
+  <strong>{ { searchIndicator } }</strong>
 </div>
 <script>
 new Vue({
@@ -428,7 +428,7 @@ new Vue({
 <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
 <div id="debounce-search-demo">
   <input v-model="searchQuery" placeholder="Type something">
-  <strong>{{ searchIndicator }}</strong>
+  <strong>{ { searchIndicator } }</strong>
 </div>
 ```
 
@@ -826,7 +826,7 @@ methods: {
 
 ### 插入文本之外的过滤器 <sup>移除</sup>
 
-现在过滤器只能用在插入文本中 (`{% raw %}{{ }}{% endraw %}` tags)。我们发现在指令（如：`v-model`， `v-on`等）中使用过滤器使事情变得更复杂。像`v-for` 这样的列表过滤器最好把处理逻辑作为一个计算属性放在js里面，这样就可以在整个模板中复用。
+现在过滤器只能用在插入文本中 (`{% raw %}{ { } }{% endraw %}` tags)。我们发现在指令（如：`v-model`， `v-on`等）中使用过滤器使事情变得更复杂。像`v-for` 这样的列表过滤器最好把处理逻辑作为一个计算属性放在js里面，这样就可以在整个模板中复用。
 
 总之，能在原生js中实现的东西，我们尽量避免引入一个新的符号去重复处理同样的问题。下面是如何替换 Vue 内置过滤器：
 
@@ -867,13 +867,13 @@ methods: {
 不再这样写：
 
 ``` html
-<p v-for="item in items | limitBy 10">{{ item }}</p>
+<p v-for="item in items | limitBy 10">{ { item } }</p>
 ```
 
 在 computed 属性中使用js内置方法： [`.slice` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice#Examples)：
 
 ``` html
-<p v-for="item in filteredItems">{{ item }}</p>
+<p v-for="item in filteredItems">{ { item } }</p>
 ```
 
 ``` js
@@ -889,13 +889,13 @@ computed: {
 不再这样写：
 
 ``` html
-<p v-for="user in users | filterBy searchQuery in 'name'">{{ user.name }}</p>
+<p v-for="user in users | filterBy searchQuery in 'name'">{ { user.name } }</p>
 ```
 
 在 computed 属性中使用js内置方法 [`.filter` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter#Examples)：
 
 ``` html
-<p v-for="user in filteredUsers">{{ user.name }}</p>
+<p v-for="user in filteredUsers">{ { user.name } }</p>
 ```
 
 ``` js
@@ -927,13 +927,13 @@ self.users.filter(function (user) {
 不这样写：
 
 ``` html
-<p v-for="user in users | orderBy 'name'">{{ user.name }}</p>
+<p v-for="user in users | orderBy 'name'">{ { user.name } }</p>
 ```
 
 而是在 computed 属性中使用 [lodash's `orderBy`](https://lodash.com/docs/4.15.0#orderBy) (或者可能是 [`sortBy`](https://lodash.com/docs/4.15.0#sortBy))：
 
 ``` html
-<p v-for="user in orderedUsers">{{ user.name }}</p>
+<p v-for="user in orderedUsers">{ { user.name } }</p>
 ```
 
 ``` js
@@ -962,13 +962,13 @@ _.orderBy(this.users, ['name', 'last_login'], ['asc', 'desc'])
 现在过滤器参数形式可以更好地与js函数调用方式一致，因此不用再用空格分隔参数：
 
 ``` html
-<p>{{ date | formatDate 'YY-MM-DD' timeZone }}</p>
+<p>{ { date | formatDate 'YY-MM-DD' timeZone } }</p>
 ```
 
 现在用圆括号括起来并用逗号分隔：
 
 ``` html
-<p>{{ date | formatDate('YY-MM-DD', timeZone) }}</p>
+<p>{ { date | formatDate('YY-MM-DD', timeZone) } }</p>
 ```
 
 {% raw %}
@@ -1152,7 +1152,7 @@ You may notice that:
 属性内部的计算插值已经不能再使用了：
 
 ``` html
-<button class="btn btn-{{ size }}"></button>
+<button class="btn btn-{ { size } }"></button>
 ```
 
 应该写成行内表达式：
@@ -1184,7 +1184,7 @@ computed: {
 
 ### HTML 计算插值 <sup>移除</sup>
 
-HTML 的计算插值 (`{% raw %}{{{ foo }}}{% endraw %}`) 已经移除，取代的是 [`v-html` 指令](../api/#v-html).
+HTML 的计算插值 (`{% raw %}{ { { foo } } }{% endraw %}`) 已经移除，取代的是 [`v-html` 指令](../api/#v-html).
 
 {% raw %}
 <div class="upgrade-path">
@@ -1195,7 +1195,7 @@ HTML 的计算插值 (`{% raw %}{{{ foo }}}{% endraw %}`) 已经移除，取代�
 
 ### 单次绑定<sup>替换</sup>
 
-单次绑定 (`{% raw %}{{* foo }}{% endraw %}`) 已经被新的 [`v-once` directive](../api/#v-once) 取代。
+单次绑定 (`{% raw %}{ {* foo } }{% endraw %}`) 已经被新的 [`v-once` directive](../api/#v-once) 取代。
 
 {% raw %}
 <div class="upgrade-path">

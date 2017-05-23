@@ -41,7 +41,7 @@ public class ToastModule extends ReactContextBaseJavaModule {
   }
 ```
 
-_译注_：模块名前的RCT前缀会被自动移除。所以如果返回的字符串为"RCTToastAndroid"，在JavaScript端依然可以通过`React.NativeModules.ToastAndroid`访问到这个模块。
+_译注_：模块名前的RCT前缀会被自动移除。所以如果返回的字符串为"RCTToastAndroid"，在JavaScript端依然通过`React.NativeModules.ToastAndroid`访问到这个模块。
 
 一个可选的方法`getContants`返回了需要导出给JavaScript使用的常量。它并不一定需要实现，但在定义一些可以被JavaScript同步访问到的预定义的值时非常有用。
 
@@ -85,19 +85,7 @@ ReadableArray -> Array
 在Java这边要做的最后一件事就是注册这个模块。我们需要在应用的Package类的`createNativeModules`方法中添加这个模块。如果模块没有被注册，它也无法在JavaScript中被访问到。
 
 ```java
-package com.facebook.react.modules.toast;
-
-import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.JavaScriptModule;
-import com.facebook.react.bridge.NativeModule;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class AnExampleReactPackage implements ReactPackage {
+class AnExampleReactPackage implements ReactPackage {
 
   @Override
   public List<Class<? extends JavaScriptModule>> createJSModules() {
@@ -218,8 +206,6 @@ __译注__：这一部分涉及到较新的js语法和特性，不熟悉的读�
 我们把上面的代码用promise来代替回调进行重构：
 
 ```java
-import com.facebook.react.bridge.Promise;
-
 public class UIManagerModule extends ReactContextBaseJavaModule {
 
 ...
@@ -307,13 +293,13 @@ componentWillMount: function() {
 
 ### 从`startActivityForResult`中获取结果
 
-如果你使用`startActivityForResult`调起了一个activity并想从其中获取返回结果，那么你需要监听`onActivityResult`事件。具体的做法是继承`BaseActivityEventListener`或是实现`ActivityEventListener`。我们推荐前一种做法，因为它相对来说不太会受到API变更的影响。然后你需要在模块的构造函数中注册这一监听事件。
+You'll need to listen to `onActivityResult` if you want to get results from an activity you started with `startActivityForResult`. To do this, the you must extend `BaseActivityEventListener` or implement `ActivityEventListener`. The former is preferred as it is more resilient to API changes. Then, you need to register the listener in the module's constructor,
 
 ```java
 reactContext.addActivityEventListener(mActivityResultListener);
 ```
 
-现在你可以通过重写下面的方法来实现对`onActivityResult`的监听：
+Now you can listen to `onActivityResult` by implementing the following method:
 
 ```java
 @Override
@@ -322,11 +308,11 @@ public void onActivityResult(
   final int requestCode,
   final int resultCode,
   final Intent intent) {
-  // 在这里实现你自己的逻辑
+  // Your logic here
 }
 ```
 
-下面我们写一个简单的图片选择器来实践一下。这个图片选择器会把`pickImage`方法暴露给JavaScript，而这个方法在调用时就会把图片的路径返回到JS端。
+We will implement a simple image picker to demonstrate this. The image picker will expose the method `pickImage` to JavaScript, which will return the path of the image when called.
 
 ```java
 public class ImagePickerModule extends ReactContextBaseJavaModule {
@@ -342,7 +328,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule {
   private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
   
     @Override
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
       if (requestCode == IMAGE_PICKER_REQUEST) {
         if (mPickerPromise != null) {
           if (resultCode == Activity.RESULT_CANCELED) {
@@ -403,15 +389,15 @@ public class ImagePickerModule extends ReactContextBaseJavaModule {
 }
 ```
 
-### 监听生命周期事件
+### Listening to LifeCycle events
 
-监听activity的生命周期事件（比如`onResume`, `onPause`等等）和我们在前面实现 `ActivityEventListener`的做法类似。模块必须实现`LifecycleEventListener`，然后需要在构造函数中注册一个监听函数：
+Listening to the activity's LifeCycle events such as `onResume`, `onPause` etc. is very similar to how we implemented `ActivityEventListener`. The module must implement `LifecycleEventListener`. Then, you need to register a listener in the module's constructor,
 
 ```java
 reactContext.addLifecycleEventListener(this);
 ```
 
-现在你可以通过实现下列方法来监听activity的生命周期事件了：
+Now you can listen to the activity's LifeCycle events by implementing the following methods:
 
 ```java
 @Override

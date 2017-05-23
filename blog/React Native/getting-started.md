@@ -2,8 +2,6 @@
 
 根据你所使用的操作系统、针对的目标平台不同，具体步骤有所不同。如果想同时开发iOS和Android也没问题，你只需要先选一个平台开始，另一个平台的环境搭建只是稍有不同。
 
-如果`阅读完本文档`后还碰到很多环境搭建的问题，我们建议你还可以再看看由本站提供的`环境搭建视频教程`([macOS iOS](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220865928921581&vid=a1417i5op7k)、[macOS Android](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220870223888877&vid=z1417kmxask)、[windows Android](https://ke.qq.com/webcourse/index.html#course_id=197101&term_id=100233637&taid=1220874518856173&vid=d1417tgg1ez))、[windows环境搭建文字教程](http://bbs.reactnative.cn/topic/10)、以及[常见问题](http://bbs.reactnative.cn/topic/130)。
-
 <div class="toggler">
 <style>
 .toggler {
@@ -46,6 +44,8 @@
 <a class="button-windows" onclick="display('os', 'windows')">Windows</a>
 </div>
 
+译注：如果`阅读完本文档`后还碰到很多环境搭建的问题，我们建议你还可以再看看由本站提供的[环境搭建视频教程](http://v.youku.com/v_show/id_XMTQ4OTYyMjg4MA==.html)、[windows环境搭建文字教程](http://bbs.reactnative.cn/topic/10)、以及[常见问题](http://bbs.reactnative.cn/topic/130)。
+
 <!-- ######### LINUX AND WINDOWS for iOS ##################### -->
 
 <div markdown class="md-block linux windows ios">
@@ -54,7 +54,7 @@
 
 苹果公司目前只允许在Mac电脑上开发iOS应用。如果你没有Mac电脑，那么只能考虑先开发Android应用了。
 
-![](/blog/React Native/img/react-native-sorry-not-supported.png)
+![](img/react-native-sorry-not-supported.png)
 
 
 <!-- ######### MAC for iOS ##################### -->
@@ -83,13 +83,13 @@ sudo chown -R `whoami` /usr/local
 
 使用Homebrew来安装[Node.js](https://nodejs.org/).
 
-> React Native目前需要NodeJS 5.0或更高版本。本文发布时Homebrew默认安装的是最新版本，一般都满足要求。 
+> React Native需要NodeJS 4.0或更高版本。本文发布时Homebrew默认安装的是最新版本，一般都满足要求。 
 
 ```
 brew install node
 ```
 
-安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。注意：不要使用cnpm！cnpm安装的模块路径比较奇怪，packager不能正常识别！
+安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。
 
 ```
 npm config set registry https://registry.npm.taobao.org --global
@@ -104,14 +104,6 @@ npm config set disturl https://npm.taobao.org/dist --global
 npm install -g yarn react-native-cli
 ```
 
-安装完yarn后同理也要设置镜像源：
-
-```
-yarn config set registry https://registry.npm.taobao.org --global
-yarn config set disturl https://npm.taobao.org/dist --global
-```
-
-
 如果你看到`EACCES: permission denied`这样的权限报错，那么请参照上文的homebrew译注，修复`/usr/local`目录的所有权：  
 
 ```bash
@@ -122,7 +114,7 @@ sudo chown -R `whoami` /usr/local
 
 #### Xcode
 
-React Native目前需要[Xcode](https://developer.apple.com/xcode/downloads/) 8.0 或更高版本。你可以通过App Store或是到[Apple开发者官网](https://developer.apple.com/xcode/downloads/)上下载。这一步骤会同时安装Xcode IDE和Xcode的命令行工具。
+React Native目前需要[Xcode](https://developer.apple.com/xcode/downloads/) 7.0 或更高版本。你可以通过App Store或是到[Apple开发者官网](https://developer.apple.com/xcode/downloads/)上下载。这一步骤会同时安装Xcode IDE和Xcode的命令行工具。
 
 > 虽然一般来说命令行工具都是默认安装了，但你最好还是启动Xcode，并在`Xcode | Preferences | Locations`菜单中检查一下是否装有某个版本的`Command Line Tools`。Xcode的命令行工具中也包含一些必须的工具，比如`git`等。
 
@@ -145,27 +137,27 @@ Android Studio包含了运行和测试React Native应用所需的Android SDK和�
 
 - 选择`Custom`选项：
 
-![custom installation](/blog/React Native/img/react-native-android-studio-custom-install.png)
+![custom installation](img/react-native-android-studio-custom-install.png)
 
 - 勾选`Performance`和`Android Virtual Device`
 
-![additional installs](/blog/React Native/img/react-native-android-studio-additional-installs.png)
+![additional installs](img/react-native-android-studio-additional-installs.png)
 
 - 安装完成后，在Android Studio的启动欢迎界面中选择`Configure | SDK Manager`。
 
-![configure sdk](/blog/React Native/img/react-native-android-studio-configure-sdk.png)
+![configure sdk](img/react-native-android-studio-configure-sdk.png)
 
 - 在`SDK Platforms`窗口中，选择`Show Package Details`，然后在`Android 6.0 (Marshmallow)`中勾选`Google APIs`、`Android SDK Platform 23`、`Intel x86 Atom System Image`、`Intel x86 Atom_64 System Image`以及`Google APIs Intel x86 Atom_64 System Image`。
 
-![platforms](/blog/React Native/img/react-native-android-studio-android-sdk-platforms.png)
+![platforms](img/react-native-android-studio-android-sdk-platforms.png)
 
-- 在`SDK Tools`窗口中，选择`Show Package Details`，然后在`Android SDK Build Tools`中勾选`Android SDK Build-Tools 23.0.1`（必须是这个版本）。然后还要勾选最底部的`Android Support Repository`.
+- 在`SDK Tools`窗口中，选择`Show Package Details`，然后在`Android SDK Build Tools`中勾选`Android SDK Build-Tools 23.0.1`。（必须是这个版本）
 
-![build tools](/blog/React Native/img/react-native-android-studio-android-sdk-build-tools.png)
+![build tools](img/react-native-android-studio-android-sdk-build-tools.png)
 
 #### ANDROID_HOME环境变量
 
-确保`ANDROID_HOME`环境变量正确地指向了你安装的Android SDK的路径。具体的做法是把下面的命令加入到`~/.bash_profile`文件中：(__译注__：~表示用户目录，即`/Users/你的用户名/`，而小数点开头的文件在Finder中是隐藏的，并且这个文件有可能并不存在。请在终端下使用`vi ~/.bash_profile`命令创建或编辑。如不熟悉vi操作，请点击[这里](http://www.eepw.com.cn/article/48018.htm)学习）  
+确保`ANDROID_HOME`环境变量正确地指向了你安装的Android SDK的路径。具体的做法是把下面的命令加入到`~/.bash_profile`文件中：(__译注__：~表示用户目录，即`/Users/你的用户名/`，而小数点开头的文件在Finder中是隐藏的，并且这个文件有可能并不存在。请在终端下使用`sudo vi ~/.bash_profile`命令创建或编辑。如不熟悉vi操作，请点击[这里](http://www.eepw.com.cn/article/48018.htm)学习）  
 
 ```
 # 如果你不是通过Android Studio安装的sdk，则其路径可能不同，请自行确定清楚。
@@ -180,8 +172,7 @@ source ~/.bash_profile
 
 可以使用`echo $ANDROID_HOME`检查此变量是否已正确设置。
 
-</div>
-<div markdown class="md-block mac ios android">
+</div><div markdown class="md-block mac ios android">
 
 ### 推荐安装的工具
 
@@ -212,6 +203,10 @@ brew install flow
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 ```
 
+#### Gradle Daemon
+
+开启[Gradle Daemon](https://docs.gradle.org/2.9/userguide/gradle_daemon.html)可以极大地提升java代码的增量编译速度。
+
 ### 其他可选的安装项
 
 #### Git
@@ -239,13 +234,43 @@ brew install git
 
 比起Android Studio自带的原装模拟器，Genymotion是一个性能更好的选择，但它只对个人用户免费。
 
-1. 下载和安装[Genymotion](https://www.genymotion.com/download)（genymotion需要依赖VirtualBox虚拟机，下载选项中提供了包含VirtualBox和不包含的选项，请按需选择）。
+1. 下载和安装[Genymotion](https://www.genymotion.com/)（译注：你需要先注册登录，然后才能找到免费下载的链接！另外，genymotion需要依赖VirtualBox虚拟机，下载选项中提供了包含VirtualBox和不包含的选项，请按需选择）。
 2. 打开Genymotion。如果你还没有安装VirtualBox，则此时会提示你安装。
 3. 创建一个新模拟器并启动。
 4. 启动React Native应用后，可以按下⌘+M来打开开发者菜单。
 
-</div>
-<div markdown class="md-block linux windows android">
+### 常见问题
+
+#### 安装Android Studio时无法创建虚拟设备
+
+某些版本的Android Studio可能存在一个[已知的bug](https://code.google.com/p/android/issues/detail?id=207563)，导致在安装时无法创建虚拟设备。安装过程中可能看到如下报错：
+
+```
+Creating Android virtual device
+Unable to create a virtual device: Unable to create Android virtual device
+```
+
+如果你碰到了这个问题，可以运行`android avd`来手工创建虚拟设备。
+
+![avd](img/react-native-android-studio-avd.png)
+
+然后在AVD管理器（AVD Manager）窗口中选择新设备并点击`Start...`来启动。
+
+#### Shell命令无响应的异常
+
+如果你碰到了下面这样的异常）：
+
+```
+Execution failed for task ':app:installDebug'.
+  com.android.builder.testing.api.DeviceException: com.android.ddmlib.ShellCommandUnresponsiveException
+```
+
+试着将`项目目录/android/build.gradle`中的Gradle版本改为1.2.3。
+
+
+<!-- ######### LINUX and WINDOWS for ANDROID ##################### -->
+
+</div><div markdown class="md-block linux windows android">
 
 ## 安装
 
@@ -285,7 +310,7 @@ choco install python2
 
 ```
 sudo apt-get install -y build-essential
-curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
@@ -293,13 +318,13 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 </div><div markdown class="md-block windows android">
 
-打开命令提示符窗口，使用Chocolatey来安装NodeJS。注意，目前已知Node 7.1版本在windows上无法正常工作，请避开这个版本！
+打开命令提示符窗口，使用Chocolatey来安装NodeJS。注意，目前已知Node 7.1版本在windows上无法正常工作，请注意避开这个版本！
 
 ```
 choco install nodejs.install
 ```
 
-安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。注意：不要使用cnpm！cnpm安装的模块路径比较奇怪，packager不能正常识别！
+安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。
 
 ```
 npm config set registry https://registry.npm.taobao.org --global
@@ -316,12 +341,6 @@ npm config set disturl https://npm.taobao.org/dist --global
 npm install -g yarn react-native-cli
 ```
 
-安装完yarn后同理也要设置镜像源：
-
-```
-yarn config set registry https://registry.npm.taobao.org --global
-yarn config set disturl https://npm.taobao.org/dist --global
-```
 
 > 如果你遇到`EACCES: permission denied`权限错误，可以尝试运行下面的命令（限linux系统）：
 > `sudo npm install -g yarn react-native-cli`.
@@ -349,11 +368,11 @@ Android Studio包含了运行和测试React Native应用所需的Android SDK和�
 
 - 选择`Custom`选项：
 
-![custom installation](/blog/React Native/img/react-native-android-studio-custom-install-linux.png)
+![custom installation](img/react-native-android-studio-custom-install-linux.png)
 
 - 选择`Android Virtual Device`
 
-![additional installs](/blog/React Native/img/react-native-android-studio-additional-installs-linux.png)
+![additional installs](img/react-native-android-studio-additional-installs-linux.png)
 
 </div><div markdown class="md-block windows android">
 
@@ -361,11 +380,11 @@ Android Studio包含了运行和测试React Native应用所需的Android SDK和�
 
 - 在初步安装完成后，选择`Custom`安装项：
 
-![custom installation](/blog/React Native/img/react-native-android-studio-custom-install-windows.png)
+![custom installation](img/react-native-android-studio-custom-install-windows.png)
 
 - 检查已安装的组件，尤其是模拟器和HAXM加速驱动。
 
-![verify installs](/blog/React Native/img/react-native-android-studio-verify-installs-windows.png)
+![verify installs](img/react-native-android-studio-verify-installs-windows.png)
 
 </div><div markdown class="md-block windows linux android">
 
@@ -373,11 +392,11 @@ Android Studio包含了运行和测试React Native应用所需的Android SDK和�
 
 </div><div markdown class="md-block linux android">
 
-![configure sdk](/blog/React Native/img/react-native-android-studio-configure-sdk-linux.png)
+![configure sdk](img/react-native-android-studio-configure-sdk-linux.png)
 
 </div><div markdown class="md-block windows android">
 
-![configure sdk](/blog/React Native/img/react-native-android-studio-configure-sdk-windows.png)
+![configure sdk](img/react-native-android-studio-configure-sdk-windows.png)
 
 </div><div markdown class="md-block windows linux android">
 
@@ -385,23 +404,23 @@ Android Studio包含了运行和测试React Native应用所需的Android SDK和�
 
 </div><div markdown class="md-block linux android">
 
-![platforms](/blog/React Native/img/react-native-android-studio-android-sdk-platforms-linux.png)
+![platforms](img/react-native-android-studio-android-sdk-platforms-linux.png)
 
 </div><div markdown class="md-block windows android">
 
-![platforms](/blog/React Native/img/react-native-android-studio-android-sdk-platforms-windows.png)
+![platforms](img/react-native-android-studio-android-sdk-platforms-windows.png)
 
 </div><div markdown class="md-block windows linux android">
 
-- 在`SDK Tools`窗口中，选择`Show Package Details`，然后在`Android SDK Build Tools`中勾选`Android SDK Build-Tools 23.0.1`（必须是这个版本）。然后还要勾选最底部的`Android Support Repository`.
+- 在`SDK Tools`窗口中，选择`Show Package Details`，然后在`Android SDK Build Tools`中勾选`Android SDK Build-Tools 23.0.1`。（必须是这个版本）
 
 </div><div markdown class="md-block linux android">
 
-![build tools](/blog/React Native/img/react-native-android-studio-android-sdk-build-tools-linux.png)
+![build tools](img/react-native-android-studio-android-sdk-build-tools-linux.png)
 
 </div><div markdown class="md-block windows android">
 
-![build tools](/blog/React Native/img/react-native-android-studio-android-sdk-build-tools-windows.png)
+![build tools](img/react-native-android-studio-android-sdk-build-tools-windows.png)
 
 </div><div markdown class="md-block windows linux android">
 
@@ -422,7 +441,7 @@ export ANDROID_HOME=~/Library/Android/sdk
 然后使用下列命令使其立即生效（否则重启后才生效）：  
 
 ```bash
-source ~/.bash_profile
+source ./bash_profile
 ```
 
 可以使用`echo $ANDROID_HOME`检查此变量是否已正确设置。
@@ -434,7 +453,7 @@ source ~/.bash_profile
 
 > 具体的路径可能和下图不一致，请自行确认。
 
-![env variable](/blog/React Native/img/react-native-android-sdk-environment-variable-windows.png)
+![env variable](img/react-native-android-sdk-environment-variable-windows.png)
 
 > 你需要关闭现有的命令符提示窗口然后重新打开，这样新的环境变量才能生效。
 
@@ -472,35 +491,31 @@ sudo make install
 npm install -g flow-bin
 ```
 
-</div>
-<div markdown class="md-block mac windows linux android">
+</div><div markdown class="md-block windows linux android">
 
 #### Gradle Daemon
 
 开启[Gradle Daemon](https://docs.gradle.org/2.9/userguide/gradle_daemon.html)可以极大地提升java代码的增量编译速度。
 
-</div>
-<div markdown class="md-block mac linux android">
+</div><div markdown class="md-block mac linux android">
 
 ```
 touch ~/.gradle/gradle.properties && echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
 ```
 
-</div>
-<div markdown class="md-block windows android">
+</div><div markdown class="md-block windows android">
 
 ```
 (if not exist "%USERPROFILE%/.gradle" mkdir "%USERPROFILE%/.gradle") && (echo org.gradle.daemon=true >> "%USERPROFILE%/.gradle/gradle.properties")
 ```
 
-</div>
-<div markdown class="md-block linux android">
+</div><div markdown class="md-block linux android">
 
 #### Android模拟器加速器
 
 在安装Android Studio时你可能会看到下面这样的提示：
 
-![accelerator](/blog/React Native/img/react-native-android-studio-kvm-linux.png)
+![accelerator](img/react-native-android-studio-kvm-linux.png)
 
 如果你的系统支持KVM，那就应该安装[Intel的Android模拟器加速器](https://software.intel.com/en-us/android/articles/speeding-up-the-android-emulator-on-intel-architecture#_Toc358213272)。
 
@@ -527,7 +542,7 @@ export PATH
 
 > 注意你的具体路径可能和下图不同
 
-![env variable](/blog/React Native/img/react-native-android-tools-environment-variable-windows.png)
+![env variable](img/react-native-android-tools-environment-variable-windows.png)
 
 </div><div markdown class="md-block windows linux android">
 
@@ -568,7 +583,7 @@ choco install git
 
 比起Android Studio自带的原装模拟器，Genymotion是一个性能更好的选择，但它只对个人用户免费。
 
-1. 下载和安装[Genymotion](https://www.genymotion.com/download)（genymotion需要依赖VirtualBox虚拟机，下载选项中提供了包含VirtualBox和不包含的选项，请按需选择）。
+1. 下载和安装[Genymotion](https://www.genymotion.com/)（译注：你需要先注册登录，然后才能找到免费下载的链接！另外，genymotion需要依赖VirtualBox虚拟机，下载选项中提供了包含VirtualBox和不包含的选项，请按需选择）。
 2. 打开Genymotion。如果你还没有安装VirtualBox，则此时会提示你安装。
 3. 创建一个新模拟器并启动。
 4. 启动React Native应用后，可以按下F1来打开开发者菜单。
@@ -578,6 +593,7 @@ choco install git
 #### Visual Studio Emulator for Android
 
 [Visual Studio Emulator for Android](https://www.visualstudio.com/zh-cn/features/msft-android-emulator-vs.aspx#中国 (简体中文))是利用了Hyper-V技术进行硬件加速的免费android模拟器。也是Android Studio自带的原装模拟器之外的一个很好的选择。而且你并不需要安装Visual Studio。
+
 在用于React Native开发前，需要先在注册表中进行一些修改：
 
 1. 打开运行命令（按下Windows+R键）
@@ -587,8 +603,7 @@ choco install git
 5. 名称设为`Path`
 6. 双击`Path`，将其值设为你的Android SDK的路径。（例如`C:\Program Files\Android\sdk`）
 
-</div>
-<div markdown class="md-block mac ios android">
+</div><div markdown class="md-block mac ios android">
 
 ## 测试安装
 
@@ -599,8 +614,6 @@ react-native init AwesomeProject
 cd AwesomeProject
 react-native run-ios
 ```
-
-> 提示：你可以使用`--version`参数创建指定版本的项目。例如`react-native init MyApp --version 0.39.2`。注意版本号必须精确到两个小数点。
 
 你也可以在[Nuclide](http://nuclide.io)中打开[`AwesomeProject`](http://nuclide.io/docs/quick-start/getting-started/#adding-a-project)文件夹
 然后[运行](http://nuclide.io/docs/platforms/react-native/#command-line)，或是双击`ios/AwesomeProject.xcodeproj`文件然后在Xcode中点击`Run`按钮。
@@ -613,8 +626,6 @@ cd AwesomeProject
 react-native run-android
 ```
 
-> 提示：你可以使用`--version`参数创建指定版本的项目。例如`react-native init MyApp --version 0.39.2`。注意版本号必须精确到两个小数点。
- 
 你也可以在[Nuclide](http://nuclide.io)中打开[`AwesomeProject`](http://nuclide.io/docs/quick-start/getting-started/#adding-a-project)文件夹然后[运行](http://nuclide.io/docs/platforms/react-native/#command-line)。
 
 </div><div markdown class="md-block mac ios android">
@@ -640,7 +651,7 @@ react-native run-android
 
 恭喜！你已经成功运行并修改了你的第一个React Native应用。
 
-![](/blog/React Native/img/react-native-congratulations.png)
+![](img/react-native-congratulations.png)
 
 </div><div markdown class="md-block windows linux android">
 
@@ -652,11 +663,22 @@ cd AwesomeProject
 react-native run-android
 ```
 
-> 提示：你可以使用`--version`参数创建指定版本的项目。例如`react-native init MyApp --version 0.39.2`。注意版本号必须精确到两个小数点。
+</div><div markdown class="md-block windows linux android">
 
-__Windows用户请注意，请不要在命令行默认的System32目录中init项目！会有各种权限限制导致不能运行！__
-</div>
-<div markdown class="md-block windows linux android">
+### 手动运行Packager
+
+有个常见的问题是在你运行`react-native run-android`命令后，Packager可能不会自动运行。此时你可以手动启动它：
+
+```
+cd AwesomeProject
+react-native start
+```
+
+</div><div markdown class="md-block windows android">
+
+如果你碰到了`ERROR  Watcher took too long to load`的报错，请尝试将[这个文件](https://github.com/facebook/react-native/blob/5fa33f3d07f8595a188f6fe04d6168a6ede1e721/packager/react-packager/src/DependencyResolver/FileWatcher/index.js#L16)中的MAX_WAIT_TIME值改得更大一些 (文件在`node_modules/react-native/`目录下)。
+
+</div><div markdown class="md-block windows linux android">
 
 ### 修改项目
 
@@ -670,7 +692,7 @@ __Windows用户请注意，请不要在命令行默认的System32目录中init�
 
 恭喜！你已经成功运行并修改了你的第一个React Native应用。
 
-![](/blog/React Native/img/react-native-congratulations.png)
+![](img/react-native-congratulations.png)
 
 </div><div markdown class="md-block mac ios android">
 

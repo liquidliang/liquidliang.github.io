@@ -68,7 +68,7 @@ rootView.appProperties = @{@"images" : imageList};
 ## 属性的限制
 跨语言属性的主要缺点是不支持回调方法，因而无法实现自下而上的数据绑定。设想你有一个小的RN视图，当一个JS动作触发时你想从原生的父视图中移除它。此时你会发现根本做不到，因为信息需要自下而上进行传递。
 
-虽然我们有跨语言回调（[参阅这里](native-modules-ios.html#回调函数)），但是这些回调函数并不总能满足需求。最主要的问题是它们并不是被设计来当作属性进行传递。这一机制的本意是允许我们从JS触发一个原生动作，然后用JS处理那个动作的处理结果。
+虽然我们有跨语言回调（[参阅这里](native-modules-ios.html#回调函数),但是这些回调函数并不总能满足需求。最主要的问题是它们并不是被设计来当作属性进行传递。这一机制的本意是允许我们从JS触发一个原生动作，然后用JS处理那个动作的处理结果。
 
 ## 其他的跨语言交互（事件和原生模块）
 如上一章所说，使用属性总会有一些限制。有时候属性并不足以满足应用逻辑，因此我们需要更灵活的解决办法。这一章描述了其他的在React Native中可用的通信方法。他们可以用来内部通信（在JS和RN的原生层之间），也可以用作外部通信（在RN和纯原生部分之间）。
@@ -177,7 +177,7 @@ typedef NS_ENUM(NSInteger, RCTRootViewSizeFlexibility) {
 ```
 在例子中我们使用一个`FlexibleSizeExampleView`视图来包含根视图。我们创建了根视图，初始化并且设置了代理。代理将会处理尺寸更新。然后，我们设置根视图的弹性尺寸为`RCTRootViewSizeFlexibilityHeight`，意味着`rootViewDidChangeIntrinsicSize:`方法将会在每次React Native内容高度变化时进行调用。最后，我们设置根视图的宽度和位置。注意我们也设置了高度，但是并没有效果，因为我们已经将高度设置为根据RN内容进行弹性变化了。
 
-你可以在这里查看完整的例子[源代码](https://github.com/facebook/react-native/blob/master/RNTester/RNTester/NativeExampleViews/FlexibleSizeExampleView.m)。
+你可以在这里查看完整的例子[源代码](https://phabricator.fb.com/diffusion/FBOBJC/browse/master/Libraries/FBReactKit/js/react-native-github/Examples/UIExplorer/UIExplorer/NativeExampleViews/FlexibleSizeExampleView.m)。
 
 动态改变根视图的弹性模式是可行的。改变根视图的弹性模式将会导致布局的重新计算，并且在重新量出内容尺寸时会调用`rootViewDidChangeIntrinsicSize`方法。
 

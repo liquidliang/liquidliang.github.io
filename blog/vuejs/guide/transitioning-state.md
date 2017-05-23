@@ -18,7 +18,7 @@ Vue 的过渡系统提供了非常多简单的方法设置进入、离开和列�
 
 <div id="animated-number-demo">
   <input v-model.number="number" type="number" step="20">
-  <p>{{ animatedNumber }}</p>
+  <p>{ { animatedNumber } }</p>
 </div>
 ```
 
@@ -53,7 +53,7 @@ new Vue({
 <script src="https://unpkg.com/tween.js@16.3.4"></script>
 <div id="animated-number-demo" class="demo">
   <input v-model.number="number" type="number" step="20">
-  <p>{{ animatedNumber }}</p>
+  <p>{ { animatedNumber } }</p>
 </div>
 <script>
 new Vue({
@@ -102,7 +102,7 @@ new Vue({
     v-bind:style="{ backgroundColor: tweenedCSSColor }"
     class="example-7-color-preview"
   ></span>
-  <p>{{ tweenedCSSColor }}</p>
+  <p>{ { tweenedCSSColor } }</p>
 </div>
 ```
 
@@ -178,7 +178,7 @@ new Vue({
     v-bind:style="{ backgroundColor: tweenedCSSColor }"
     class="example-7-color-preview"
   ></span>
-  <p>{{ tweenedCSSColor }}</p>
+  <p>{ { tweenedCSSColor } }</p>
 </div>
 <script>
 var Color = net.brehaut.Color
@@ -248,7 +248,7 @@ new Vue({
     <polygon :points="points" class="demo-polygon"></polygon>
     <circle cx="100" cy="100" r="90" class="demo-circle"></circle>
   </svg>
-  <label>Sides: {{ sides }}</label>
+  <label>Sides: { { sides } }</label>
   <input
     class="demo-range-input"
     type="range"
@@ -256,7 +256,7 @@ new Vue({
     max="500"
     v-model.number="sides"
   >
-  <label>Minimum Radius: {{ minRadius }}%</label>
+  <label>Minimum Radius: { { minRadius } }%</label>
   <input
     class="demo-range-input"
     type="range"
@@ -264,7 +264,7 @@ new Vue({
     max="90"
     v-model.number="minRadius"
   >
-  <label>Update Interval: {{ updateInterval }} milliseconds</label>
+  <label>Update Interval: { { updateInterval } } milliseconds</label>
   <input
     class="demo-range-input"
     type="range"
@@ -385,7 +385,7 @@ See [this fiddle](https://jsfiddle.net/chrisvfritz/65gLu2b6/) for the complete c
 <div id="example-8">
   <input v-model.number="firstNumber" type="number" step="20"> +
   <input v-model.number="secondNumber" type="number" step="20"> =
-  {{ result }}
+  { { result } }
   <p>
     <animated-integer v-bind:value="firstNumber"></animated-integer> +
     <animated-integer v-bind:value="secondNumber"></animated-integer> =
@@ -401,7 +401,7 @@ See [this fiddle](https://jsfiddle.net/chrisvfritz/65gLu2b6/) for the complete c
 // 可以支持更多更复杂的动态过渡
 // strategies.
 Vue.component('animated-integer', {
-  template: '<span>{{ tweeningValue }}</span>',
+  template: '<span>{ { tweeningValue } }</span>',
   props: {
     value: {
       type: Number,
@@ -459,7 +459,7 @@ new Vue({
 <div id="example-8" class="demo">
   <input v-model.number="firstNumber" type="number" step="20"> +
   <input v-model.number="secondNumber" type="number" step="20"> =
-  {{ result }}
+  { { result } }
   <p>
     <animated-integer v-bind:value="firstNumber"></animated-integer> +
     <animated-integer v-bind:value="secondNumber"></animated-integer> =
@@ -468,7 +468,7 @@ new Vue({
 </div>
 <script>
 Vue.component('animated-integer', {
-  template: '<span>{{ tweeningValue }}</span>',
+  template: '<span>{ { tweeningValue } }</span>',
   props: {
     value: {
       type: Number,

@@ -1,7 +1,7 @@
 ### 截图
-![showActionSheetWithOptions](/blog/React Native/img/api/actionsheetios1.png)
+![showActionSheetWithOptions](img/api/actionsheetios1.png)
 
-![showShareActionSheetWithOptions](/blog/React Native/img/api/actionsheetios2.png)
+![showShareActionSheetWithOptions](img/api/actionsheetios2.png)
 
 ### 方法
 

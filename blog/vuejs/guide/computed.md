@@ -5,7 +5,7 @@
 
 ```html
 <div id="example">
-  {{ message.split('').reverse().join('') }}
+  { { message.split('').reverse().join('') } }
 </div>
 ```
 
@@ -17,8 +17,8 @@
 
 ``` html
 <div id="example">
-  <p>Original message: "{{ message }}"</p>
-  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p>Original message: "{ { message } }"</p>
+  <p>Computed reversed message: "{ { reversedMessage } }"</p>
 </div>
 ```
 
@@ -42,8 +42,8 @@ var vm = new Vue({
 
 {% raw %}
 <div id="example">
-  <p>Original message: "{{ message }}"</p>
-  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p>Original message: "{ { message } }"</p>
+  <p>Computed reversed message: "{ { reversedMessage } }"</p>
 </div>
 <script>
 var vm = new Vue({
@@ -80,7 +80,7 @@ console.log(vm.reversedMessage) // -> 'eybdooG'
 你可能已经注意到我们可以通过调用表达式中的method来达到同样的效果：
 
 ``` html
-<p>Reversed message: "{{ reverseMessage() }}"</p>
+<p>Reversed message: "{ { reverseMessage() } }"</p>
 ```
 
 ``` js
@@ -113,7 +113,7 @@ computed: {
 Vue.js 提供了一个方法 `$watch` ，它用于观察 Vue 实例上的数据变动。当一些数据需要根据其它数据变化时， `$watch` 很诱人 —— 特别是如果你来自 AngularJS 。不过，通常更好的办法是使用计算属性而不是一个命令式的 `$watch` 回调。思考下面例子：
 
 ``` html
-<div id="demo">{{ fullName }}</div>
+<div id="demo">{ { fullName } }</div>
 ```
 
 ``` js
@@ -191,7 +191,7 @@ computed: {
     Ask a yes/no question:
     <input v-model="question">
   </p>
-  <p>{{ answer }}</p>
+  <p>{ { answer } }</p>
 </div>
 ```
 
@@ -255,7 +255,7 @@ var watchExampleVM = new Vue({
     Ask a yes/no question:
     <input v-model="question">
   </p>
-  <p>{{ answer }}</p>
+  <p>{ { answer } }</p>
 </div>
 <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
 <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>

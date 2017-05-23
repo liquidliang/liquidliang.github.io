@@ -634,7 +634,7 @@ new Vue({
 ``` html
 <transition>
   <button v-bind:key="isEditing">
-    {{ isEditing ? 'Save' : 'Edit' }}
+    { { isEditing ? 'Save' : 'Edit' } }
   </button>
 </transition>
 ```
@@ -660,7 +660,7 @@ new Vue({
 ``` html
 <transition>
   <button v-bind:key="docState">
-    {{ buttonMessage }}
+    { { buttonMessage } }
   </button>
 </transition>
 ```
@@ -988,7 +988,7 @@ new Vue({
   <button v-on:click="remove">Remove</button>
   <transition-group name="list" tag="p">
     <span v-for="item in items" v-bind:key="item" class="list-item">
-      {{ item }}
+      { { item } }
     </span>
   </transition-group>
 </div>
@@ -1035,7 +1035,7 @@ new Vue({
   <button v-on:click="remove">Remove</button>
   <transition-group name="list" tag="p">
     <span v-for="item in items" :key="item" class="list-item">
-      {{ item }}
+      { { item } }
     </span>
   </transition-group>
 </div>
@@ -1090,7 +1090,7 @@ new Vue({
   <button v-on:click="shuffle">Shuffle</button>
   <transition-group name="flip-list" tag="ul">
     <li v-for="item in items" v-bind:key="item">
-      {{ item }}
+      { { item } }
     </li>
   </transition-group>
 </div>
@@ -1122,7 +1122,7 @@ new Vue({
   <button v-on:click="shuffle">Shuffle</button>
   <transition-group name="flip-list" tag="ul">
     <li v-for="item in items" :key="item">
-      {{ item }}
+      { { item } }
     </li>
   </transition-group>
 </div>
@@ -1163,7 +1163,7 @@ new Vue({
       v-bind:key="item"
       class="list-complete-item"
     >
-      {{ item }}
+      { { item } }
     </span>
   </transition-group>
 </div>
@@ -1216,7 +1216,7 @@ new Vue({
   <button v-on:click="remove">Remove</button>
   <transition-group name="list-complete" tag="p">
     <span v-for="item in items" :key="item" class="list-complete-item">
-      {{ item }}
+      { { item } }
     </span>
   </transition-group>
 </div>
@@ -1272,7 +1272,7 @@ FLIP 动画不仅可以实现单列过渡，多维网格的过渡也同样[简�
   </button>
   <transition-group name="cell" tag="div" class="sudoku-container">
     <div v-for="cell in cells" :key="cell.id" class="cell">
-      {{ cell.number }}
+      { { cell.number } }
     </div>
   </transition-group>
 </div>
@@ -1345,7 +1345,7 @@ new Vue({
       v-for="(item, index) in computedList"
       v-bind:key="item.msg"
       v-bind:data-index="index"
-    >{{ item.msg }}</li>
+    >{ { item.msg } }</li>
   </transition-group>
 </div>
 ```
@@ -1416,7 +1416,7 @@ new Vue({
       v-for="(item, index) in computedList"
       v-bind:key="item.msg"
       v-bind:data-index="index"
-    >{{ item.msg }}</li>
+    >{ { item.msg } }</li>
   </transition-group>
 </div>
 <script>

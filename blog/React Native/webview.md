@@ -1,7 +1,7 @@
 创建一个原生的WebView，可以用于访问一个网页。
 
 ### 截图
-![](/blog/React Native/img/components/webview.png)
+![](img/components/webview.png)
 
 ### 属性
 
@@ -55,13 +55,6 @@
 		<div class="deprecated"><div class="deprecatedTitle"><span>已过期</span></div><div class="deprecatedMessage"><div><p>请使用<code>source</code> 属性代替。</p></div></div></div>
 	</div>
 	<div class="prop">
-	<h4 class="propTitle"><a class="anchor" name="injectjavascript"></a>injectJavaScript?: <span class="propType">function</span> <a class="hash-link" href="#injectjavascript">#</a>
-	</h4>
-	<div>
-	<p>在网页加载完成之后，还可以主动调用此方法（以ref形式调用）继续给WebView注入JS代码。注入后会立即执行。</p>
-	</div>
-	</div>
-	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="injectedjavascript"></a>injectedJavaScript <span class="propType">string</span> <a class="hash-link" href="#injectedjavascript">#</a></h4>
 		<div>
 			<p>设置在网页加载之前注入的一段JS代码。</p>
@@ -89,7 +82,7 @@
 	    <a class="hash-link" href="#onloadstart">#</a></h4>
 	    <div><p>加载开始时调用。</p></div>
 	</div>
-  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span>
+  <div class="prop"><h4 class="propTitle"><a class="anchor" name="onmessage"></a>onMessage <span class="propType">function</span> 
     <a class="hash-link" href="#onmessage">#</a></h4>
     <div>
       <p>在webview内部的网页中调用<code>window.postMessage</code>方法时可以触发此属性对应的函数，从而实现网页和RN之间的数据交换。
@@ -136,9 +129,6 @@
 	</div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="startinloadingstate"></a>startInLoadingState <span class="propType">bool</span> <a class="hash-link" href="#startinloadingstate">#</a></h4>
-    <div>
-      <p>强制WebView在第一次加载时先显示loading视图。默认为true。</p>
-    </div>
 	</div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="style"></a>style <span class="propType"><a href="view.html#style">View#style</a></span> <a class="hash-link" href="#style">#</a></h4>
@@ -148,35 +138,16 @@
 		<div class="deprecated"><div class="deprecatedTitle"><span>已过期</span></div><div class="deprecatedMessage"><div><p>请使用<code>source</code> 属性代替。</p></div></div></div>
 	</div>
 	<div class="prop">
-		<h4 class="propTitle"><a class="anchor" name="mixedcontentmode"></a><span class="platform">android</span>mixedContentMode?: <span class="propType">enum('never', 'always', 'compatibility')</span> <a class="hash-link" href="#mixedcontentmode">#</a></h4>
-		<div>
-			<p>指定混合内容模式。即WebView是否应该允许安全链接（https）页面中加载非安全链接（http）的内容。</p>
-			<p>可选的<code>mixedContentMode</code>值如下：</p>
-			<ul>
-				<li><code>'never'</code> (默认) - WebView不允许安全链接页面中加载非安全链接的内容。</li>
-				<li><code>'always'</code> - WebView允许安全链接页面中加载非安全链接的内容。</li>
-				<li><code>'compatibility'</code> - WebView会尽量和浏览器当前对待此情况的行为一致。</li>
-			</ul>
-		</div>
-	</div>
-	<div class="prop">
-		<h4 class="propTitle"><a class="anchor" name="saveformdatadisabled"></a><span class="platform">android</span>saveFormDataDisabled?: <span class="propType">bool</span> <a class="hash-link" href="#saveformdatadisabled">#</a></h4>
-		<div>
-			<p>用于控制页面上的表单是否启用自动保存/自动补全功能。仅Android有效。</p>
-		</div>
-	</div>
-	<div class="prop">
 	    <h4 class="propTitle">
 	        <a class="anchor" name="useragent"></a>
 	        <span class="platform">android</span>userAgent
 	        <span class="propType">string</span> <a class="hash-link" href="#useragent">#</a>
 	    </h4>
-	    <div><p>为WebView设置user-agent字符串标识。这一字符串也可以在原生端用WebViewConfig来设置，但js端的设置会覆盖原生端的设置。</p></div>
+	    <div><p>为WebView设置user-agent字符串标识。这一字符串也可以在原生端用WebViewConfig来设置,但js端的设置会覆盖原生端的设置。</p></div>
 	</div>
 </div>
 
 ### 例子
-
 ```javascript
 'use strict';
 
@@ -200,27 +171,30 @@ var TEXT_INPUT_REF = 'urlInput';
 var WEBVIEW_REF = 'webview';
 var DEFAULT_URL = 'https://m.facebook.com';
 
-class WebViewExample extends React.Component {
-  state = {
-    url: DEFAULT_URL,
-    status: 'No Page Loaded',
-    backButtonEnabled: false,
-    forwardButtonEnabled: false,
-    loading: true,
-    scalesPageToFit: true,
-  };
+var WebViewExample = React.createClass({
 
-  inputText = '';
+  getInitialState: function() {
+    return {
+      url: DEFAULT_URL,
+      status: 'No Page Loaded',
+      backButtonEnabled: false,
+      forwardButtonEnabled: false,
+      loading: true,
+      scalesPageToFit: true,
+    };
+  },
 
-  handleTextInputChange = (event) => {
+  inputText: '',
+
+  handleTextInputChange: function(event) {
     var url = event.nativeEvent.text;
     if (!/^[a-zA-Z-_]+:/.test(url)) {
       url = 'http://' + url;
     }
     this.inputText = url;
-  };
+  },
 
-  render() {
+  render: function() {
     this.inputText = this.state.url;
 
     return (
@@ -275,26 +249,26 @@ class WebViewExample extends React.Component {
         </View>
       </View>
     );
-  }
+  },
 
-  goBack = () => {
+  goBack: function() {
     this.refs[WEBVIEW_REF].goBack();
-  };
+  },
 
-  goForward = () => {
+  goForward: function() {
     this.refs[WEBVIEW_REF].goForward();
-  };
+  },
 
-  reload = () => {
+  reload: function() {
     this.refs[WEBVIEW_REF].reload();
-  };
+  },
 
-  onShouldStartLoadWithRequest = (event) => {
+  onShouldStartLoadWithRequest: function(event) {
     // Implement any custom loading logic here, don't forget to return!
     return true;
-  };
+  },
 
-  onNavigationStateChange = (navState) => {
+  onNavigationStateChange: function(navState) {
     this.setState({
       backButtonEnabled: navState.canGoBack,
       forwardButtonEnabled: navState.canGoForward,
@@ -303,13 +277,13 @@ class WebViewExample extends React.Component {
       loading: navState.loading,
       scalesPageToFit: true
     });
-  };
+  },
 
-  onSubmitEditing = (event) => {
+  onSubmitEditing: function(event) {
     this.pressGoButton();
-  };
+  },
 
-  pressGoButton = () => {
+  pressGoButton: function() {
     var url = this.inputText.toLowerCase();
     if (url === this.state.url) {
       this.reload();
@@ -320,42 +294,43 @@ class WebViewExample extends React.Component {
     }
     // dismiss keyboard
     this.refs[TEXT_INPUT_REF].blur();
-  };
-}
+  },
 
-class Button extends React.Component {
-  _handlePress = () => {
+});
+
+var Button = React.createClass({
+  _handlePress: function() {
     if (this.props.enabled !== false && this.props.onPress) {
       this.props.onPress();
     }
-  };
-
-  render() {
+  },
+  render: function() {
     return (
       <TouchableWithoutFeedback onPress={this._handlePress}>
-        <View style={styles.button}>
-          <Text>{this.props.text}</Text>
+        <View style={[styles.button, this.props.enabled ? {} : styles.buttonDisabled]}>
+          <Text style={styles.buttonText}>{this.props.text}</Text>
         </View>
       </TouchableWithoutFeedback>
     );
   }
-}
+});
 
-class ScaledWebView extends React.Component {
-  state = {
-    scalingEnabled: true,
-  };
+var ScaledWebView = React.createClass({
 
-  render() {
+  getInitialState: function() {
+    return {
+      scalingEnabled: true,
+    }
+  },
+
+  render: function() {
     return (
       <View>
         <WebView
-          style={
-						{
+          style={ {
             backgroundColor: BGWASH,
             height: 200,
-          }
-				}
+          } }
           source={ {uri: 'https://facebook.github.io/react/'} }
           scalesPageToFit={this.state.scalingEnabled}
         />
@@ -374,84 +349,8 @@ class ScaledWebView extends React.Component {
         </View>
       </View>
     );
-  }
-}
-
-class MessagingTest extends React.Component {
-  webview = null
-
-  state = {
-    messagesReceivedFromWebView: 0,
-    message: '',
-  }
-
-  onMessage = e => this.setState({
-    messagesReceivedFromWebView: this.state.messagesReceivedFromWebView + 1,
-    message: e.nativeEvent.data,
-  })
-
-  postMessage = () => {
-    if (this.webview) {
-      this.webview.postMessage('"Hello" from React Native!');
-    }
-  }
-
-  render(): ReactElement<any> {
-    const {messagesReceivedFromWebView, message} = this.state;
-
-    return (
-      <View style={[styles.container, { height: 200 }]}>
-        <View style={styles.container}>
-          <Text>Messages received from web view: {messagesReceivedFromWebView}</Text>
-          <Text>{message || '(No message)'}</Text>
-          <View style={styles.buttons}>
-            <Button text="Send Message to Web View" enabled onPress={this.postMessage} />
-          </View>
-        </View>
-        <View style={styles.container}>
-          <WebView
-            ref={webview => { this.webview = webview; } }
-            style={ {
-              backgroundColor: BGWASH,
-              height: 100,
-            } }
-            source={require('./messagingtest.html')}
-            onMessage={this.onMessage}
-          />
-        </View>
-      </View>
-    );
-  }
-}
-
-class InjectJS extends React.Component {
-  webview = null;
-  injectJS = () => {
-    const script = 'document.write("Injected JS ")';  // eslint-disable-line quotes
-    if (this.webview) {
-      this.webview.injectJavaScript(script);
-    }
-  }
-  render() {
-    return (
-      <View>
-        <WebView
-          ref={webview => { this.webview = webview; } }
-          style={ {
-            backgroundColor: BGWASH,
-            height: 300,
-          } }
-          source={ {uri: 'https://www.facebook.com'} }
-          scalesPageToFit={true}
-        />
-        <View style={styles.buttons}>
-          <Button text="Inject JS" enabled onPress={this.injectJS} />
-        </View>
-    </View>
-    );
-  }
-}
-
+  },
+})
 
 var styles = StyleSheet.create({
   container: {
@@ -573,15 +472,15 @@ exports.description = 'Base component to display web content';
 exports.examples = [
   {
     title: 'Simple Browser',
-    render(): React.Element<any> { return <WebViewExample />; }
+    render(): ReactElement { return <WebViewExample />; }
   },
   {
     title: 'Scale Page to Fit',
-    render(): React.Element<any> { return <ScaledWebView/>; }
+    render(): ReactElement { return <ScaledWebView/>; }
   },
   {
     title: 'Bundled HTML',
-    render(): React.Element<any> {
+    render(): ReactElement {
       return (
         <WebView
           style={ {
@@ -596,7 +495,7 @@ exports.examples = [
   },
   {
     title: 'Static HTML',
-    render(): React.Element<any> {
+    render(): ReactElement {
       return (
         <WebView
           style={ {
@@ -611,7 +510,7 @@ exports.examples = [
   },
   {
     title: 'POST Test',
-    render(): React.Element<any> {
+    render(): ReactElement {
       return (
         <WebView
           style={ {
@@ -627,14 +526,6 @@ exports.examples = [
         />
       );
     }
-  },
-  {
-    title: 'Messaging Test',
-    render(): ReactElement<any> { return <MessagingTest />; }
-  },
-  {
-    title: 'Inject JavaScript',
-    render(): React.Element<any> { return <InjectJS />; }
-  },
+  }
 ];
 ```

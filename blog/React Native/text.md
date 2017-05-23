@@ -26,27 +26,15 @@ var styles = StyleSheet.create({
 ```
 
 ### 截图
-![](/blog/React Native/img/components/text.png)
+![](img/components/text.png)
 
 ### 属性
 
 <div class="props">
   <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="adjustsfontsizetofit"></a>adjustsFontSizeToFit  <span class="propType">bool</span> <a class="hash-link" href="#adjustsfontsizetofit">#</a></h4>
+    <h4 class="propTitle"><a class="anchor" name="allowfontscaling"></a><span class="platform">ios</span>allowFontScaling <span class="propType">bool</span> <a class="hash-link" href="#allowfontscaling">#</a></h4>
     <div>
-      <p>指定字体是否随着给定样式的限制而自动缩放。</p>
-    </div>
-  </div>
-  <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="allowfontscaling"></a>allowFontScaling <span class="propType">bool</span> <a class="hash-link" href="#allowfontscaling">#</a></h4>
-    <div>
-      <p>控制字体是否要根据系统的“字体大小”辅助选项来进行缩放。</p>
-    </div>
-  </div>
-  <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="minimumfontscale"></a><span class="platform">ios</span>minimumFontScale <span class="propType">bool</span> <a class="hash-link" href="#minimumfontscale">#</a></h4>
-    <div>
-      <p>当adjustsFontSizeToFit开启时，指定最小的缩放比（即不能低于这个值）。可设定的值为0.01 - 1.0</p>
+      <p>控制字体是否要根据iOS的“文本大小”辅助选项来进行缩放。</p>
     </div>
   </div>
   <div class="prop">
@@ -63,73 +51,66 @@ var styles = StyleSheet.create({
     </div>
   </div>
   <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="onlongpress"></a>onLongPress <span class="propType">function</span> <a class="hash-link" href="#onlongpress">#</a></h4>
-    <div>
-      <p>当文本被长按以后调用此回调函数。</p>
-    </div>
-  </div>
-  <div class="prop">
     <h4 class="propTitle"><a class="anchor" name="onpress"></a>onPress <span class="propType">function</span> <a class="hash-link" href="#onpress">#</a></h4>
     <div>
       <p>当文本被点击以后调用此回调函数。</p>
     </div>
   </div>
   <div class="prop">
-    <h4 class="propTitle"><a class="anchor" name="selectable"></a>selectable <span class="propType">function</span> <a class="hash-link" href="#selectable">#</a></h4>
-    <div>
-      <p>决定用户是否可以长按选择文本，以便复制和粘贴。</p>
-    </div>
-  </div><div class="prop"><h4 class="propTitle"><a class="anchor" name="style"></a>style <span class="propType">style</span> <a
-        class="hash-link" href="#style">#</a></h4>
+    <h4 class="propTitle"><a class="anchor" name="style"></a>style <span class="propType">style</span> <a class="hash-link" href="#style">#</a></h4>
     <div class="compactProps">
-        <div class="prop"><h6 class="propTitle"><a href="view.html#style">View#style...</a></h6></div>
-        <div class="prop"><h6 class="propTitle">color <span class="propType"><a href="colors.html">color</a></span>
-        </h6></div>
-        <div class="prop"><h6 class="propTitle">fontFamily <span class="propType">string</span></h6></div>
-        <div class="prop"><h6 class="propTitle">fontSize <span class="propType">number</span></h6></div>
-        <div class="prop"><h6 class="propTitle">fontStyle <span class="propType">enum('normal', 'italic')</span></h6>
-        </div>
-        <div class="prop">
-            <h6 class="propTitle">fontWeight <span class="propType">enum('normal', 'bold', '100', '200', '300', '400', '500', '600', '700', '800', '900')</span>
-                <div><p>指定字体的粗细。大多数字体都支持'normal'和'bold'值。并非所有字体都支持所有的数字值。如果某个值不支持，则会自动选择最接近的值。</p></div>
-            </h6>
-        </div>
-        <div class="prop"><h6 class="propTitle">lineHeight <span class="propType">number</span></h6></div>
-        <div class="prop">
-            <h6 class="propTitle">textAlign <span
-                    class="propType">enum('auto', 'left', 'right', 'center', 'justify')</span>
-                <div><p>指定文本的对齐方式。其中'justify'值仅iOS支持，在Android上会变为<code>left</code></p></div>
-            </h6>
-        </div>
-        <div class="prop"><h6 class="propTitle">textDecorationLine <span class="propType">enum('none', 'underline', 'line-through', 'underline line-through')</span>
-        </h6></div>
-        <div class="prop"><h6 class="propTitle">textShadowColor <span class="propType"><a
-                href="colors.html">color</a></span></h6></div>
-        <div class="prop"><h6 class="propTitle">textShadowOffset <span
-                class="propType">{width: number, height: number}</span></h6></div>
-        <div class="prop"><h6 class="propTitle">textShadowRadius <span class="propType">number</span></h6></div>
-        <div class="prop">
-            <h6 class="propTitle"><span class="platform">android</span>includeFontPadding <span
-                    class="propType">bool</span>
-                <div><p>Android在默认情况下会为文字额外保留一些padding，以便留出空间摆放上标或是下标的文字。对于某些字体来说，这些额外的padding可能会导致文字难以垂直居中。如果你把<code>textAlignVertical</code>设置为<code>center</code>之后，文字看起来依然不在正中间，那么可以尝试将本属性设置为<code>false</code>.
-                </p></div>
-            </h6>
-        </div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">android</span>textAlignVertical <span
-                class="propType">enum('auto', 'top', 'bottom', 'center')</span></h6></div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">ios</span>fontVariant <span
-                class="propType"><span>[enum('small-caps', 'oldstyle-nums', 'lining-nums', 'tabular-nums', 'proportional-nums')]</span></span>
-        </h6></div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">ios</span>letterSpacing <span class="propType">number</span>
-        </h6></div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">ios</span>textDecorationColor <span
-                class="propType"><a href="colors.html">color</a></span></h6></div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">ios</span>textDecorationStyle <span
-                class="propType">enum('solid', 'double', 'dotted', 'dashed')</span></h6></div>
-        <div class="prop"><h6 class="propTitle"><span class="platform">ios</span>writingDirection <span
-                class="propType">enum('auto', 'ltr', 'rtl')</span></h6></div>
+    <div class="prop">
+      <h6 class="propTitle"><a href="view.html#style">View#style...</a></h6>
     </div>
-</div>
+    <div class="prop">
+      <h6 class="propTitle">color <span class="propType">string</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">fontFamily <span class="propType">string</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">fontSize <span class="propType">number</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">fontStyle <span class="propType">enum('normal', 'italic')</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">fontWeight <span class="propType">enum("normal", 'bold', '100', '200', '300', '400', '500', '600', '700', '800', '900')</span></h6>
+	    <div>
+	      <p>指定字体的粗细。大多数字体都支持'normal'和'bold'值。并非所有字体都支持所有的数字值。如果某个值不支持，则会自动选择最接近的值。</p>
+	    </div>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">letterSpacing <span class="propType">number</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">lineHeight <span class="propType">number</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">textAlign <span class="propType">enum("auto", 'left', 'right', 'center', 'justify')</span></h6>
+	    <div>
+	      <p>指定文本的对齐方式。其中'justify'值仅iOS支持。</p>
+	    </div>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle"><span class="platform">android</span>textAlignVertical <span class="propType">enum('auto', 'top', 'bottom', 'center')</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle"><span class="platform">ios</span>letterSpacing <span class="propType">number</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle"><span class="platform">ios</span>textDecorationColor <span class="propType">string</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle">textDecorationLine <span class="propType">enum("none", 'underline', 'line-through', 'underline line-through')</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle"><span class="platform">ios</span>textDecorationStyle <span class="propType">enum("solid", 'double', 'dotted', 'dashed')</span></h6>
+    </div>
+    <div class="prop">
+      <h6 class="propTitle"><span class="platform">ios</span>writingDirection <span class="propType">enum("auto", 'ltr', 'rtl')</span></h6></div>
+    </div>
+  </div>
   <div class="prop">
     <h4 class="propTitle"><a class="anchor" name="testid"></a>testID <span class="propType">string</span> <a class="hash-link" href="#testid">#</a></h4>
     <div>
@@ -698,8 +679,8 @@ var {
   Text,
   View,
 } = ReactNative;
-var RNTesterBlock = require('./RNTesterBlock');
-var RNTesterPage = require('./RNTesterPage');
+var UIExplorerBlock = require('./UIExplorerBlock');
+var UIExplorerPage = require('./UIExplorerPage');
 
 var Entity = React.createClass({
   render: function() {
@@ -754,19 +735,19 @@ var TextExample = React.createClass({
   },
   render: function() {
     return (
-      <RNTesterPage title="<Text>">
-        <RNTesterBlock title="Wrap">
+      <UIExplorerPage title="<Text>">
+        <UIExplorerBlock title="Wrap">
           <Text>
             The text should wrap if it goes on multiple lines.
             See, this is going to the next line.
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Padding">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Padding">
           <Text style={ {padding: 10} }>
             This text is indented by 10px padding on all sides.
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Font Family">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Font Family">
           <Text style={ {fontFamily: 'sans-serif'} }>
             Sans-Serif
           </Text>
@@ -785,8 +766,8 @@ var TextExample = React.createClass({
           <Text style={ {fontFamily: 'monospace', fontWeight: 'bold'} }>
             Monospace Bold (After 5.0)
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Android Material Design fonts">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Android Material Design fonts">
           <View style={ {flexDirection: 'row', alignItems: 'flex-start'} }>
             <View style={ {flex: 1} }>
               <Text style={ {fontFamily: 'sans-serif'} }>
@@ -836,8 +817,8 @@ var TextExample = React.createClass({
               </Text>
             </View>
           </View>
-        </RNTesterBlock>
-        <RNTesterBlock title="Custom Fonts">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Custom Fonts">
           <View style={ {flexDirection: 'row', alignItems: 'flex-start'} }>
             <View style={ {flex: 1} }>
               <Text style={ {fontFamily: 'notoserif'} }>
@@ -851,46 +832,46 @@ var TextExample = React.createClass({
               </Text>
             </View>
           </View>
-        </RNTesterBlock>
+        </UIExplorerBlock>
 
-        <RNTesterBlock title="Font Size">
+        <UIExplorerBlock title="Font Size">
           <Text style={ {fontSize: 23} }>
             Size 23
           </Text>
           <Text style={ {fontSize: 8} }>
             Size 8
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Color">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Color">
           <Text style={ {color: 'red'} }>
             Red color
           </Text>
           <Text style={ {color: 'blue'} }>
             Blue color
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Font Weight">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Font Weight">
           <Text style={ {fontWeight: 'bold'} }>
             Move fast and be bold
           </Text>
           <Text style={ {fontWeight: 'normal'} }>
             Move fast and be bold
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Font Style">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Font Style">
           <Text style={ {fontStyle: 'italic'} }>
             Move fast and be bold
           </Text>
           <Text style={ {fontStyle: 'normal'} }>
             Move fast and be bold
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Font Style and Weight">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Font Style and Weight">
           <Text style={ {fontStyle: 'italic', fontWeight: 'bold'} }>
             Move fast and be bold
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Text Decoration">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Text Decoration">
           <Text style={ {textDecorationLine: 'underline'} }>
             Solid underline
           </Text>
@@ -906,8 +887,8 @@ var TextExample = React.createClass({
           <Text>
             Mixed text with <Text style={ {textDecorationLine: 'underline'} }>underline</Text> and <Text style={ {textDecorationLine: 'line-through'} }>line-through</Text> text nodes
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Nested">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Nested">
           <Text onPress={() => console.log('1st')}>
             (Normal text,
             <Text style={ {fontWeight: 'bold'} } onPress={() => console.log('2nd')}>
@@ -949,8 +930,8 @@ var TextExample = React.createClass({
           <Text style={ {fontSize: 12} }>
             <Entity>Entity Name</Entity>
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Text Align">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Text Align">
           <Text>
             auto (default) - english LTR
           </Text>
@@ -966,8 +947,8 @@ var TextExample = React.createClass({
           <Text style={ {textAlign: 'right'} }>
             right right right right right right right right right right right right right
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Unicode">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Unicode">
           <View style={ {flex: 1} }>
             <View style={ {flexDirection: 'row'} }>
               <Text style={ {backgroundColor: 'red'} }>
@@ -990,24 +971,24 @@ var TextExample = React.createClass({
               </Text>
             </View>
           </View>
-        </RNTesterBlock>
-        <RNTesterBlock title="Spaces">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Spaces">
           <Text>
             A {'generated'} {' '} {'string'} and    some &nbsp;&nbsp;&nbsp; spaces
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Line Height">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Line Height">
           <Text style={ {lineHeight: 35} }>
             Holisticly formulate inexpensive ideas before best-of-breed benefits. <Text style={ {fontSize: 20} }>Continually</Text> expedite magnetic potentialities rather than client-focused interfaces.
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Empty Text">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Empty Text">
           <Text />
-        </RNTesterBlock>
-        <RNTesterBlock title="Toggling Attributes">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Toggling Attributes">
           <AttributeToggler />
-        </RNTesterBlock>
-        <RNTesterBlock title="backgroundColor attribute">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="backgroundColor attribute">
           <Text style={ {backgroundColor: '#ffaaaa'} }>
             Red background,
             <Text style={ {backgroundColor: '#aaaaff'} }>
@@ -1029,8 +1010,8 @@ var TextExample = React.createClass({
               </Text>
             </Text>
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="containerBackgroundColor attribute">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="containerBackgroundColor attribute">
           <View style={ {flexDirection: 'row', height: 85} }>
             <View style={ {backgroundColor: '#ffaaaa', width: 150} } />
             <View style={ {backgroundColor: '#aaaaff', width: 150} } />
@@ -1041,8 +1022,8 @@ var TextExample = React.createClass({
           <Text style={[styles.backgroundColorText, {top: -70, backgroundColor: 'transparent'}]}>
             {"containerBackgroundColor: 'transparent' + backgroundColor wash"}
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="numberOfLines attribute">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="numberOfLines attribute">
           <Text numberOfLines={1}>
             Maximum of one line no matter now much I write here. If I keep writing it{"'"}ll just truncate after one line
           </Text>
@@ -1052,18 +1033,18 @@ var TextExample = React.createClass({
           <Text style={ {marginTop: 20} }>
             No maximum lines specified no matter now much I write here. If I keep writing it{"'"}ll just keep going and going
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Inline images">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Inline images">
           <Text>
             This text contains an inline image <Image source={require('./flux.png')}/>. Neat, huh?
           </Text>
-        </RNTesterBlock>
-        <RNTesterBlock title="Text shadow">
+        </UIExplorerBlock>
+        <UIExplorerBlock title="Text shadow">
           <Text style={ {fontSize: 20, textShadowOffset: {width: 2, height: 2}, textShadowRadius: 1, textShadowColor: '#00cccc'} }>
             Demo text shadow
           </Text>
-        </RNTesterBlock>
-      </RNTesterPage>
+        </UIExplorerBlock>
+      </UIExplorerPage>
     );
   }
 });

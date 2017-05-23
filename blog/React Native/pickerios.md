@@ -1,5 +1,5 @@
 ### 截图
-![](/blog/React Native/img/components/pickerios.png)
+![](img/components/pickerios.png)
 
 ### 属性
 

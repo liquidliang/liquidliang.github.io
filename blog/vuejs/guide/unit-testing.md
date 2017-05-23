@@ -9,7 +9,7 @@
 
 ``` html
 <template>
-  <span>{{ message }}</span>
+  <span>{ { message } }</span>
 </template>
 
 <script>
@@ -69,7 +69,7 @@ describe('MyComponent', () => {
 
 ``` html
 <template>
-  <p>{{ msg }}</p>
+  <p>{ { msg } }</p>
 </template>
 
 <script>

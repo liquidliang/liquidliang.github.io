@@ -48,6 +48,10 @@
                     "mdlink": "network"
                 },
                 {
+                    "subject": "使用导航器跳转页面",
+                    "mdlink": "using-navigators"
+                },
+                {
                     "subject": "其他参考资源",
                     "mdlink": "more-resources"
                 }
@@ -155,7 +159,7 @@
                     "mdlink": "native-component-ios"
                 },
                 {
-                    "subject": "链接原生库",
+                    "subject": "使用链接库",
                     "mdlink": "linking-libraries-ios"
                 },
                 {
@@ -225,10 +229,6 @@
                     "mdlink": "drawerlayoutandroid"
                 },
                 {
-                    "subject": "FlatList",
-                    "mdlink": "flatlist"
-                },
-                {
                     "subject": "Image",
                     "mdlink": "image"
                 },
@@ -245,8 +245,16 @@
                     "mdlink": "listviewdatasource"
                 },
                 {
+                    "subject": "MapView",
+                    "mdlink": "mapview"
+                },
+                {
                     "subject": "Modal",
                     "mdlink": "modal"
+                },
+                {
+                    "subject": "Navigator",
+                    "mdlink": "navigator"
                 },
                 {
                     "subject": "NavigatorIOS",
@@ -275,10 +283,6 @@
                 {
                     "subject": "ScrollView",
                     "mdlink": "scrollview"
-                },
-                {
-                    "subject": "SectionList",
-                    "mdlink": "sectionlist"
                 },
                 {
                     "subject": "SegmentedControlIOS",
@@ -341,10 +345,6 @@
                     "mdlink": "viewpagerandroid"
                 },
                 {
-                    "subject": "VirtualizedList",
-                    "mdlink": "virtualizedlist"
-                },
-                {
                     "subject": "WebView",
                     "mdlink": "webview"
                 }
@@ -388,10 +388,6 @@
                 {
                     "subject": "BackAndroid",
                     "mdlink": "backandroid"
-                },
-                {
-                    "subject": "BackHandler",
-                    "mdlink": "backhandler"
                 },
                 {
                     "subject": "CameraRoll",
@@ -470,16 +466,8 @@
                     "mdlink": "pushnotificationios"
                 },
                 {
-                    "subject": "Share",
-                    "mdlink": "share"
-                },
-                {
                     "subject": "StyleSheet",
                     "mdlink": "stylesheet"
-                },
-                {
-                    "subject": "Systrace",
-                    "mdlink": "systrace"
                 },
                 {
                     "subject": "TimePickerAndroid",
@@ -488,6 +476,10 @@
                 {
                     "subject": "ToastAndroid",
                     "mdlink": "toastandroid"
+                },
+                {
+                    "subject": "VibrationIOS",
+                    "mdlink": "vibrationios"
                 },
                 {
                     "subject": "Vibration",

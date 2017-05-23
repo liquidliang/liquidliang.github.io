@@ -1,12 +1,7 @@
-`CameraRoll`模块提供了访问本地相册的功能。在iOS上使用这个模块之前，你需要先链接`RCTCameraRoll`库，具体做法请参考[链接原生库](linking-libraries-ios.html)文档。
-
-**译注**：本模块只提供了基本的访问图片的功能，并没有提供相册界面。对于多数开发者来说，可能[react-native-image-picker](https://github.com/marcshilling/react-native-image-picker)的功能更为完整易用。
-
-### iOS 10的权限要求
-从iOS10开始，访问相册需要用户授权。你需要在`Info.plist`中添加一条名为`NSCameraUsageDescription`的键，然后在其值中填写向用户请求权限的具体描述。编辑完成后这个键在Xcode中实际会显示为`Privacy - Camera Usage Description`。
+`CameraRoll`模块提供了访问本地相册的功能。
 
 ### 截图
-![cameraroll](/blog/React Native/img/api/cameraroll.png)
+![cameraroll](img/api/cameraroll.png)
 
 ### 方法
 
@@ -25,14 +20,6 @@
 			<p>返回一个Promise，操作成功时返回新的URI。</p>
 		</div>
 	</div>
-  <div class="prop">
-    <h4 class="methodTitle"><a class="anchor" name="savetocameraroll"></a><span class="methodType">static </span>saveToCameraRoll<span class="methodType">(tag, type?)</span> <a class="hash-link" href="#savetocameraroll">#</a></h4>
-      <div><p>把图片或视频保存到相册中。</p>
-      <p>On Android, the tag must be a local image or video URI, such as <code>"file:///sdcard/img.png"</code>.</p><p>On iOS, the tag can be any image URI (including local, remote asset-library and base64 data URIs) or a local video file URI (remote or data URIs are not supported for saving video at this time).</p>
-      <p>If the tag has a file extension of .mov or .mp4, it will be inferred as a video. Otherwise it will be treated as a photo. To override the automatic choice, you can pass an optional
-<code>type</code> parameter that must be one of 'photo' or 'video'.</p><p>Returns a Promise which will resolve with the new URI.</p>
-      </div>
-  </div>
 	<div class="prop">
 		<h4 class="propTitle"><a class="anchor" name="getphotos"></a><span class="propType">static </span>getPhotos<span class="propType">(params: object)</span> <a class="hash-link" href="#getphotos">#</a></h4>
 		<div>
@@ -61,26 +48,28 @@ const {
   TouchableOpacity
 } = ReactNative;
 
-const invariant = require('fbjs/lib/invariant');
-
 const CameraRollView = require('./CameraRollView');
 
 const AssetScaledImageExampleView = require('./AssetScaledImageExample');
 
-class CameraRollExample extends React.Component {
-  state = {
-    groupTypes: 'SavedPhotos',
-    sliderValue: 1,
-    bigImages: true,
-  };
-  _cameraRollView: ?CameraRollView;
+const CAMERA_ROLL_VIEW = 'camera_roll_view';
+
+const CameraRollExample = React.createClass({
+
+  getInitialState() {
+    return {
+      groupTypes: 'SavedPhotos',
+      sliderValue: 1,
+      bigImages: true,
+    };
+  },
+
   render() {
     return (
       <View>
         <Switch
           onValueChange={this._onSwitchChange}
-          value={this.state.bigImages}
-        />
+          value={this.state.bigImages} />
         <Text>{(this.state.bigImages ? 'Big' : 'Small') + ' Images'}</Text>
         <Slider
           value={this.state.sliderValue}
@@ -88,16 +77,16 @@ class CameraRollExample extends React.Component {
         />
         <Text>{'Group Type: ' + this.state.groupTypes}</Text>
         <CameraRollView
-          ref={(ref) => { this._cameraRollView = ref; } }
+          ref={CAMERA_ROLL_VIEW}
           batchSize={20}
           groupTypes={this.state.groupTypes}
           renderImage={this._renderImage}
         />
       </View>
     );
-  }
+  },
 
-  loadAsset = (asset) => {
+  loadAsset(asset){
     if (this.props.navigator) {
       this.props.navigator.push({
         title: 'Camera Roll Image',
@@ -106,13 +95,13 @@ class CameraRollExample extends React.Component {
         passProps: { asset: asset },
       });
     }
-  };
+  },
 
-  _renderImage = (asset) => {
+  _renderImage(asset) {
     const imageSize = this.state.bigImages ? 150 : 75;
     const imageStyle = [styles.image, {width: imageSize, height: imageSize}];
-    const {location} = asset.node;
-    const locationStr = location ? JSON.stringify(location) : 'Unknown location';
+    const location = asset.node.location.longitude ?
+      JSON.stringify(asset.node.location) : 'Unknown location';
     return (
       <TouchableOpacity key={asset} onPress={ this.loadAsset.bind( this, asset ) }>
         <View style={styles.row}>
@@ -122,30 +111,29 @@ class CameraRollExample extends React.Component {
           />
           <View style={styles.info}>
             <Text style={styles.url}>{asset.node.image.uri}</Text>
-            <Text>{locationStr}</Text>
+            <Text>{location}</Text>
             <Text>{asset.node.group_name}</Text>
             <Text>{new Date(asset.node.timestamp).toString()}</Text>
           </View>
         </View>
       </TouchableOpacity>
     );
-  };
+  },
 
-  _onSliderChange = (value) => {
+  _onSliderChange(value) {
     const options = CameraRoll.GroupTypesOptions;
     const index = Math.floor(value * options.length * 0.99);
     const groupTypes = options[index];
     if (groupTypes !== this.state.groupTypes) {
       this.setState({groupTypes: groupTypes});
     }
-  };
+  },
 
-  _onSwitchChange = (value) => {
-    invariant(this._cameraRollView, 'ref should be set');
-    this._cameraRollView.rendererChanged();
+  _onSwitchChange(value) {
+    this.refs[CAMERA_ROLL_VIEW].rendererChanged();
     this.setState({ bigImages: value });
-  };
-}
+  }
+});
 
 const styles = StyleSheet.create({
   row: {
@@ -169,7 +157,7 @@ exports.description = 'Example component that uses CameraRoll to list user\'s ph
 exports.examples = [
   {
     title: 'Photos',
-    render(): React.Element<any> { return <CameraRollExample />; }
+    render(): ReactElement<any> { return <CameraRollExample />; }
   }
 ];
 ```
