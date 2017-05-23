@@ -487,15 +487,17 @@ exports.examples = [
   {
     title: 'Annotation focus example',
     render() {
-      return <AnnotationExample style={styles.map} annotation={{
-        title: 'More Info...',
-        onFocus: () => {
-          alert('Annotation gets focus');
-        },
-        onBlur: () => {
-          alert('Annotation lost focus');
-        }
-      }}/>;
+      return <AnnotationExample style={styles.map} annotation={
+				{
+	        title: 'More Info...',
+	        onFocus: () => {
+	          alert('Annotation gets focus');
+	        },
+	        onBlur: () => {
+	          alert('Annotation lost focus');
+	        }
+	      }
+			}/>;
     }
   },
   {
@@ -507,37 +509,40 @@ exports.examples = [
   {
     title: 'Custom pin color',
     render() {
-      return <AnnotationExample style={styles.map} annotation={{
-        title: 'You Are Purple',
-        tintColor: MapView.PinColors.PURPLE,
-      }}/>;
+      return <AnnotationExample style={styles.map} annotation={
+					{
+	        title: 'You Are Purple',
+	        tintColor: MapView.PinColors.PURPLE,
+	      }
+			}/>;
     }
   },
   {
     title: 'Custom pin image',
     render() {
-      return <AnnotationExample style={styles.map} annotation={{
-        title: 'Thumbs Up!',
-        image: require('image!uie_thumb_big'),
-      }}/>;
+      return <AnnotationExample style={styles.map} annotation={
+					{
+	        title: 'Thumbs Up!',
+	        image: require('image!uie_thumb_big'),
+	      }
+			}/>;
     }
   },
   {
     title: 'Custom pin view',
     render() {
-      return <AnnotationExample style={styles.map} annotation={{
-        title: 'Thumbs Up!',
-        view: <View style={{
-          alignItems: 'center',
-        }}>
-          <Text style={{fontWeight: 'bold', color: '#f007'}}>
-            Thumbs Up!
-          </Text>
-          <Image
-            style={{width: 90, height: 65, resizeMode: 'cover'}}
-            source={require('image!uie_thumb_big')}
-          />
-        </View>,
+      return <AnnotationExample style={styles.map} annotation={
+					{
+	        title: 'Thumbs Up!',
+	        view: <View style={{alignItems: 'center'}}>
+	          <Text style={{fontWeight: 'bold', color: '#f007'}}>
+	            Thumbs Up!
+	          </Text>
+	          <Image
+	            style={{width: 90, height: 65, resizeMode: 'cover'}}
+	            source={require('image!uie_thumb_big')}
+	          />
+	        </View>,
       }}/>;
     }
   },
@@ -546,10 +551,7 @@ exports.examples = [
     render() {
       return <MapView
         style={styles.map}
-        region={{
-          latitude: 39.06,
-          longitude: -95.22,
-        }}
+        region={{latitude: 39.06,longitude: -95.22,}}
         overlays={[{
           coordinates:[
             {latitude: 32.47, longitude: -107.85},
