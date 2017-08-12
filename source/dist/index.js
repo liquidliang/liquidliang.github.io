@@ -2064,7 +2064,7 @@
 	    });
 	  });
 	
-	  if (m_util.dom.getWindowWidth() < 766) {
+	  if (m_util.dom.getWindowWidth() < 1000) {
 	    return view.setView({
 	      source: function source() {
 	        return new Promise(function (resolve) {
